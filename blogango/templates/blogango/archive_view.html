@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% load markup %}
+
+{% block main %}
+<div id="columnA_2columns">
+{% for entry in object_list %}
+<div class="post">
+<h3>
+<a href="{{entry.get_absolute_url}}">{{entry.title}}</a>
+</h3>
+
+{% include "blogango/entry_controls.html" %}
+
+<div class="entrytxt">
+{{entry.text|textile}}
+</div>
+</div>
+{% endfor %}
+<br class="clear" />
+</div>
+{% endblock %}
+

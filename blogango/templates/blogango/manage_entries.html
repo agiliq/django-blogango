@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div id="columnA_2columns">
+
+<div id="message">
+Manage previous entries. Delete or unpublish.
+</div>
+
+<form action="." method="post">
+<table summary="" border="0" class="entries">
+<tr>
+<th>Entry</th>
+<th>View</th>
+<th>Edit</th>
+<th>Select</th>
+</tr>
+{% for entry in entries %}
+<tr>
+<td>{{entry.title}}</td>
+<td><a href="{{entry.get_absolute_url}}">view</a></td>
+<td><a href="{{entry.get_edit_url}}">edit</a></td>
+<td><input type="checkbox" name="entries" value="{{entry.id}}" /></td>
+</tr>
+{% endfor %}
+</table>
+
+<input type="submit" class="button" value="Delete" name="del" />
+<input type="submit" class="button" value="Unpublish" name="unpublish" />
+</form>
+</div>
+{% endblock %}

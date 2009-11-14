@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load markup %}
+
+{% block title %}
+{{block.super}} - Tags
+{% endblock %}
+
+{% block main %}
+<div id="columnA_2columns">
+<div class="tags">
+<ul>
+{% for entry in entries %}
+<li>
+<a href="{{entry.get_absolute_url}}">{{entry.title}}</a> <br />
+<br class="clear">
+{{entry.text|textile|truncatewords:50}}
+</li>
+{% endfor %}
+</ul>
+</div>
+</div>
+{% endblock %}

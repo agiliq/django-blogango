@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<title>
+{% block title %}
+{{blog.title}}
+{% endblock %}
+</title>
+
+<link rel="stylesheet" type="text/css" title="Red" href="{{ MEDIA_URL }}blogango/style_red.css" />
+<link rel="alternate" type="application/rss+xml" title="Blogango RSS Feed" href="/rss/latest/" />
+
+ <script type="text/javascript" src="/foo/jquery.js"></script>          
+ <script type="text/javascript">                                         
+   $(document).ready(
+	  function(){
+		  
+		}
+		)                                     
+ </script>   
+</head>
+<body>
+
+<div id="header">
+
+
+	<div id="header_inner" class="fluid">
+    {% block header %}
+		<div id="logo">
+			<a href="{% url blogango_index %}"><h1><span>{{blog.title}}</span></h1></a>
+			<h2>{{blog.tag_line}}</h2>
+		</div>
+		{% endblock %}
+		
+		{% block topbar %}
+		<div id="menu">
+			<ul>
+				{% for page in pages %}
+				<li><a href="{{page.get_absolute_url}}">{{page.title}}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+		{% endblock %}
+		
+	</div>
+</div>
+
+<div id="main">
+
+	<div id="main_inner" class="fluid">
+
+		<div id="primaryContent_2columns">
+		  {% block message %}
+			{% endblock %}
+                  {% block main %}
+		  {% endblock %}
+                  
+                  {% block content %}
+		  {% endblock %}
+	
+		</div>
+		
+		<div id="secondaryContent_2columns">
+		  {% block sidebar %}
+			<div id="columnC_2columns">
+			
+				<h4><span>Search</span></h4>			
+				<form method="get" action="/search/">
+				<div id="search">
+					<input type="text" class="text" name="q" />
+					<input type="submit" class="button" value="Go" />
+					<br class="clear" />
+				</div>
+				</form>	
+				
+				<h4><span>Recent Posts</span>  </h4>
+				<ul class="links">
+				{% for recent in recents %}
+				<li><a href="{{recent.get_absolute_url}}">{{recent.title}}</a></li>
+				{%endfor %}
+				</ul>
+				
+				<h4><span>Recent Comments</span>  </h4>
+				<ul class="links">
+				{% for recent_comment in recent_comments %}
+				<li><a href="{{recent_comment.get_absolute_url}}">{{recent_comment.text|truncatewords:5}}</a></li>
+				by {{recent_comment.user_name}} on <a href="{{recent_comment.comment_for.get_absolute_url}}">{{recent_comment.comment_for}}</a>
+				{%endfor %}
+				</ul>				
+
+				<h4><span>Blogroll</span>  </h4>
+				<ul class="links">
+				{% for link in blogroll %}
+				<li><a href="{{link.get_absolute_url}}">{{link.text}}</a></li>
+				{%endfor %}
+				</ul>
+				
+				<h4><span>Meta</span>  </h4>
+				<ul class="links">
+				<li><a href="{% url blogango_index %}">Home</a></li>
+				{% if user.is_authenticated %}
+        <li><a href="{% url blogango_create %}">Create</a></li>
+        <li><a href="{% url blogango_manage %}">Manage</a></li>
+				<li><a href="{% url auth_logout %}">Logout</a></li>				
+				{% else %}
+				<li><a href="{% url auth_login %}">Login</a></li>
+        {% endif %}
+				<li><a href="/rss/latest/">Feed</a></li>				
+				</ul>
+				
+				<h4><span>Archive</span>  </h4>
+				<ul class="links">
+				{% for date in date_list %}
+				<li><a href="/archive/{{date.0}}/">{{date.1}}</a></li>
+				{% endfor %}
+				</ul>				
+				
+   		</div>
+
+		</div>
+		{% endblock %}
+
+		<br class="clear" />
+
+	</div>
+
+</div>
+
+<div id="footer" class="fluid">
+  {% block footer %}
+	Blogango - Almost as cool as gypsy jazz. Design by <a href="http://www.nodethirtythree.com/">NodeThirtyThree Design</a>.
+	{% endblock %}
+</div>
+
+</body>
+</html>

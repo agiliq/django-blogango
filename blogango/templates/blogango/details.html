@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load markup %}
+
+{% block title %}
+{{block.super}} - {{entry.title}}
+{% endblock %}
+
+{% block main %}
+<div id="columnA_2columns">
+<div class="post">
+<h3>
+<a href="{{entry.get_absolute_url}}">{{entry.title}}</a>
+</h3>
+{% include "blogango/entry_controls.html" %}
+<div class="entrytxt">
+{{entry.text|textile}}
+</div>
+</div>
+<div class="tags">
+{% for tag in tags %}
+<a href="{{tag.get_absolute_url}}">{{tag.tag_txt}}</a>
+{% endfor %}
+</div>
+
+{% if entry.comments_allowed%}
+<form action="." method="post">
+<table>
+{{comment_form}}
+</table>
+<input type="submit" class="button" value="Comment" />
+</form>
+{% else %}
+<div class="message">
+Comments are disabled.
+</div>
+{% endif %}
+
+<br class="clear" />
+<div class="comments">
+{% for comment in comments %}
+<div class="commnttext">
+{{comment.text}}
+</div>
+{% include 'blogango/commentcontrols.html' %}
+{% endfor %}
+</div>
+</div>
+{% endblock %}

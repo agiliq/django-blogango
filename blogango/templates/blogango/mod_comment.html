@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load markup %} 
+
+{% block title %}
+{{block.super}} - Comments
+{% endblock %}
+
+{% block main %}
+<div id="columnA_2columns">
+<div id="message">
+Manage comments. Down with spammers.
+</div>
+Comments
+<form action="." method="post">
+
+<table summary="" border="0" class="comments">
+{% for comment in comments %}
+<tr>
+<th>Comment</th>
+<th>Delete</th>
+<th>Mark as spam</th>
+</tr>
+<tr>
+<td>{{comment.text|textile}}</td>
+<td><input type="checkbox" name="delete" value="{{comment.id}}" /></td>
+<td><input type="checkbox" name="spam" value="{{comment.id}}" /></td>
+</tr>
+{% endfor %}
+</table>
+
+<input type="submit" class="button" value="Manage Comments" />
+</form>
+</div>
+{% endblock %}
