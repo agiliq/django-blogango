@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{block.super}} - Blogroll
+{% endblock %}
+
+{% block main %}
+
+<div id="message">
+Add links to the blogroll.
+</div>
+
+<div id="columnA_2columns">
+<form action="." method="post">
+<table>
+{{blogroll_form}}
+</table>
+<input type="submit" class="button" value="Add to blogroll" />
+</form>
+</div>
+
+{% endblock %}
