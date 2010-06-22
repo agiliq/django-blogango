@@ -1,0 +1,114 @@
+@charset "utf-8";
+/* CSS Document */
+/**************************************/
+/*              GLOBALS               */
+/**************************************/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}
+ol, ul {
+	list-style: none;
+}
+
+body{ background:url(../images/bg.png) repeat-x; background-color:#4E4E4E; font:14px Helvetica, Arial, sans-serif; color:#000; line-height:22px;}
+#header a{font: bold 32px Helvetica, Arial, sans-serif; color:#585858;text-decoration: none;text-transform:uppercase;}
+h1{font:bold 18px Helvetica, Arial, sans-serif; color:#ffffff; line-height:50px; background-color:#8FB83C; padding-left:25px;  }
+h1 a {color:#ffffff; text-decoration: none;}
+h1.green{font:bold 18px Helvetica, Arial, sans-serif; color:#ffffff; line-height:50px; background-color:#8FB83C; padding-left:25px;}
+h1.orange{font:bold 18px Helvetica, Arial, sans-serif; ; line-height:50px; background-color:#FF7800; padding-left:25px; }
+h1.brown{font:bold 18px Helvetica, Arial, sans-serif;  line-height:50px; background-color:#7E4221; padding-left:25px; }
+h1.red{font:bold 18px Helvetica, Arial, sans-serif;  line-height:50px; background-color:#A1001B; padding-left:25px; }
+h1.purple{font:bold 18px Helvetica, Arial, sans-serif;  line-height:50px; background-color:#530072; padding-left:25px; }
+h1.blue{font:bold 18px Helvetica, Arial, sans-serif;  line-height:50px; background-color:#00ADEF; padding-left:25px; }
+
+h2{font:bold 15px Helvetica, Arial, sans-serif; line-height:40px;}
+p.post{padding-bottom:20px;border-bottom:1px solid #A4A4A4; }
+
+#container{width:960px; margin:0px auto;}
+#header{width:940px; height:45px; display:block; margin:10px 0px 10px 0px; padding:35px 0px 0px 20px;}
+#leftpanel{width:600px; float:left;}
+#rightpanel{width:320px; float:right;}
+
+.general_block{ display:block; background-color:#FFF; padding:20px;}
+.comment_block{ display:block; background-color:#FFF; padding:20px 30px 20px 30px; margin:10px 0px 10px 0px;}
+.comment_block .leftpanel{ display:block; width:430px; float:left;}
+.comment_block .rightpanel{ display:block; width:100px; float:right; text-align:right; }
+.commentor{font:bold 14px Arial, Helvetica, sans-serif;}
+.commentor a {text-decoration: none;color:#0975B5;}
+.postdate{font:12px Arial, Helvetica, sans-serif; color:#666; padding-left:20px;}
+.comment_post { margin-top:10px; font:12px Arial, Helvetica, sans-serif; line-height:18px; }
+
+.rightblock{width:320px; display:block; background-color:#FFF; margin-bottom:20px;}
+.rightblock ul{ padding:25px 0px 25px 25px;}
+.rightblock li{ font:bold 11px Tahoma, Geneva, sans-serif; line-height:24px;  color:#5E5E5E; text-decoration:none; }
+.rightblock li a{ font:bold 11px Tahoma, Geneva, sans-serif; line-height:24px; color:#5E5E5E; text-decoration:none; border-bottom:1px dashed #999; }
+.rightblock li a:hover{ font:bold 11px Tahoma, Geneva, sans-serif; line-height:24px; text-decoration:none; color:#000; }
+
+.rightblock_divided{width:320px; display:block;  margin-bottom:20px;}
+.rightblock_divided .left{width:150px; float:left;background-color:#FFF;}
+.rightblock_divided .right{width:150px; float:right;background-color:#FFF;}
+.rightblock_divided ul{ padding:25px 0px 25px 25px;}
+.rightblock_divided li{ font:bold 11px Tahoma, Geneva, sans-serif; line-height:24px;  color:#5E5E5E; text-decoration:none; }
+.rightblock_divided li a{ font:bold 11px Tahoma, Geneva, sans-serif; line-height:24px; color:#5E5E5E; text-decoration:none; border-bottom:1px dashed #999; }
+.rightblock_divided li a:hover{ font:bold 11px Tahoma, Geneva, sans-serif; line-height:24px; text-decoration:none; color:#000; }
+
+
+.leftblock{width:600px; display:block; background-color:#FFF; margin-bottom:10px;}
+
+
+.filed{ font:bold 12px Arial, Helvetica, sans-serif; color:#000; line-height:25px; padding-left:25px;}
+.filed a{font:12px Arial, Helvetica, sans-serif; line-height:25px;text-decoration:none; color:#5E5E5E; border-bottom:1px dashed #999;}
+.filed a:hover{font:12px Arial, Helvetica, sans-serif; line-height:25px;text-decoration:none; color:#000; border-bottom:1px dashed #999;}
+.postdetails{font:bold 12px Arial, Helvetica, sans-serif; color:#424242; line-height:25px; margin:0px 25px 0px 25px;  padding-bottom:15px; background:url(../images/linesbg.png) repeat-x bottom left;}
+.postdetails a{font:bold 12px Arial, Helvetica, sans-serif; color:#000; line-height:25px;  text-decoration:none; color:#424242; border-bottom:1px dashed #999;}
+.postdetails a:hover{font:bold 12px Arial, Helvetica, sans-serif; color:#000; line-height:25px;  text-decoration:none; color:#000; }
+
+.postlist ul li { list-style-type: square;}
+	
+.postcontent{font:14px Helvetica, Arial, sans-serif; color:#000; line-height:22px; margin:20px 25px 0px 25px; background:url(../images/linesbg2.png) repeat-x bottom left; display:block; padding-bottom:20px; }
+.postcontent ul{ margin:10px 0px 20px 0px; font-weight:bold;}
+.postcontent li{font:14px Helvetica, Arial, sans-serif; color:#000; line-height:22px; margin:0px 0px 0px 15px; list-style-type:disc;}
+
+.post_icon{ width:30px; height:30px;}
+
+.moreinfo{font:bold 11px Tahoma, Geneva, sans-serif; color:#666; line-height:40px; text-decoration:none;  margin:0px 25px 0px 25px;   }
+.moreinfo a{font:bold 11px Tahoma, Geneva, sans-serif; color:#666; line-height:40px; text-decoration:none;  text-align:right; border-bottom:1px dashed #999;  }
+
+.moreinfo a:hover{font:bold 11px Tahoma, Geneva, sans-serif; color:#000; line-height:40px; text-decoration:none;  border-bottom:1px dashed #000; }
+
+/**************************************/
+/*              FORMS                 */
+/**************************************/
+.textfield{width:495px; background-color:#F0F0F0; border:1px solid #D1D1D1; padding:5px;}
+.textarea{width:495px; background-color:#F0F0F0; border:1px solid #D1D1D1; padding:5px; margin-bottom:5px;}
+fieldset{border:3px solid #EAEAEA; padding:20px; font:bold 11px Tahoma, Geneva, sans-serif; line-height:30px; margin-top:10px;}
+legend{font:16px Arial, Helvetica, sans-serif; line-height:24px;}
+.but_right{float:right;}
+
+.submit{ text-align:right; padding:3px;}
+.footer{ clear:both; font:bold 11px Tahoma, Geneva, sans-serif; color:#FFF; line-height:40px; text-align:center;}
+.clear{clear:both;}
+#pre {display: block;margin: 2em 0;white-space: pre;overflow: auto;width: 500px;line-height: 1.4;border: 3px solid #ccc;background: #F1F1F1;padding:20px;font-family: 'Droid Sans Mono', arial, serif; font-size:12px;}
+
+ul.errorlist {
+    color: red;
+    display: inline;	
+}
+ul.errorlist li {
+    display: inline;
+}

@@ -1,0 +1,38 @@
+{% extends "admin/base_site.html" %}
+
+{% block title %}XML-RPC Service{% endblock %}
+
+{% block extrahead %}
+<style type="text/css">
+<!--
+.function {
+	border-bottom: 2px solid;
+}
+.function_desc {
+	padding-left: 15px;
+	padding-right: 15px;
+}
+.function_doc {
+	padding: 2px;
+	background-color: #EEE;
+}
+-->
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>XML-RPC Service</h1>
+<h2>You need to invoke this service using an XML-RPC Client.</h2>
+<h2>The following methods are available:</h2>
+{% for m in methods %}
+  <div class="function">
+	<h3>{{ m.0 }}</h3>
+		<div class="function_desc">
+		<strong>Types of Argument{{ m.1.args|length|pluralize }}: </strong> {{ m.1.args }} <br />
+		<strong>Type of Return: </strong> {{ m.1.returns }} <br />
+		<pre class="function_doc">{{ m.2 }}</pre>
+		</div>
+  </div>
+{% endfor %}
+{% endblock %}
+

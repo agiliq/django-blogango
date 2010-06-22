@@ -4,17 +4,23 @@
 {{block.super}} - Install
 {% endblock %}
 
-{% block main %}
-<div id="columnA_2columns">
-<div id="message">
-<p>Enter the title and the tag line for your blog. Can it be that easy?</p>
+{% block content %}
+<div class="leftblock">
+    <h1>Blog not created </h1> 
+
+<div class="postcontent">
+    <p>Create a blog in '/admin/'</p>
 </div>
+
+{% comment %}
 <form action="." method="post">
-<table>
-{{install_form}}
-</table>
-<input name="install" type="submit" value="Install Blog" class="button"/>
+    <table>
+    {{install_form}}
+    </table>
+    <input name="install" type="submit" value="Install Blog" class="button"/>
 </form>
+{% endcomment %}
+
 </div>
 
 {% endblock %}

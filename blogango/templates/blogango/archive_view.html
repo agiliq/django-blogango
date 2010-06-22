@@ -1,23 +1,23 @@
 {% extends "base.html" %}
 
-{% load markup %}
+{% block title %} 
+- Archives
+{% endblock %}
 
-{% block main %}
-<div id="columnA_2columns">
+{% block content %}
+
 {% for entry in object_list %}
-<div class="post">
-<h3>
-<a href="{{entry.get_absolute_url}}">{{entry.title}}</a>
-</h3>
-
-{% include "blogango/entry_controls.html" %}
-
-<div class="entrytxt">
-{{entry.text|textile}}
-</div>
-</div>
+    <div class="leftblock"> 
+        <h1><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h1> 
+        {% include 'blogango/entry_controls.html' %}
+        
+        <div class="postcontent"> 
+            <p>{{ entry.text|truncatewords_html:50|safe }}</p> 
+        </div> 
+        <div class="moreinfo"><a href="{{ entry.get_absolute_url }}">read more </a></div> 
+    </div>
+    
 {% endfor %}
-<br class="clear" />
-</div>
+
 {% endblock %}
 

@@ -1,138 +1,120 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title>Blog {% block title %} {% endblock %}</title> 
+<link href="{{ MEDIA_URL }}blogango/css/agiliqblog.css" rel="stylesheet" type="text/css" /> 
+<link href="{{ MEDIA_URL }}blogango/css/prettify.css" rel="stylesheet" type="text/css" />
+<link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css' />
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-<title>
-{% block title %}
-{{blog.title}}
-{% endblock %}
-</title>
+{% if feed_url %}
+    <link rel="alternate" type="application/rss+xml" title="The Agiliq Blog - Django Web Development RSS Feed" href="{{feed_url}}" />
+{% endif %}
+{% if canonical_url %}
+    <link rel="canonical" href='{{ canonical_url }}' />
+{% endif %}
+{# <link rel="pingback" href="{% url xmlrpc %}" /> #}
+<link rel="pingback" href="{{ pingback_xmlrpc_url }}" />
 
-<link rel="stylesheet" type="text/css" title="Red" href="{{ MEDIA_URL }}blogango/style_red.css" />
-<link rel="alternate" type="application/rss+xml" title="Blogango RSS Feed" href="/rss/latest/" />
-
- <script type="text/javascript" src="/foo/jquery.js"></script>          
- <script type="text/javascript">                                         
-   $(document).ready(
-	  function(){
-		  
-		}
-		)                                     
- </script>   
-</head>
-<body>
-
-<div id="header">
+<script type="text/javascript" src="{{ MEDIA_URL }}blogango/js/prettify.js"></script> 
+ 
+</head> 
+<body> 
 
 
-	<div id="header_inner" class="fluid">
-    {% block header %}
-		<div id="logo">
-			<a href="{% url blogango_index %}"><h1><span>{{blog.title}}</span></h1></a>
-			<h2>{{blog.tag_line}}</h2>
-		</div>
-		{% endblock %}
-		
-		{% block topbar %}
-		<div id="menu">
-			<ul>
-				{% for page in pages %}
-				<li><a href="{{page.get_absolute_url}}">{{page.title}}</a></li>
-				{% endfor %}
-			</ul>
-		</div>
-		{% endblock %}
-		
-	</div>
-</div>
-
-<div id="main">
-
-	<div id="main_inner" class="fluid">
-
-		<div id="primaryContent_2columns">
-		  {% block message %}
-			{% endblock %}
-                  {% block main %}
-		  {% endblock %}
-                  
-                  {% block content %}
-		  {% endblock %}
-	
-		</div>
-		
-		<div id="secondaryContent_2columns">
-		  {% block sidebar %}
-			<div id="columnC_2columns">
-			
-				<h4><span>Search</span></h4>			
-				<form method="get" action="/search/">
-				<div id="search">
-					<input type="text" class="text" name="q" />
-					<input type="submit" class="button" value="Go" />
-					<br class="clear" />
-				</div>
-				</form>	
-				
-				<h4><span>Recent Posts</span>  </h4>
-				<ul class="links">
-				{% for recent in recents %}
-				<li><a href="{{recent.get_absolute_url}}">{{recent.title}}</a></li>
-				{%endfor %}
-				</ul>
-				
-				<h4><span>Recent Comments</span>  </h4>
-				<ul class="links">
-				{% for recent_comment in recent_comments %}
-				<li><a href="{{recent_comment.get_absolute_url}}">{{recent_comment.text|truncatewords:5}}</a></li>
-				by {{recent_comment.user_name}} on <a href="{{recent_comment.comment_for.get_absolute_url}}">{{recent_comment.comment_for}}</a>
-				{%endfor %}
-				</ul>				
-
-				<h4><span>Blogroll</span>  </h4>
-				<ul class="links">
-				{% for link in blogroll %}
-				<li><a href="{{link.get_absolute_url}}">{{link.text}}</a></li>
-				{%endfor %}
-				</ul>
-				
-				<h4><span>Meta</span>  </h4>
-				<ul class="links">
-				<li><a href="{% url blogango_index %}">Home</a></li>
-				{% if user.is_authenticated %}
-        <li><a href="{% url blogango_create %}">Create</a></li>
-        <li><a href="{% url blogango_manage %}">Manage</a></li>
-				<li><a href="{% url auth_logout %}">Logout</a></li>				
-				{% else %}
-				<li><a href="{% url auth_login %}">Login</a></li>
+<div id="container"> 
+    <div id="header">
+        <a href="{% url blogango_index %}">{{ blog.title }}</a> {{ blog.tag_line }}
+    </div> 
+  
+    <!--LEFT PANEL STARTS--> 
+    <div id="leftpanel">
+        {% block content %}
+        <!--BLOG POST STARTS-->
+        {% for entry in entries %}
+            <div class="leftblock"> 
+                <h1>{{ entry.title }}</h1> 
+                <div class="filed">Filed in : <a href="#">Django Forms</a></div> 
+                <div class="postdetails">
+                    <img src="{{ MEDIA_URL }}blogango/images/blog.png" width="16" height="16" alt="Written by" /> 
+                    <a href="#"> {{ entry.created_by }}</a> &nbsp;&nbsp;&nbsp;
+                    <img src="{{ MEDIA_URL }}blogango/images/date_icon.png" width="16" height="16" alt="Date" />
+                    &nbsp;26th May,2010.
+                </div> 
+                <div class="postcontent"> 
+                    <p>{{ entry.text|truncatewords_html:50|safe }}</p> 
+                </div> 
+                <div class="moreinfo"><a href="{{ entry.get_absolute_url }}">read more </a></div> 
+            </div>
+        {% empty %}
+                <div class="leftblock">
+                  You don't have any entries in your blog.
+                </div>
+        {% endfor %}
+        <!--BLOG POST ENDS-->
+        {% endblock %}
+    </div> 
+    <!-- LEFT PANEL ENDS -->
+   
+    <!--RIGHT PANEL STARTS--> 
+    <div id="rightpanel"> 
+        {% if recents %}
+        <!--POSTS PANEL STARTS--> 
+        <div class="rightblock"> 
+	        <h1>BLOGPOSTS</h1> 
+	        <ul> 
+	            {% for recent in recents %}
+	                <li><a href="{{ recent.get_absolute_url }}">{{ recent.title }}</a></li>
+	            {% endfor %}  
+	        </ul> 
+        </div> 
+        <!--POSTS PANEL ENDS-->
         {% endif %}
-				<li><a href="/rss/latest/">Feed</a></li>				
-				</ul>
-				
-				<h4><span>Archive</span>  </h4>
-				<ul class="links">
-				{% for date in date_list %}
-				<li><a href="/archive/{{date.0}}/">{{date.1}}</a></li>
-				{% endfor %}
-				</ul>				
-				
-   		</div>
 
-		</div>
-		{% endblock %}
+        <!--FRIENDS PANEL STARTS--> 
+        <div class="rightblock"> 
+            {% if blog_rolls %}
+	            <h1 class="orange">BLOG ROLL</h1> 
+	            <ul> 
+                    {% for roll in blog_rolls %}
+                        <li><a href="{{ roll.url }}">{{ roll.text }}</a></li>
+                    {% endfor %}
+	            </ul> 
+            {% endif %}
+        <div class="clear"></div> 
+        </div> 
+        <!--FRIENDS PANEL ENDS-->
 
-		<br class="clear" />
+        {% if tags %}
+        <!--CATEGORIES PANEL STARTS--> 
+        <div class="rightblock"> 
+            <h1 class="brown">CATEGORIES</h1> 
+            <ul>
+                {% for tag in tags %}
+                    <li><a href="{% url blogango_tag_details tag.slug %}">{{ tag.name }}</a></li>
+                {% endfor %} 
+            </ul> 
+        </div> 
+        <!--CATEGORIES PANEL ENDS-->
+        {% endif %} 
+        
+        {% if archive_months %}
+        <!--ARCHIVES PANEL STARTS--> 
+        <div class="rightblock"> 
+            <h1 class="blue">ARCHIVES</h1> 
+            <ul>
+                {% for month in archive_months %}
+                    <li><a href="{% url blogango_archives month|date:'Y' month|date:'b' %}">{{ month|date:'F Y' }}</a></li>
+                {% endfor %} 
+            </ul> 
+        </div> 
+        <!--ARCHIVES PANEL ENDS-->
+        {% endif %}
+    </div> 
+    <!--RIGHT PANEL ENDS-->
+     
+    <div class="clear"></div> 
+</div> 
 
-	</div>
-
-</div>
-
-<div id="footer" class="fluid">
-  {% block footer %}
-	Blogango - Almost as cool as gypsy jazz. Design by <a href="http://www.nodethirtythree.com/">NodeThirtyThree Design</a>.
-	{% endblock %}
-</div>
-
-</body>
-</html>
+</body> 
+</html> 

@@ -1,48 +1,100 @@
 {% extends 'base.html' %}
-{% load markup %}
+{% load gravatar %}
+{% load pingback_tags %}
 
 {% block title %}
-{{block.super}} - {{entry.title}}
+    {{block.super}} - {{entry.title}}
 {% endblock %}
 
-{% block main %}
-<div id="columnA_2columns">
-<div class="post">
-<h3>
-<a href="{{entry.get_absolute_url}}">{{entry.title}}</a>
-</h3>
-{% include "blogango/entry_controls.html" %}
-<div class="entrytxt">
-{{entry.text|textile}}
+{% block content %}
+<div class="leftblock"> 
+    <h1>{{ entry.title }}</h1> 
+    
+    {% include 'blogango/entry_controls.html' %} 
+    
+    <div class="postcontent"> 
+        <p>{{ entry.text|safe }}</p> 
+    </div>
+    <div class="moreinfo"> <br/> </div> 
 </div>
-</div>
+
 <div class="tags">
 {% for tag in tags %}
-<a href="{{tag.get_absolute_url}}">{{tag.tag_txt}}</a>
+    <a href="{{tag.get_absolute_url}}">{{tag.tag_txt}}</a>
 {% endfor %}
 </div>
 
-{% if entry.comments_allowed%}
-<form action="." method="post">
-<table>
-{{comment_form}}
-</table>
-<input type="submit" class="button" value="Comment" />
-</form>
-{% else %}
-<div class="message">
-Comments are disabled.
-</div>
+{% if comments %}
+<!--COMMENT BLOCK STARTS-->
+{% for comment in comments %}
+    <div class="comment_block">
+	    <div class="leftpanel">
+	        <span class="commentor">
+	           {% if comment.user_url %}
+	               <a href='{{ comment.user_url }}' rel='nofollow' target='_blank'>{{ comment.user_name }}</a>
+	           {% else %}
+	               {{ comment.user_name }}
+	           {% endif %}
+	        </span>   
+	        <span class="postdate">{{ comment.created_on|date:'jS N, Y' }}</span><br/>
+	        <div class="comment_post">
+	            <p>{{ comment.text }}</p>
+	        </div>
+	    </div>
+	    <div class="rightpanel">
+	        <img src="{% gravatar_url comment.email_id %}" width="50" height="50" alt="commmenttor" /> 
+	    </div>
+	    <div class="clear"></div>
+    </div>
+{% endfor %}
+<!--COMMENT BLOCK ENDS-->
 {% endif %}
 
-<br class="clear" />
-<div class="comments">
-{% for comment in comments %}
-<div class="commnttext">
-{{comment.text}}
+<!--  Ping Backs starts -->
+{% get_pingback_list for entry as pingbacks %}
+
+{% if pingbacks %}
+    {% for pingback in pingbacks %}
+        <div class="comment_block">
+            <span class="commentor">
+                <!-- <a name='pingback-{{pingback.id}}' href='{{entry.get_absolute_url}}#pingback-{{ pingback.id }}'>permalink</a>  -->
+            </span>
+            <span class="postdate">{{ pingback.date|date:'jS N, Y' }}, pingback from {{ pingback.url|urlizetrunc:40 }}</span>
+            <div class="comment_post">{{ pinback.content }}</div>
+        </div>
+    {% endfor %} 
+{% endif %}
+<!--  Ping Backs ends -->
+
+<!--COMMENT FORM BLOCK STARTS-->
+<div class="general_block">
+    {% if entry.comments_allowed%}
+        <form action="." method="post">
+            {% csrf_token %}
+            <fieldset>
+                <legend>Comments</legend>
+                Name : {{comment_form.name.errors}}<br/> {{comment_form.name}} <br/>
+	            Email : {{comment_form.email.errors}} <br/> {{comment_form.email}} <br/>
+	            Your site url: {{comment_form.url.errors}} <br/> {{comment_form.url}} <br/>
+                Comment : {{comment_form.text.errors}} <br/> {{comment_form.text}} <br/>
+                <input name="button" type="submit"  id="button" value="Comment"  class="but_right"/>
+	        </fieldset>
+	    </form>
+    {% else %}
+        <div class="message">Comments are disabled.</div>
+    {% endif %}
 </div>
-{% include 'blogango/commentcontrols.html' %}
-{% endfor %}
-</div>
-</div>
+<!--COMMENT FORM BLOCK ENDS-->
+
 {% endblock %}
+
+
+{% comment %}
+<div id="columnA_2columns">
+    <div class="post">
+        <h3><a href="{{entry.get_absolute_url}}">{{entry.title}}</a></h3>
+        {# {% include "blogango/entry_controls.html" %} #}
+        <div class="entrytxt">{{entry.text|textile}}</div>
+    </div>
+</div>
+{% endcomment %}

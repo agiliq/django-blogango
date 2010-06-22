@@ -1,0 +1,23 @@
+
+Requirements:
+-------------
+1. pingback
+2. django_xmlrpc
+3. taggit
+
+STEPS:
+-----
+1. Include 'blogango', 'pingback', 'taggit' in installed apps.
+2. include blog urls in urls.py
+    
+    url(r'^blog/', include('blogango.urls')),
+
+3. include 'blogango.context_processors.extra_context' in settings.TEMPLATE_CONTEXT_PROCESSORS
+4. if the comments have to verified through AKISMET, set AKISMET_API_KEY else set AKISMET_COMMENT = False
+5. Enable django admin, if not already enabled.
+
+    python manage.py syncdb
+
+6. create blog at '/admin/blogango/blog/add/'
+7. check your blog at '/blog/'
+

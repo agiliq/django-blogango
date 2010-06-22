@@ -1,8 +1,16 @@
-{% load humanize %}
-<ul class="post_info">
-<li class="date">Created by {{entry.created_by}} on {{entry.created_on|naturalday}}.</li>
-<li class="comments">{{entry.get_num_comments}} comments. <a href="{{entry.get_absolute_url}}">Permalink</a></li>
-{% if user.is_authenticated %}
-<a href="{{entry.get_edit_url}}">Edit</a>
+{% if entry.tags.all %}
+    <div class="filed">Filed in :
+        {% for tag in entry.tags.all %} 
+            <a href="{% url blogango_tag_details tag.slug %}">{{ tag.name }}</a>
+        {% endfor %}
+    </div>
+{% else %}
+    <br/>
 {% endif %}
-</ul>
+
+<div class="postdetails">
+    <img src="{{ MEDIA_URL }}blogango/images/blog.png" width="16" height="16" alt="Written by" /> 
+    <a href="{% url blogango_author entry.created_by %}"> {{ entry.created_by }}</a> &nbsp;&nbsp;&nbsp;
+    <img src="{{ MEDIA_URL }}blogango/images/date_icon.png" width="16" height="16" alt="Date" />
+    &nbsp;{{ entry.created_on|date:'jS N, Y' }}.
+</div> 

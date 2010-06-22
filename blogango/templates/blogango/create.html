@@ -12,6 +12,7 @@ Create a new entry.
 </div>
 
 <form action="." method="post">
+{% csrf_token %}
 <table>
 {{create_form}}
 </table>
