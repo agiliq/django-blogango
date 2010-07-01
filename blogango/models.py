@@ -71,7 +71,8 @@ class BlogEntry(models.Model):
             self.title = _infer_title_or_slug(self.text)
         if self.slug == None or self.slug == '':
             self.slug = _infer_title_or_slug(self.text)
-        self.summary = _generate_summary(self.text)
+        if not self.summary: 
+            self.summary = _generate_summary(self.text)
         if not self.meta_keywords:
             self.meta_keywords = self.summary
         if not self.meta_description:
@@ -92,10 +93,6 @@ class BlogEntry(models.Model):
     def get_num_comments(self):
         cmnt_count = Comment.objects.filter(comment_for=self).count()
         return cmnt_count
-
-    @property
-    def blog_title(self):
-        return self.title
 
 class Comment(models.Model):
     """Comments for each blog.
