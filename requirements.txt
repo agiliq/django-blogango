@@ -1,0 +1,5 @@
+django-taggit
+django-xmlrpc
+django-taggit
+BeautifulSoup
+
