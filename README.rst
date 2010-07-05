@@ -1,12 +1,27 @@
+Checkout the application live in use at http://agiliq.com/blog
+
+To quickly try it locally:
+--------------------------
+
+#Step1: cd to the example folder
+$cd django-blogango/exmaple/
+#Step2: Install the requirements in the local folder
+$sudo pip install -r ../requirements.txt
+#Step3: Run the server!
+$python manage.py runserver
 
 Requirements:
 -------------
-1. pingback
-2. django_xmlrpc
-3. taggit
+1. django-pingback
+2. django-xmlrpc
+3. django-taggit
 
-STEPS:
------
+    pip install -r requirements.txt
+
+To integrate into your application:
+-----------------------------------
+
+0. Install the requirements
 1. Include 'blogango', 'pingback', 'taggit' in installed apps.
 2. include blog urls in urls.py
     
