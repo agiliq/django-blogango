@@ -55,7 +55,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.contrib.messages.context_processors.messages',
-    'blogango.context_processors.extra_context',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -78,6 +77,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'blogango',
     'pingback',
+    'django_xmlrpc',
     'taggit',
 )
 
