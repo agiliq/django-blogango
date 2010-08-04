@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {{block.super}} - Tags
+    {{block.super}} - Tagged with {{ tag.name }}
 {% endblock %}
 
 {% block content %}
 <div class="leftblock">
-    <h1>Post with tag: {{ tag.name }}</h1>
+    <h1>Posts with tag: {{ tag.name }}</h1>
     <div class="postdetails">
     <ul>
     {% for entry in entries %}
