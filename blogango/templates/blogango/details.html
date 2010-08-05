@@ -26,6 +26,7 @@
 
 {% if comments %}
 <!--COMMENT BLOCK STARTS-->
+<h1>Comments</h1>
 {% for comment in comments %}
     <div class="comment_block">
 	    <div class="leftpanel">
@@ -48,6 +49,31 @@
     </div>
 {% endfor %}
 <!--COMMENT BLOCK ENDS-->
+{% endif %}
+
+{% if reactions %}
+<!--REACTIONS BLOCK STARTS-->
+<h1>Reactions</h1>
+{% for reaction in reactions %}
+    <div class="comment_block">
+	    <div class="leftpanel">
+	        <span class="commentor">
+				<a href="http://twitter.com/{{ reaction.user_name }}">
+				    {{ reaction.user_name }}
+				</a>
+	        </span>
+	        <span class="postdate">{{ reaction.created_on|date:'jS N, Y' }}</span><br/>
+	        <div class="comment_post">
+	            <p>{{ reaction.text|safe }}</p>
+	        </div>
+	    </div>
+	    <div class="rightpanel">
+	        <img src="{{ reaction.profile_image }}" width="50" height="50" alt="commmenttor" /> 
+	    </div>
+	    <div class="clear"></div>
+    </div>
+{% endfor %}
+<!--REACTION BLOCK ENDS-->
 {% endif %}
 
 <!--  Ping Backs starts -->

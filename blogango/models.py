@@ -94,7 +94,19 @@ class BlogEntry(models.Model):
         cmnt_count = Comment.objects.filter(comment_for=self).count()
         return cmnt_count
 
-class Comment(models.Model):
+class BaseComment(models.Model):
+    text = models.TextField()
+    comment_for = models.ForeignKey(BlogEntry)
+    created_on = models.DateTimeField(auto_now_add=True)
+    user_name = models.CharField(max_length=100)
+    
+    class Meta:
+        ordering = ['created_on']
+
+    def __unicode__(self):
+        return self.text
+
+class Comment(BaseComment):
     """Comments for each blog.
     text: The comment text.
     comment_for: the Post/Page this comment is created for.
@@ -103,28 +115,25 @@ class Comment(models.Model):
     user_name = If created_by is null, this comment was by anonymous user. Name in that case.
     email_id: Email-id, as in user_name.
     is_spam: Is comment marked as spam? We do not display the comment in those cases."""
-    
-    text = models.TextField()
-    comment_for = models.ForeignKey(BlogEntry)
-    created_on = models.DateTimeField(auto_now_add=True)
+
     created_by = models.ForeignKey(User, unique=False, blank=True, null=True)
-    user_name = models.CharField(max_length=100)
     user_url = models.CharField(max_length=100)
     email_id = models.EmailField()
     is_spam = models.BooleanField(default=False)
 
-    class Meta:
-        ordering = ['created_on']
-
-    def __unicode__(self):
-        return self.text
-    
     @permalink
     def get_absolute_url (self):
         #return '/comment/%s/' %self.id
           return ('comment_details', self.id)
-     
       
+class Reaction(BaseComment):
+    """
+    Reactions from various social media sites
+    """
+    reaction_id = models.CharField(max_length=200, primary_key=True)
+    source = models.CharField(max_length=200)
+    profile_image = models.URLField()
+
 class BlogRoll(models.Model):
     url = models.URLField(unique=True)
     text = models.CharField(max_length=100)

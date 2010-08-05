@@ -10,7 +10,7 @@ from django.views.generic.date_based import archive_month
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 
-from blogango.models import Blog, BlogEntry, Comment, BlogRoll
+from blogango.models import Blog, BlogEntry, Comment, BlogRoll, Reaction
 from blogango import forms as bforms
 
 from blogango.conf.settings import AKISMET_COMMENT, AKISMET_API_KEY
@@ -92,8 +92,9 @@ def details(request, year, month, slug):
         comment_f = bforms.CommentForm()
             
     comments = Comment.objects.filter(comment_for=entry, is_spam=False)
+    reactions = Reaction.objects.filter(comment_for=entry)
     # tags = Tag.objects.filter(tag_for=entry)
-    payload = {'entry': entry, 'comments': comments, 'comment_form': comment_f}
+    payload = {'entry': entry, 'comments': comments, 'reactions': reactions, 'comment_form': comment_f}
     return render('blogango/details.html', request, payload)
  
 
