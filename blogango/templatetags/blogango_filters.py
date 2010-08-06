@@ -1,10 +1,10 @@
+import re
 
 from django import template
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from taggit.models import Tag
-
 from blogango.views import _get_archive_months
 
 register = template.Library()
@@ -26,5 +26,11 @@ class BlogangoContext(template.Node):
     
 def blogango_extra_context(parser, token):
     return BlogangoContext()
+
+#django snippets #2107
+@register.filter(name='twitterize')
+def twitterize(token):
+    return re.sub(r'\W(@(\w+))', r'<a href="https://twitter.com/\2">\1</a>', token)
+twitterize.is_safe = True
     
 register.tag('blogango_extra_context', blogango_extra_context)

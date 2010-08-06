@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load gravatar %}
 {% load pingback_tags %}
+{% load blogango_filters %}
 
 {% block title %}
     {{block.super}} - {{entry.title}}
@@ -64,7 +65,7 @@
 	        </span>
 	        <span class="postdate">{{ reaction.created_on|date:'jS N, Y' }}</span><br/>
 	        <div class="comment_post">
-	            <p>{{ reaction.text|safe }}</p>
+	            <p>{{ reaction.text|safe|twitterize }}</p>
 	        </div>
 	    </div>
 	    <div class="rightpanel">
