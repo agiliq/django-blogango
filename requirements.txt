@@ -1,5 +1,4 @@
 django-taggit
 django-xmlrpc
-django-taggit
 BeautifulSoup
-
+django-markupfield
