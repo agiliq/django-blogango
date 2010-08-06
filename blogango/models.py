@@ -94,6 +94,10 @@ class BlogEntry(models.Model):
         cmnt_count = Comment.objects.filter(comment_for=self).count()
         return cmnt_count
 
+    def get_num_reactions(self):
+        reaction_count = Reaction.objects.filter(comment_for=self).count()
+        return reaction_count
+
 class BaseComment(models.Model):
     text = models.TextField()
     comment_for = models.ForeignKey(BlogEntry)
