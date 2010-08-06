@@ -12,7 +12,11 @@
             <p>{{ entry.text|truncatewords_html:50|safe }}</p> 
         </div> 
         <div class="moreinfo">
-            <a href="{{ entry.get_absolute_url }}">{{ entry.get_num_comments }} Comments and {{ entry.get_num_reactions }} Reactions</a>
+            <a href="{{ entry.get_absolute_url }}">read more</a>
+            |
+            <a href="{{ entry.get_absolute_url }}#comments">
+                {{ entry.get_num_comments }} Comments and {{ entry.get_num_reactions }} Reactions
+            </a>
         </div> 
     </div>
 {% empty %}
