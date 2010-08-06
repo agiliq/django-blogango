@@ -3,6 +3,7 @@ from django.db.models import permalink
 from django.contrib.auth.models import User
 
 from taggit.managers import TaggableManager
+from markupfield.fields import MarkupField
 
 class Blog(models.Model):
     """Blog wide settings.
@@ -45,7 +46,7 @@ class BlogEntry(models.Model):
     
     title = models.CharField(max_length=100)
     slug = models.SlugField()
-    text = models.TextField()
+    text = MarkupField(default_markup_type='markdown')
     summary = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, unique=False)
