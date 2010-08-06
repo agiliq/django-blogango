@@ -25,5 +25,8 @@ register_pingback('blogango.views.details', pingback_blog_handler)
 xmlrpcdispatcher.register_function(ping_func, 'pingback.ping')
 
 # ping external links in the entry
-signals.post_save.connect(ping_external_links(content_attr='text', url_attr='get_absolute_url'), sender=BlogEntry, weak=False)
 
+def get_blog_text(instance):
+    return instance.text.rendered
+
+signals.post_save.connect(ping_external_links(content_func=get_blog_text, url_attr='get_absolute_url'), sender=BlogEntry, weak=False)
