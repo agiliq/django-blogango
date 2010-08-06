@@ -1,17 +1,15 @@
-#!python
 """Bootstrap setuptools installation
-
-If you want to use setuptools in your package's setup.py, just include this
-file in the same directory with it, and add this to the top of your setup.py::
-
-    from ez_setup import use_setuptools
-    use_setuptools()
-
-If you want to require a specific version of setuptools, set a download
-mirror, or use an alternate download directory, you can do so by supplying
-the appropriate options to ``use_setuptools()``.
-
-This file can also be run as a script to install or upgrade setuptools.
+	If you want to use setuptools in your package's setup.py, just include this
+	file in the same directory with it, and add this to the top of your setup.py::
+	
+	    from ez_setup import use_setuptools
+	    use_setuptools()
+	
+	If you want to require a specific version of setuptools, set a download
+	mirror, or use an alternate download directory, you can do so by supplying
+	the appropriate options to ``use_setuptools()``.
+	
+	This file can also be run as a script to install or upgrade setuptools.
 """
 import sys
 DEFAULT_VERSION = "0.6c9"

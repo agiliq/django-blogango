@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import permalink
 from django.contrib.auth.models import User
+from django.conf import settings
 
 from taggit.managers import TaggableManager
 from markupfield.fields import MarkupField
@@ -46,7 +47,10 @@ class BlogEntry(models.Model):
     
     title = models.CharField(max_length=100)
     slug = models.SlugField()
-    text = MarkupField(default_markup_type='markdown')
+    text = MarkupField(default_markup_type=getattr(settings,
+                                                      'DEFAULT_MARKUP_TYPE',
+                                                      'markdown'),
+                          markup_choices=settings.MARKUP_RENDERERS)
     summary = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, unique=False)
