@@ -132,7 +132,7 @@ class Reaction(BaseComment):
     """
     reaction_id = models.CharField(max_length=200, primary_key=True)
     source = models.CharField(max_length=200)
-    profile_image = models.URLField()
+    profile_image = models.URLField(blank=True, null=True)
 
 class BlogRoll(models.Model):
     url = models.URLField(unique=True)

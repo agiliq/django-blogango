@@ -62,7 +62,7 @@ class Migration(SchemaMigration):
             ('basecomment_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['blogango.BaseComment'], unique=True)),
             ('reaction_id', self.gf('django.db.models.fields.CharField')(max_length=200, primary_key=True)),
             ('source', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('profile_image', self.gf('django.db.models.fields.URLField')(max_length=200)),
+            ('profile_image', self.gf('django.db.models.fields.URLField')(max_length=200, null=True, blank=True)),
         ))
         db.send_create_signal('blogango', ['Reaction'])
 
@@ -178,7 +178,7 @@ class Migration(SchemaMigration):
         'blogango.reaction': {
             'Meta': {'object_name': 'Reaction', '_ormbases': ['blogango.BaseComment']},
             'basecomment_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['blogango.BaseComment']", 'unique': 'True'}),
-            'profile_image': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
+            'profile_image': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'reaction_id': ('django.db.models.fields.CharField', [], {'max_length': '200', 'primary_key': 'True'}),
             'source': ('django.db.models.fields.CharField', [], {'max_length': '200'})
         },
