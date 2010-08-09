@@ -96,7 +96,7 @@ class BlogEntry(models.Model):
         return ('blogango.views.edit_entry', [self.id])
      
     def get_num_comments(self):
-        cmnt_count = Comment.objects.filter(comment_for=self).count()
+        cmnt_count = Comment.objects.filter(comment_for=self, is_spam=False).count()
         return cmnt_count
 
     def get_num_reactions(self):
