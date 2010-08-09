@@ -1,34 +1,24 @@
 # encoding: utf-8
 import datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
-class Migration(SchemaMigration):
+class Migration(DataMigration):
 
     def forwards(self, orm):
-        
-        # Adding field 'BlogEntry.text_markup_type'
-        db.add_column('blogango_blogentry', 'text_markup_type', self.gf('django.db.models.fields.CharField')(default='markdown', max_length=30), keep_default=False)
-
-        # Adding field 'BlogEntry._text_rendered'
-        db.add_column('blogango_blogentry', '_text_rendered', self.gf('django.db.models.fields.TextField')(default=''), keep_default=False)
-
-        # Changing field 'BlogEntry.text'
-        db.alter_column('blogango_blogentry', 'text', self.gf('markupfield.fields.MarkupField')())
+        "Write your forwards methods here."
+        for entry in orm.BlogEntry.objects.all():
+            # migrate older posts which were in html
+            entry._text_rendered = entry.text.raw
+            entry.save()
 
 
     def backwards(self, orm):
-        
-        # Deleting field 'BlogEntry.text_markup_type'
-        db.delete_column('blogango_blogentry', 'text_markup_type')
-
-        # Deleting field 'BlogEntry._text_rendered'
-        db.delete_column('blogango_blogentry', '_text_rendered')
-
-        # Changing field 'BlogEntry.text'
-        db.alter_column('blogango_blogentry', 'text', self.gf('django.db.models.fields.TextField')())
-
+        "Write your backwards methods here."
+        for entry in orm.BlogEntry.objects.all():
+            entry._text_rendered = ''
+            entry.save()
 
     models = {
         'auth.group': {
@@ -59,14 +49,6 @@ class Migration(SchemaMigration):
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
-        },
-        'blogango.basecomment': {
-            'Meta': {'object_name': 'BaseComment'},
-            'comment_for': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['blogango.BlogEntry']"}),
-            'created_on': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'text': ('django.db.models.fields.TextField', [], {}),
-            'user_name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'blogango.blog': {
             'Meta': {'object_name': 'Blog'},
@@ -103,19 +85,26 @@ class Migration(SchemaMigration):
             'url': ('django.db.models.fields.URLField', [], {'unique': 'True', 'max_length': '200'})
         },
         'blogango.comment': {
-            'Meta': {'object_name': 'Comment', '_ormbases': ['blogango.BaseComment']},
-            'basecomment_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['blogango.BaseComment']", 'unique': 'True', 'primary_key': 'True'}),
+            'Meta': {'object_name': 'Comment'},
+            'comment_for': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['blogango.BlogEntry']"}),
             'created_by': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'null': 'True', 'blank': 'True'}),
+            'created_on': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'email_id': ('django.db.models.fields.EmailField', [], {'max_length': '75'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_spam': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'text': ('django.db.models.fields.TextField', [], {}),
+            'user_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'user_url': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'blogango.reaction': {
-            'Meta': {'object_name': 'Reaction', '_ormbases': ['blogango.BaseComment']},
-            'basecomment_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['blogango.BaseComment']", 'unique': 'True'}),
+            'Meta': {'object_name': 'Reaction'},
+            'comment_for': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['blogango.BlogEntry']"}),
+            'created_on': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'profile_image': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'reaction_id': ('django.db.models.fields.CharField', [], {'max_length': '200', 'primary_key': 'True'}),
-            'source': ('django.db.models.fields.CharField', [], {'max_length': '200'})
+            'source': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
+            'text': ('django.db.models.fields.TextField', [], {}),
+            'user_name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'contenttypes.contenttype': {
             'Meta': {'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},

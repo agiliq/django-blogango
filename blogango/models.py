@@ -111,6 +111,7 @@ class BaseComment(models.Model):
     
     class Meta:
         ordering = ['created_on']
+        abstract = True
 
     def __unicode__(self):
         return self.text
