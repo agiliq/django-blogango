@@ -3,7 +3,7 @@ ez_setup.use_setuptools()
 from setuptools import setup, find_packages
 
 setup(
-    name="blogango",
+    name="django-blogango",
     version="0.1",
     py_modules=['ez_setup'],
     packages=['blogango',
@@ -20,7 +20,7 @@ setup(
     zip_safe=False,
     author="Agiliq Solutions",
     author_email="hello@agiliq.com",
-    description="Blog with django",
+    description="A django based blog",
     long_description=
     """
         Blogango is a simple but robust blogging application written with django
