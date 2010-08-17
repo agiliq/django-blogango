@@ -22,9 +22,10 @@
         </h1>
     {% endif %}
     {% if entry_form.errors %}
+        Please correct the following errors:
         <ul class="errors">
-            {% for error in entry_form.errors %}
-                <li>{{ error }}</li>
+            {% for field, error in entry_form.errors.iteritems %}
+                <li>{{ field }} {{ error.as_text }}</li>
             {% endfor %}
         </ul>
     {% endif %}
@@ -39,7 +40,7 @@
 		      {{ entry_form.text }}
 		</div>
 		<div class="formbox">
-		      <h3><label for="id_text_markup_type">Markup Type</label></h3>
+		      <h3><label for="id_text_markup_type">Markup Parser</label></h3>
 		      {{ entry_form.text_markup_type }}
 		</div>
 		<div class="formbox">

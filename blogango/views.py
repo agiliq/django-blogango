@@ -11,7 +11,7 @@ from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.admin.views.decorators import staff_member_required 
 
-from blogango.models import Blog, BlogEntry, Comment, BlogRoll, Reaction
+from blogango.models import Blog, BlogEntry, Comment, BlogRoll, Reaction, _generate_summary
 from blogango import forms as bforms
 
 from blogango.conf.settings import AKISMET_COMMENT, AKISMET_API_KEY
@@ -23,12 +23,15 @@ def admin_dashboard(request):
 @staff_member_required
 def admin_entry_edit(request, entry_id=None):
     done = False
+    entry = None
     entry_form = bforms.EntryForm(initial={'created_by': request.user.id})
     if entry_id:
         entry = get_object_or_404(BlogEntry, pk=entry_id)
         entry_form = bforms.EntryForm(instance=entry)
     if request.POST:
         entry_form = bforms.EntryForm(request.POST, instance=entry)
+#        import ipdb
+#        ipdb.set_trace()
         if entry_form.is_valid():
             entry_form.save()
             if entry.is_published:
@@ -39,6 +42,11 @@ def admin_entry_edit(request, entry_id=None):
     return render('blogango/admin/edit_entry.html', request, {'entry_form': entry_form,
                                                               'done': done,
                                                               'entry': entry})
+
+@staff_member_required
+def admin_manage_entries(request):
+    entries = BlogEntry.objects.all()
+    return render('blogango/admin/manage_entries.html', request, {'entries': entries})
 
 def welcome(request):
     return render_to_response('mainpage.html', {})
