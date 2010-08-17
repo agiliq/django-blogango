@@ -8,16 +8,25 @@
     &#8203;{{ title_suffix }}
 {% endblock %}
 {% block contents %}
-    {% if not done %}
-        <div align="center">
-            <span class="bundlemarker">Blog entry saved successfully</span>
-        </div>
-    {% endif %}
+      <div class="notification-messages">      
+	    {% if done %}
+	        <div class="message message-info">Blog entry saved successfully</div>
+	    {% endif %}
+      </div>
     {% if entry %}
         <h1>
             {{ entry.title }} &mdash; &#8203; Edit Entry
-            <a href="{{ entry.get_absolute_url }}" class="preview">{{ _("View Entry") }}</a>
+            {% if entry.is_published %}
+                <a href="{{ entry.get_absolute_url }}" class="preview">{{ _("View Entry") }}</a>
+            {% endif %}
         </h1>
+    {% endif %}
+    {% if entry_form.errors %}
+        <ul class="errors">
+            {% for error in entry_form.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
     {% endif %}
     <form method="POST">
         {% csrf_token %}
@@ -32,7 +41,11 @@
 		<div class="formbox">
 		      <h3><label for="id_text_markup_type">Markup Type</label></h3>
 		      {{ entry_form.text_markup_type }}
-		</div>	
+		</div>
+		<div class="formbox">
+		      <h3><label for="id_summary">Summary</label></h3>
+		      {{ entry_form.summary }}
+		</div>
 		<div class="formbox toggleable collapsed">
 		      <h3><label for="id_created_by">Author</label></h3>
 		      {{ entry_form.created_by }}

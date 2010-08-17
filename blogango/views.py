@@ -30,11 +30,13 @@ def admin_entry_edit(request, entry_id=None):
     if request.POST:
         entry_form = bforms.EntryForm(request.POST, instance=entry)
         if entry_form.is_valid():
-            entry_form.save()            
-            redirect(reverse('blogango_admin_entry_edit', args={'entry_id': entry_id})+"?done")
+            entry_form.save()
+            if entry.is_published:
+                return redirect(entry)
+            return redirect(reverse('blogango_admin_entry_edit', args=[entry_id])+'?done')
     if 'done' in request.GET:
         done = True
-    return render('blogango/admin/edit_entry.html', request, {'entry_form': entry_form, 
+    return render('blogango/admin/edit_entry.html', request, {'entry_form': entry_form,
                                                               'done': done,
                                                               'entry': entry})
 
