@@ -31,6 +31,9 @@ urlpatterns = patterns('blogango.views',
     url(r'^comment/(?P<comment_id>\d+)/$', 'comment_details', name='blogango_comment_details'),
     url(r'^author/(?P<username>[\w.@+-]+)/$', 'author', name='blogango_author'),
     
+    url(r'^admin/$', 'admin_dashboard', name='blogango_admin_dashboard'),
+    url(r'^admin/entry/new/$', 'admin_entry_edit', name='blogango_admin_entry_new'),
+    url(r'^admin/entry/edit/(?P<entry_id>\d+)/$', 'admin_entry_edit', name='blogango_admin_entry_edit'),
 )
 
 #search view

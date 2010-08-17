@@ -1,0 +1,67 @@
+{% extends "blogango/admin/base.html" %}
+{% block title %}
+    {% if entry %}
+        Editing entry:: {{ entry_form.initial.title }}
+    {% else %}
+        New Entry
+    {% endif %}
+    &#8203;{{ title_suffix }}
+{% endblock %}
+{% block contents %}
+    {% if not done %}
+        <div align="center">
+            <span class="bundlemarker">Blog entry saved successfully</span>
+        </div>
+    {% endif %}
+    {% if entry %}
+        <h1>
+            {{ entry.title }} &mdash; &#8203; Edit Entry
+            <a href="{{ entry.get_absolute_url }}" class="preview">{{ _("View Entry") }}</a>
+        </h1>
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+		<div class="formbox formbox-title">
+		      <h3><label for="id_title">Title</label></h3>
+		      {{ entry_form.title }}
+		</div>
+		<div class="formbox">
+		      <h3><label for="id_text">Text</label></h3>
+		      {{ entry_form.text }}
+		</div>
+		<div class="formbox">
+		      <h3><label for="id_text_markup_type">Markup Type</label></h3>
+		      {{ entry_form.text_markup_type }}
+		</div>	
+		<div class="formbox toggleable collapsed">
+		      <h3><label for="id_created_by">Author</label></h3>
+		      {{ entry_form.created_by }}
+		</div>	
+		<div class="formbox toggleable collapsed">
+		      <h3><label for="id_slug">Slug</label></h3>
+		      {{ entry_form.slug }}
+		</div>
+		<div class="formbox toggleable collapsed">
+		      <h3><label for="id_tags">Tags</label></h3>
+		      {{ entry_form.tags }}
+		</div>
+		<div class="formbox">
+		      <h3><label for="id_is_page">This is a Page</label></h3>
+		      {{ entry_form.is_page }}
+		</div>
+		<div class="formbox">
+		      <h3><label for="id_comments_allowed">Allow Comments?</label></h3>
+		      {{ entry_form.comments_allowed }}
+		</div>
+		<div class="formbox">
+		      <h3><label for="id_is_published">Publish?</label></h3>
+		      {{ entry_form.is_published }}
+		</div>	
+		<div class="secondary">
+		  <div class="actions">
+		    <input type="submit" value="Save" name="save">
+		    <input type="reset" value="Cancel" name="cancel">
+		  </div>
+		</div>
+	</form>
+{% endblock %}

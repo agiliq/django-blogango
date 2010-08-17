@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 
 from taggit.models import Tag
 from blogango.views import _get_archive_months
+from blogango.models import Blog
 
 register = template.Library()
 
@@ -14,13 +15,18 @@ class BlogangoContext(template.Node):
         pass
     
     def render(self, context):
+        #only one blog must be present
+        blog = Blog.objects.get(pk=1)
         tags = Tag.objects.all()
         feed_url = getattr(settings, 'FEED_URL', reverse('blogango_feed', args=['latest'])) 
         archive_months = _get_archive_months()
                 
-        extra_context = {'tags': tags, 
-                'feed_url': feed_url,
-                'archive_months': archive_months}
+        extra_context = {
+                         'tags': tags, 
+                         'feed_url': feed_url,
+                         'archive_months': archive_months,
+                         'blog': blog,
+                         }
         context.update(extra_context)
         return ''
     

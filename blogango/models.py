@@ -71,13 +71,13 @@ class BlogEntry(models.Model):
     def __unicode__(self):
         return self.title
 
-    def save(self):
+    def save(self, *args, **kwargs):
         if self.title == None  or self.title == '':
-            self.title = _infer_title_or_slug(self.text)
+            self.title = _infer_title_or_slug(self.text.rendered)
         if self.slug == None or self.slug == '':
-            self.slug = _infer_title_or_slug(self.text)
+            self.slug = _infer_title_or_slug(self.text.rendered)
         if not self.summary: 
-            self.summary = _generate_summary(self.text)
+            self.summary = _generate_summary(self.text.rendered)
         if not self.meta_keywords:
             self.meta_keywords = self.summary
         if not self.meta_description:
@@ -93,7 +93,7 @@ class BlogEntry(models.Model):
     
     @permalink 
     def get_edit_url(self):
-        return ('blogango.views.edit_entry', [self.id])
+        return ('blogango.views.admin_entry_edit', [self.id])
      
     def get_num_comments(self):
         cmnt_count = Comment.objects.filter(comment_for=self, is_spam=False).count()

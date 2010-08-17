@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -9,11 +9,34 @@ from django.core.urlresolvers import reverse
 from django.views.generic.date_based import archive_month
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.admin.views.decorators import staff_member_required 
 
 from blogango.models import Blog, BlogEntry, Comment, BlogRoll, Reaction
 from blogango import forms as bforms
 
 from blogango.conf.settings import AKISMET_COMMENT, AKISMET_API_KEY
+
+@staff_member_required
+def admin_dashboard(request):
+    return render('blogango/admin/index.html', request, {})
+
+@staff_member_required
+def admin_entry_edit(request, entry_id=None):
+    done = False
+    entry_form = bforms.EntryForm(initial={'created_by': request.user.id})
+    if entry_id:
+        entry = get_object_or_404(BlogEntry, pk=entry_id)
+        entry_form = bforms.EntryForm(instance=entry)
+    if request.POST:
+        entry_form = bforms.EntryForm(request.POST, instance=entry)
+        if entry_form.is_valid():
+            entry_form.save()            
+            redirect(reverse('blogango_admin_entry_edit', args={'entry_id': entry_id})+"?done")
+    if 'done' in request.GET:
+        done = True
+    return render('blogango/admin/edit_entry.html', request, {'entry_form': entry_form, 
+                                                              'done': done,
+                                                              'entry': entry})
 
 def welcome(request):
     return render_to_response('mainpage.html', {})

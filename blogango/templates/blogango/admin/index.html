@@ -1,0 +1,26 @@
+{% extends "blogango/admin/base.html" %}
+{% load i18n %}
+{% block title %}{{ _("Dashboard") }}{% endblock %}
+{% block contents %}
+  <div class="dashboard">
+    <h1>{{ _("Dashboard") }}</h1>
+    <div class="panel">
+      <div class="text">
+        <p>{{ request.user.username }}
+          Howdy.  Welcome to the Zine administration interface, {{ request.user.username }}.
+          You have written <strong>{{ your_posts }}</strong> post so far.
+      </div>
+      <h2>{{ _('Quickstart') }}</h2>
+      <ul>
+        <li><a href="{% url blogango_admin_entry_new %}">{{ _("New Entry") }}</a>
+        <li><a href="{# url_for('admin/manage_comments')|e #}">{{ _("Moderate Comments") }}</a>
+        <li><a href="{# url_for('admin/manage_entries')|e #}">{{ _("Manage Entries") }}</a>
+        <li><a href="{# url_for('admin/options')|e #}">{{ _("Configure Zine") }}</a>
+        <li><a href="{# url_for('admin/plugins')|e #}">{{ _("Manage Plugins") }}</a>
+        <li><a href="{# url_for('admin/manage_users')|e #}">{{ _("Manage Users") }}</a>
+        <li><a href="{# url_for('admin/help')|e #}">{{ _("Get Help") }}</a>
+      </ul>
+    </div>
+    <div class="clear"></div>
+  </div>
+{% endblock %}
