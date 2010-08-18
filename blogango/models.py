@@ -31,6 +31,9 @@ class Blog(models.Model):
         super(Blog, self).save() # Call the "real" save() method.
 
         
+class BlogPublishedManager(models.Manager):
+    def get_query_set(self):
+        return super(BlogPublishedManager, self).get_query_set().filter(is_published=True)
 
 class BlogEntry(models.Model):
     """Each blog entry.
@@ -63,6 +66,9 @@ class BlogEntry(models.Model):
     meta_description = models.TextField(blank=True, null=True)
 
     tags = TaggableManager()
+    
+    default = models.Manager()
+    objects = BlogPublishedManager()
     
     class Meta:
         ordering = ['-created_on']

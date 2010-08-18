@@ -40,7 +40,7 @@ def admin_entry_edit(request, entry_id=None):
 
 @staff_member_required
 def admin_manage_entries(request):
-    entries = BlogEntry.objects.all()
+    entries = BlogEntry.default.all()
     return render('blogango/admin/manage_entries.html', request, {'entries': entries})
 
 def welcome(request):
@@ -94,13 +94,16 @@ def details(request, year, month, slug):
     if not _is_blog_installed():
         return HttpResponseRedirect(reverse('blogango_install'))
     
-    entry = BlogEntry.objects.get(created_on__year=year, 
+    entry = BlogEntry.default.get(created_on__year=year, 
                                   created_on__month=month, 
-                                  slug=slug,
-                                  is_published=True)
+                                  slug=slug)
 
+    # publsihed check needs to be handled here to allow previews
     if not entry.is_published:
-        raise Http404
+        if request.user.id == entry.created_by.id and 'preview' in request.GET:
+            pass
+        else:
+            raise Http404
 
     if request.method == 'POST':
         comment_f = bforms.CommentForm(request.POST)
