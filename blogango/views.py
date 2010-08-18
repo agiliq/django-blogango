@@ -55,6 +55,18 @@ def admin_manage_comments(request):
     comments = Comment.default.all()
     return render('blogango/admin/manage_comments.html', request, {'comments': comments})
 
+@staff_member_required
+def admin_edit_preferences(request):
+    #only one blog must be present
+    blog = Blog.objects.get(pk=1)
+    form = bforms.PreferencesForm(instance=blog)
+    if request.POST:
+        form = bforms.PreferencesForm(request.POST, instance=blog)
+        if form.is_valid():
+            form.save()
+            return redirect(request.path+"?done")
+    return render('blogango/admin/edit_preferences.html', request, {'form': form})
+
 def welcome(request):
     return render_to_response('mainpage.html', {})
 

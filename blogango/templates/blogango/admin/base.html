@@ -48,8 +48,9 @@
       <li {% if request.path == manage_comments_url %}class="active"{% endif %}>
           <a href="{{ manage_comments_url }}">{{ _("Comments") }}</a>
       </li>
-      <li>
-          <a href="{{ options_url }}">{{ _("Options") }}</a>
+      {% url blogango_admin_edit_preferences as edit_preferences_url %}
+      <li {% if request.path == edit_preferences_url %}class="active"{% endif %}>
+          <a href="{{ edit_preferences_url }}">{{ _("Options") }}</a>
       </li>
     </ul>
     <div class="contents">

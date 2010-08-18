@@ -13,12 +13,9 @@
       <h2>{{ _('Quickstart') }}</h2>
       <ul>
         <li><a href="{% url blogango_admin_entry_new %}">{{ _("New Entry") }}</a>
-        <li><a href="{# url_for('admin/manage_comments')|e #}">{{ _("Moderate Comments") }}</a>
+        <li><a href="{% url blogango_admin_comments_manage %}">{{ _("Moderate Comments") }}</a>
         <li><a href="{% url blogango_admin_entry_manage %}">{{ _("Manage Entries") }}</a>
-        <li><a href="{# url_for('admin/options')|e #}">{{ _("Configure Zine") }}</a>
-        <li><a href="{# url_for('admin/plugins')|e #}">{{ _("Manage Plugins") }}</a>
-        <li><a href="{# url_for('admin/manage_users')|e #}">{{ _("Manage Users") }}</a>
-        <li><a href="{# url_for('admin/help')|e #}">{{ _("Get Help") }}</a>
+        <li><a href="{% url blogango_admin_edit_preferences %}">{{ _("Configure blogango") }}</a>
       </ul>
     </div>
     <div class="clear"></div>

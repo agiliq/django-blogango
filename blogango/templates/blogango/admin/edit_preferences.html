@@ -1,0 +1,60 @@
+{% extends "blogango/admin/base.html" %}
+{% block title %}{{ _("Basic Options") }}{% endblock %}
+{% block contents %}
+  <h1>{{ _("Basic Options") }}</h1>
+  <p>
+    From here you can configure the basic blog settings like the blog
+    title and tagline.
+  </p>
+  <div class="notification-messages">      
+    {% if 'done' in request.GET %}
+        <div class="message message-info">Preferences saved successfully</div>
+    {% endif %}
+  </div>  
+	{% if form.errors %}
+	    Please correct the following errors:
+	    <ul class="errors">
+	        {% for field, error in form.errors.iteritems %}
+	            <li>{{ field }} {{ error.as_text }}</li>
+	        {% endfor %}
+	    </ul>
+	{% endif %}
+  <form method="POST">
+    {% csrf_token %}
+      <dl>
+	    <dt>
+	      <label for="id_title">Blog title</label>
+	    </dt>
+	    <dd>
+	      {{ form.title }}
+	    </dd>
+	    <dt>
+	      <label for="id_tag_line">Blog tagline</label>
+	    </dt>
+	    <dd>
+	      {{ form.tag_line }}
+	    </dd>
+	    <dt>
+	      <label for="id_entries_per_page">Entries per page</label>
+	    </dt>
+	    <dd>
+	      {{ form.entries_per_page }}
+	    </dd>
+	    <dt>
+	      <label for="id_recents">Number of recent entries</label>
+	    </dt>
+	    <dd>
+	      {{ form.recents }}
+	    </dd>
+	    <dt>
+	      <label for="id_recent_comments">Number of recent comments</label>
+	    </dt>
+	    <dd>
+	      {{ form.recent_comments }}
+	    </dd>
+	  </dl>
+	    <div class="actions">
+	      <input type="submit" value="{{ _('Save') }}">
+	    </div>
+  </form>
+{% endblock %}

@@ -36,6 +36,7 @@ urlpatterns = patterns('blogango.views',
     url(r'^admin/entry/edit/(?P<entry_id>\d+)/$', 'admin_entry_edit', name='blogango_admin_entry_edit'),
     url(r'^admin/entry/manage/$', 'admin_manage_entries', name='blogango_admin_entry_manage'),
     url(r'^admin/comments/manage/$', 'admin_manage_comments', name='blogango_admin_comments_manage'),
+    url(r'^admin/preferences/edit/$', 'admin_edit_preferences', name='blogango_admin_edit_preferences'),
 )
 
 #search view

@@ -44,7 +44,7 @@ class PreferencesForm(forms.ModelForm):
     
     class Meta:
         model = Blog
-        exclude = ('title', 'tag_line')
+        #exclude = ('title', 'tag_line')
         
 class BlogForm(forms.ModelForm):
     
