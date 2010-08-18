@@ -23,6 +23,7 @@ class EntryForm(forms.ModelForm):
     
     class Meta:
         model = BlogEntry
+        exclude = ('slug', 'summary')
 
 class CommentForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea(attrs={'class': 'textarea'}), label='Comment')

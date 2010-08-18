@@ -73,11 +73,11 @@ class BlogEntry(models.Model):
 
     def save(self, *args, **kwargs):
         if self.title == None  or self.title == '':
-            self.title = _infer_title_or_slug(self.text.rendered)
+            self.title = _infer_title_or_slug(self.text.raw)
         if self.slug == None or self.slug == '':
-            self.slug = _infer_title_or_slug(self.text.rendered)
+            self.slug = _infer_title_or_slug(self.text.raw)
         if not self.summary: 
-            self.summary = _generate_summary(self.text.rendered)
+            self.summary = _generate_summary(self.text.raw)
         if not self.meta_keywords:
             self.meta_keywords = self.summary
         if not self.meta_description:

@@ -9,7 +9,7 @@
 {% endblock %}
 {% block contents %}
       <div class="notification-messages">      
-	    {% if done %}
+	    {% if 'done' in request.GET %}
 	        <div class="message message-info">Blog entry saved successfully</div>
 	    {% endif %}
       </div>
@@ -43,21 +43,21 @@
 		      <h3><label for="id_text_markup_type">Markup Parser</label></h3>
 		      {{ entry_form.text_markup_type }}
 		</div>
-		<div class="formbox">
-		      <h3><label for="id_summary">Summary</label></h3>
-		      {{ entry_form.summary }}
-		</div>
 		<div class="formbox toggleable collapsed">
 		      <h3><label for="id_created_by">Author</label></h3>
 		      {{ entry_form.created_by }}
 		</div>	
 		<div class="formbox toggleable collapsed">
-		      <h3><label for="id_slug">Slug</label></h3>
-		      {{ entry_form.slug }}
-		</div>
-		<div class="formbox toggleable collapsed">
 		      <h3><label for="id_tags">Tags</label></h3>
 		      {{ entry_form.tags }}
+		</div>
+		<div class="formbox toggleable collapsed">
+		      <h3><label for="id_meta_keywords">Keywords</label></h3>
+		      {{ entry_form.meta_keywords }}
+		</div>
+		<div class="formbox toggleable collapsed">
+		      <h3><label for="id_meta_description">Description</label></h3>
+		      {{ entry_form.meta_description }}
 		</div>
 		<div class="formbox">
 		      <h3><label for="id_is_page">This is a Page</label></h3>

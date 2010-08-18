@@ -11,7 +11,7 @@ from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.admin.views.decorators import staff_member_required 
 
-from blogango.models import Blog, BlogEntry, Comment, BlogRoll, Reaction, _generate_summary
+from blogango.models import Blog, BlogEntry, Comment, BlogRoll, Reaction, _infer_title_or_slug, _generate_summary
 from blogango import forms as bforms
 
 from blogango.conf.settings import AKISMET_COMMENT, AKISMET_API_KEY
@@ -22,25 +22,20 @@ def admin_dashboard(request):
 
 @staff_member_required
 def admin_entry_edit(request, entry_id=None):
-    done = False
     entry = None
     entry_form = bforms.EntryForm(initial={'created_by': request.user.id})
     if entry_id:
         entry = get_object_or_404(BlogEntry, pk=entry_id)
-        entry_form = bforms.EntryForm(instance=entry)
+        entry_form = bforms.EntryForm(instance=entry, initial={'text': entry.text.raw})
     if request.POST:
         entry_form = bforms.EntryForm(request.POST, instance=entry)
-#        import ipdb
-#        ipdb.set_trace()
+
         if entry_form.is_valid():
-            entry_form.save()
-            if entry.is_published:
-                return redirect(entry)
-            return redirect(reverse('blogango_admin_entry_edit', args=[entry_id])+'?done')
-    if 'done' in request.GET:
-        done = True
+            new_entry = entry_form.save()
+            if new_entry.is_published:
+                return redirect(new_entry)
+            return redirect(reverse('blogango_admin_entry_edit', args=[new_entry.id])+'?done')
     return render('blogango/admin/edit_entry.html', request, {'entry_form': entry_form,
-                                                              'done': done,
                                                               'entry': entry})
 
 @staff_member_required
