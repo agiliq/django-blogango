@@ -1,0 +1,37 @@
+{% extends "blogango/admin/base.html" %}
+{% block title %}{{ _("Manage Entries") }}{% endblock %}
+{% block contents %}
+  <h1>{{ _("Manage Entries") }}</h1>
+	<table class="postlist">
+	    <tbody>
+		    <tr>
+		      <th class="title">Title</th>
+		      <th class="author">Author</th>
+		      <th class="categories">Categories</th>
+		      <th class="comments">Comments</th>
+		      <th class="date">Date</th>
+		    </tr>
+		    {% for entry in entries %}
+		    <tr class="odd draft">
+		      <td class="title"><a href="{{ entry.get_edit_url }}">{{ entry.title }}</a>
+				<span class="meta">[<a href="{{ entry.get_edit_url }}">edit</a>]</span>
+		        <span class="meta">[<a href="{{ entry.get_absolute_url }}">show</a>]</span>
+		      </td>
+		      <td class="author"><a href="{{ entry.created_by.get_absolute_url }}">{{ entry.created_by }}</a></td>
+		      <td class="categories">
+		      {% for tag in entry.tags.all %}
+		          <a href="{% url blogango_tag_details tag.slug %}">{{ tag.name }}</a>
+		      {% endfor %}
+		      </td>
+		      <td class="comments"><a href="{{ entry.get_absolute_url }}#comments">{{ entry.get_num_comments }}</a></td>
+		      <td class="date">{{ entry.created_on }}</td>
+		    </tr>
+		    {% endfor %}
+        </tbody>
+    </table>
+  <form action="{% url blogango_admin_entry_new %}" method="get">
+    <div class="actions">
+      <input type="submit" value="{{ _('New Entry') }}">
+    </div>
+  </form>
+{% endblock %}
