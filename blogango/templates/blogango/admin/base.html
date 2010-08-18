@@ -31,6 +31,26 @@
     </div>
   </div>
   <div class="body">
+    <ul class="navbar standalonebar">
+      {% url blogango_admin_dashboard as dashboard_url %}
+      <li {% if request.path == dashboard_url %}class="active"{% endif %}>
+          <a href="{{ dashboard_url }}">{{ _("Dashboard") }}</a>
+      </li>
+      {% url blogango_admin_entry_new as write_url %}
+      <li {% if request.path == write_url %}class="active"{% endif %}>
+          <a href="{{ write_url }}">{{ _("Write") }}</a>
+      </li>
+      {% url blogango_admin_entry_manage as manage_url %}
+      <li {% if request.path == manage_url %}class="active"{% endif %}>
+          <a href="{{ manage_url }}">{{ _("Manage") }}</a>
+      </li>
+      <li>
+          <a href="{{ comment_url }}">{{ _("Comments") }}</a>
+      </li>
+      <li>
+          <a href="{{ options_url }}">{{ _("Options") }}</a>
+      </li>
+    </ul>
     <div class="contents">
       {% block contents %}{% endblock %}
     </div>
