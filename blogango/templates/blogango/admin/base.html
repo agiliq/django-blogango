@@ -22,10 +22,12 @@
   <div class="header">
     <div class="title">{{ blog.title }} Administration</div>
     <div class="metanav">
-      <a href="{# url_for('blog/index')|e #}">{{ _("View Blog") }}</a> |
-      <a href="{# url_for('account/index')|e #}">{{ _("My Account") }}</a> |
-      <a href="{# url_for('account/logout') #}">{{ _("Logout") }}</a> |
+      <a href="{% url blogango_index %}">{{ _("View Blog") }}</a> |
+      <a href="{% url admin:logout %}">{{ _("Logout") }}</a>
+	  {% comment %}
+	  <a href="{# url_for('account/index')|e #}">{{ _("My Account") }}</a> |
       <a href="{# url_for('admin/help') #}">?</a>
+      {% endcomment %}
     </div>
   </div>
   <div class="body">
