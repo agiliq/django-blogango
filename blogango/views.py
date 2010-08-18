@@ -11,9 +11,10 @@ from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.admin.views.decorators import staff_member_required 
 
+from taggit.models import Tag
+
 from blogango.models import Blog, BlogEntry, Comment, BlogRoll, Reaction, _infer_title_or_slug, _generate_summary
 from blogango import forms as bforms
-
 from blogango.conf.settings import AKISMET_COMMENT, AKISMET_API_KEY
 
 @staff_member_required
@@ -32,6 +33,11 @@ def admin_entry_edit(request, entry_id=None):
 
         if entry_form.is_valid():
             new_entry = entry_form.save()
+            tag_list = entry_form.cleaned_data['tags']
+            for tag in tag_list:
+                tag_, created = Tag.objects.get_or_create(name=tag.strip())
+                tag_.save()
+                new_entry.tags.add(tag_)
             if new_entry.is_published:
                 return redirect(new_entry)
             return redirect(reverse('blogango_admin_entry_edit', args=[new_entry.id])+'?done')
