@@ -110,6 +110,10 @@ class BlogEntry(models.Model):
         reaction_count = Reaction.objects.filter(comment_for=self).count()
         return reaction_count
 
+class CommentManager(models.Manager):
+    def get_query_set(self):
+        return super(CommentManager, self).get_query_set().filter(is_public=True)
+
 class BaseComment(models.Model):
     text = models.TextField()
     comment_for = models.ForeignKey(BlogEntry)
@@ -122,10 +126,6 @@ class BaseComment(models.Model):
 
     def __unicode__(self):
         return self.text
-    
-class CommentManager(models.Manager):
-    def get_query_set(self):
-        return super(CommentManager, self).get_query_set().filter(is_public=True)
 
 class Comment(BaseComment):
     """Comments for each blog.

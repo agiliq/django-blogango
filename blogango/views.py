@@ -49,6 +49,12 @@ def admin_manage_entries(request):
     entries = BlogEntry.default.all()
     return render('blogango/admin/manage_entries.html', request, {'entries': entries})
 
+@staff_member_required
+def admin_manage_comments(request):
+    # fetch all comments, objects gets you only public ones
+    comments = Comment.default.all()
+    return render('blogango/admin/manage_comments.html', request, {'comments': comments})
+
 def welcome(request):
     return render_to_response('mainpage.html', {})
 
