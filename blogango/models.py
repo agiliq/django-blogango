@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import permalink
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.contrib.comments.moderation import CommentModerator, moderator
 
 from taggit.managers import TaggableManager
 from markupfield.fields import MarkupField
@@ -121,6 +122,10 @@ class BaseComment(models.Model):
 
     def __unicode__(self):
         return self.text
+    
+class CommentManager(models.Manager):
+    def get_query_set(self):
+        return super(CommentManager, self).get_query_set().filter(is_public=True)
 
 class Comment(BaseComment):
     """Comments for each blog.
@@ -130,12 +135,18 @@ class Comment(BaseComment):
     created_by: THe user who wrote this comment.
     user_name = If created_by is null, this comment was by anonymous user. Name in that case.
     email_id: Email-id, as in user_name.
-    is_spam: Is comment marked as spam? We do not display the comment in those cases."""
+    is_spam: Is comment marked as spam? We do not display the comment in those cases.
+    is_public: null for comments waiting to be approved, True if approved, False if rejected
+    """
 
     created_by = models.ForeignKey(User, unique=False, blank=True, null=True)
     user_url = models.CharField(max_length=100)
     email_id = models.EmailField()
     is_spam = models.BooleanField(default=False)
+    is_public = models.NullBooleanField(null=True, blank=True)
+
+    default = models.Manager()
+    objects = CommentManager()
 
     @permalink
     def get_absolute_url (self):
@@ -161,6 +172,9 @@ class BlogRoll(models.Model):
     def get_absolute_url(self):
         return self.url
 
+class CommentModerator(CommentModerator):
+    email_notification = True
+    enable_field = 'is_public'
         
 #Helper methods
 def _infer_title_or_slug(text):
@@ -169,3 +183,4 @@ def _infer_title_or_slug(text):
 def _generate_summary(text):
      return ' '.join(text.split()[:100])
 
+moderator.register(Comment, CommentModerator)
