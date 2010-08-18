@@ -22,7 +22,11 @@
 				    {% endif %}
 		          </a>
 				<span class="meta">[<a href="{{ entry.get_edit_url }}">edit</a>]</span>
+				{% if entry.is_published %}
 		        <span class="meta">[<a href="{{ entry.get_absolute_url }}">show</a>]</span>
+		        {% else %}
+		        <span class="meta">[<a href="{{ entry.get_absolute_url }}?preview">preview</a>]</span>
+		        {% endif %}
 		      </td>
 		      <td class="author"><a href="{{ entry.created_by.get_absolute_url }}">{{ entry.created_by }}</a></td>
 		      <td class="categories">
