@@ -69,13 +69,10 @@
 		      <h3><label for="id_comments_allowed">Allow Comments?</label></h3>
 		      {{ entry_form.comments_allowed }}
 		</div>
-		<div class="formbox">
-		      <h3><label for="id_is_published">Publish?</label></h3>
-		      {{ entry_form.is_published }}
-		</div>	
 		<div class="secondary">
 		  <div class="actions">
 		    <input type="submit" value="Save" name="save">
+		    <input type="submit" value="Save and Publish" name="publish">
 		    <input type="reset" value="Cancel" name="cancel">
 		  </div>
 		</div>

@@ -32,7 +32,10 @@ def admin_entry_edit(request, entry_id=None):
         entry_form = bforms.EntryForm(request.POST, instance=entry)
 
         if entry_form.is_valid():
-            new_entry = entry_form.save()
+            new_entry = entry_form.save(commit=False)
+            if "publish" in request.POST:
+                new_entry.is_published = True
+            new_entry.save()
             tag_list = entry_form.cleaned_data['tags']
             for tag in tag_list:
                 tag_, created = Tag.objects.get_or_create(name=tag.strip())
@@ -342,8 +345,9 @@ def manage(request):
 
 def author(request, username):
     author = get_object_or_404(User, username=username)
-    return render('blogango/author.html', request, {'author': author})
-    
+    author_posts = author.blogentry_set.filter(is_published=True)
+    return render('blogango/author.html', request, {'author': author, 
+                                                    'author_posts': author_posts})
     
 def monthly_view(request, year, month):
     # print year, month

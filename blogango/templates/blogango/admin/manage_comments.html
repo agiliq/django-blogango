@@ -3,29 +3,33 @@
 {% block contents %}
   <h1>{{ _("Manage Comments") }}</h1>
     <ul class="comments">
-    {% for comment in comments %}
-      <li class="comment {% cycle 'odd' 'even' %}{% if comment.is_public == False %} 'blocked'{% endif %}">
-          <p class="meta"><strong>{{ comment.created_by }}</strong> |
-	          <a href="mailto:{{ comment.email_id }}">{{ comment.email_id }}</a>
-	          <a href="{{ comment.user_url }}">{{ comment.user_url }}</a> |
-          </p>
-          <div class="body">{{ comment.text }}</div>
-          <p>{{ comment.created_on }}
-          [ <a href="{{ edit_comment_url }}">{{ _("Edit") }}</a> |
-            <a href="{{ delete_comment_url }}">{{ _("Delete") }}</a> |
-          {% if comment.is_spam %}
-            <a href="{{ mark_not_spam_url }}">{{ _("Mark as Not Spam") }}</a>
-          {% else %} 
-            {% if not comment.is_public %}
-              <a href="{{ approve_comment_url }}">{{ _("Approve") }}</a> |
-            {% endif %}
-          {% endif %}
-          {% if comment.is_public %}
-            <a href="{{ block_comment_url }}">{{ _("Block") }}</a> |
-          {% endif %}
-          ]
-          </p>
-      </li>
-    {% endfor %}
+    {% if comments %}
+	    {% for comment in comments %}
+	      <li class="comment {% cycle 'odd' 'even' %}{% if comment.is_public == False %} 'blocked'{% endif %}">
+	          <p class="meta"><strong>{{ comment.created_by }}</strong> |
+		          <a href="mailto:{{ comment.email_id }}">{{ comment.email_id }}</a>
+		          <a href="{{ comment.user_url }}">{{ comment.user_url }}</a> |
+	          </p>
+	          <div class="body">{{ comment.text }}</div>
+	          <p>{{ comment.created_on }}
+	          [ <a href="{{ edit_comment_url }}">{{ _("Edit") }}</a> |
+	            <a href="{{ delete_comment_url }}">{{ _("Delete") }}</a> |
+	          {% if comment.is_spam %}
+	            <a href="{{ mark_not_spam_url }}">{{ _("Mark as Not Spam") }}</a>
+	          {% else %} 
+	            {% if not comment.is_public %}
+	              <a href="{{ approve_comment_url }}">{{ _("Approve") }}</a> |
+	            {% endif %}
+	          {% endif %}
+	          {% if comment.is_public %}
+	            <a href="{{ block_comment_url }}">{{ _("Block") }}</a> |
+	          {% endif %}
+	          ]
+	          </p>
+	      </li>
+	    {% endfor %}
+    {% else %}
+    	{{ _("No comments") }}
+    {% endif %}
     </ul>
 {% endblock %}

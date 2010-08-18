@@ -10,7 +10,7 @@
     <div class="postdetails postlist">
         <h2> Posts by this author</h2> 
         <ul> 
-            {% for post in author.blogentry_set.all %}
+            {% for post in author_posts %}
                 <li><a href="{{ post.get_absolute_url }}">{{ post.title }} ({{ post.created_on|date:'n/j/Y' }})</a></li>
             {% endfor %}  
         </ul> 

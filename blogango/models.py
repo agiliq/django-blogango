@@ -33,6 +33,8 @@ class Blog(models.Model):
 
         
 class BlogPublishedManager(models.Manager):
+    use_for_related_fields = True
+    
     def get_query_set(self):
         return super(BlogPublishedManager, self).get_query_set().filter(is_published=True)
 
