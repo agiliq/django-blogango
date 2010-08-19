@@ -4,21 +4,7 @@
 
 <!--BLOG POST STARTS-->
 {% for entry in entries %}
-    <div class="leftblock"> 
-        <h1><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h1> 
-        {% include 'blogango/entry_controls.html' %}
-        
-        <div class="postcontent"> 
-            <p>{{ entry.text|truncatewords_html:50|safe }}</p> 
-        </div> 
-        <div class="moreinfo">
-            <a href="{{ entry.get_absolute_url }}">read more</a>
-            |
-            <a href="{{ entry.get_absolute_url }}#comments">
-                {{ entry.get_num_comments }} Comments and {{ entry.get_num_reactions }} Reactions
-            </a>
-        </div> 
-    </div>
+    {% include 'blogango/entry_snippets.html' %}
 {% empty %}
     <div class="leftblock"> 
         <h1>No posts in blog</h1> 

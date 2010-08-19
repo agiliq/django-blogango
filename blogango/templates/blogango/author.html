@@ -5,16 +5,17 @@
 {% endblock %}
 
 {% block content %}
-<div class="leftblock"> 
-    <h1>{{ author }}</h1>
-    <div class="postdetails postlist">
-        <h2> Posts by this author</h2> 
-        <ul> 
-            {% for post in author_posts %}
-                <li><a href="{{ post.get_absolute_url }}">{{ post.title }} ({{ post.created_on|date:'n/j/Y' }})</a></li>
-            {% endfor %}  
-        </ul> 
-    </div> 
-    <div class="moreinfo"> <br/> </div>
-</div> 
+	{% for entry in author_posts %}
+	    {% include 'blogango/entry_snippets.html' %}
+	{% empty %}
+	    <div class="leftblock"> 
+	        <h1>No posts by this author</h1> 
+	        <div class="postcontent">
+	            <p>
+	              <br/>
+	              {{ author }} has not published any entries yet.
+	            </p>
+	        </div>
+	    </div>
+	{% endfor %}
 {% endblock %} 

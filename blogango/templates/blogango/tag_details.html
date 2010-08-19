@@ -5,16 +5,17 @@
 {% endblock %}
 
 {% block content %}
-<div class="leftblock">
-    <h1>Posts with tag: {{ tag.name }}</h1>
-    <div class="postdetails">
-    <ul>
-    {% for entry in entries %}
-	    <li>
-	        <a href="{{entry.get_absolute_url}}">{{entry.title}}</a> <br />
-	    </li>
+	{% for entry in entries %}
+	    {% include 'blogango/entry_snippets.html' %}
+	{% empty %}
+	    <div class="leftblock"> 
+	        <h1>No entries with this tag</h1> 
+	        <div class="postcontent">
+	            <p>
+	              <br/>
+	              No entries tagged {{ tag.name }}
+	            </p>
+	        </div>
+	    </div>
 	{% endfor %}
-    </ul>
-    </div>
-</div>
 {% endblock %}
