@@ -12,8 +12,7 @@
 	          </p>
 	          <div class="body">{{ comment.text }}</div>
 	          <p>{{ comment.created_on }}
-	          [ <a href="{{ edit_comment_url }}">{{ _("Edit") }}</a> |
-	            <a href="{{ delete_comment_url }}">{{ _("Delete") }}</a> |
+	          [
 	          {% if comment.is_spam %}
 	            <a href="{{ mark_not_spam_url }}">{{ _("Mark as Not Spam") }}</a>
 	          {% else %} 
