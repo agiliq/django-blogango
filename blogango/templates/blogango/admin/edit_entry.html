@@ -71,7 +71,7 @@
 		</div>
 		<div class="secondary">
 		  <div class="actions">
-		    <input type="submit" value="Save" name="save">
+		    <input type="submit" value="{% if entry.is_published %}Unpublish{% else %}Save{% endif %}" name="save">
 		    <input type="submit" value="Save and Publish" name="publish">
 		    <input type="reset" value="Cancel" name="cancel">
 		  </div>
