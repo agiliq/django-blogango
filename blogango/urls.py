@@ -37,6 +37,8 @@ urlpatterns = patterns('blogango.views',
     url(r'^admin/entry/manage/$', 'admin_manage_entries', name='blogango_admin_entry_manage'),
     url(r'^admin/comments/manage/$', 'admin_manage_comments', name='blogango_admin_comments_manage'),
     url(r'^admin/preferences/edit/$', 'admin_edit_preferences', name='blogango_admin_edit_preferences'),
+    url(r'^admin/comment/approve/(?P<comment_id>\d+)/$', 'admin_comment_approve', name='blogango_admin_comment_approve'),
+    url(r'^admin/comment/block/(?P<comment_id>\d+)/$', 'admin_comment_block', name='blogango_admin_comment_block'),
 )
 
 #search view

@@ -18,12 +18,13 @@
 	            <a href="{{ mark_not_spam_url }}">{{ _("Mark as Not Spam") }}</a>
 	          {% else %} 
 	            {% if not comment.is_public %}
-	              <a href="{{ approve_comment_url }}">{{ _("Approve") }}</a> |
+	              <a href="{% url blogango_admin_comment_approve comment.id %}">{{ _("Approve") }}</a> |
 	            {% endif %}
 	          {% endif %}
 	          {% if comment.is_public %}
-	            <a href="{{ block_comment_url }}">{{ _("Block") }}</a> |
+	            <a href="{% url blogango_admin_comment_block comment.id %}">{{ _("Block") }}</a> |
 	          {% endif %}
+	            <a href="{{ comment.comment_for.get_edit_url }}">{{ comment.comment_for.title }}</a>
 	          ]
 	          </p>
 	      </li>
