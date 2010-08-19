@@ -1,4 +1,4 @@
-
+from django.contrib.auth.models import User
 from django import forms
 
 from blogango.models import Blog, BlogRoll, BlogEntry
@@ -18,6 +18,10 @@ class WideTextArea(forms.Textarea):
 #    is_rte = forms.BooleanField(initial=True, label='Use Rick Text?', required=False)
 
 class EntryForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EntryForm, self).__init__(*args, **kwargs)
+        self.fields['created_by'].queryset = User.objects.filter(is_staff=True)
+    
     title = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'size':'40'}))
     text = forms.CharField(widget=WideTextArea(attrs={'class': 'resizable'}))
     
