@@ -18,6 +18,31 @@
         <li><a href="{% url blogango_admin_edit_preferences %}">{{ _("Configure blogango") }}</a>
       </ul>
     </div>
+    <div class="links">
+      {% if recent_drafts %}
+      <h2>{{ _("Drafts") }}</h2>
+      <ul class="drafts">
+      {% for draft in recent_drafts %}
+        <li>
+            <a href="{{ draft.get_edit_url }}">{{ draft.title }}</a>
+            <span class="meta">[<a href="{{ draft.get_absolute_url }}">{{ _('show') }}</a>]</span>,
+            {{ draft.created_on }}
+        </li>
+      {% endfor %}
+      </ul>
+      {% endif %}
+      {% if recent_entries %}
+      <h2>{{ _("Recent Posts") }}</h2>
+      <ul class="last_posts">
+      {% for post in recent_entries %}
+        <li>
+            <a href="{{ post.get_edit_url }}">{{ post.title }}</a>
+            <span class="meta">[<a href="{{ post.get_absolute_url }}">{{ _('show') }}</a>]</span>,
+          {{ post.created_on }}
+      {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
     <div class="clear"></div>
   </div>
 {% endblock %}

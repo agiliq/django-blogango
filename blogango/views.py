@@ -19,7 +19,10 @@ from blogango.conf.settings import AKISMET_COMMENT, AKISMET_API_KEY
 
 @staff_member_required
 def admin_dashboard(request):
-    return render('blogango/admin/index.html', request, {})
+    recent_drafts = BlogEntry.objects.filter(is_published=False).order_by('-created_on')[:5]
+    recent_entries = BlogEntry.objects.filter(is_published=True).order_by('-created_on')[:5]
+    return render('blogango/admin/index.html', request, {'recent_drafts': recent_drafts,
+                                                         'recent_entries': recent_entries})
 
 @staff_member_required
 def admin_entry_edit(request, entry_id=None):
