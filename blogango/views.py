@@ -35,6 +35,8 @@ def admin_entry_edit(request, entry_id=None):
             new_entry = entry_form.save(commit=False)
             if "publish" in request.POST:
                 new_entry.is_published = True
+            if "page" in request.POST:
+                new_entry.is_page = True
             new_entry.save()
             tag_list = entry_form.cleaned_data['tags']
             for tag in tag_list:

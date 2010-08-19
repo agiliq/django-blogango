@@ -7,6 +7,16 @@
     {% endif %}
     &#8203;{{ title_suffix }}
 {% endblock %}
+{% block subnavbar %}
+    <ul class="ctxnavbar">
+      <li{% if 'page' not in request.GET %} class="active"{% endif %}>
+          <a href="{{ request.path }}">Entry</a>
+      </li>
+      <li{% if 'page' in request.GET %} class="active"{% endif %}>
+          <a href="{{ request.path }}?page">Page</a>
+      </li>
+    </ul>
+{% endblock %}
 {% block contents %}
       <div class="notification-messages">      
 	    {% if 'done' in request.GET %}
@@ -62,13 +72,12 @@
 		      {{ entry_form.meta_description }}
 		</div>
 		<div class="formbox">
-		      <h3><label for="id_is_page">This is a Page</label></h3>
-		      {{ entry_form.is_page }}
-		</div>
-		<div class="formbox">
 		      <h3><label for="id_comments_allowed">Allow Comments?</label></h3>
 		      {{ entry_form.comments_allowed }}
 		</div>
+		{% if 'page' in request.GET %}
+		    <input type="hidden" name="page" value="1" />
+		{% endif %}
 		<div class="secondary">
 		  <div class="actions">
 		    <input type="submit" value="{% if entry.is_published %}Unpublish{% else %}Save{% endif %}" name="save">
