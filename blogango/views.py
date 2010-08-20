@@ -161,6 +161,7 @@ def details(request, year, month, slug):
                               user_name=comment_f.cleaned_data['name'],
                               user_url=comment_f.cleaned_data['url'], 
                               email_id=comment_f.cleaned_data['email'])
+            comment.is_public = getattr(settings, 'AUTO_APPROVE_COMMENTS', True)
             if AKISMET_COMMENT:
                 comment.is_spam = check_comment_spam(request, comment)
             comment.save()
