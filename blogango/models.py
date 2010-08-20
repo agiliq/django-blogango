@@ -3,6 +3,7 @@ from django.db.models import permalink
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.contrib.comments.moderation import CommentModerator, moderator
+from django.template.defaultfilters import slugify
 
 from taggit.managers import TaggableManager
 from markupfield.fields import MarkupField
@@ -84,7 +85,7 @@ class BlogEntry(models.Model):
         if self.title == None  or self.title == '':
             self.title = _infer_title_or_slug(self.text.raw)
         if self.slug == None or self.slug == '':
-            self.slug = _infer_title_or_slug(self.title)
+            self.slug = slugify(_infer_title_or_slug(self.title))
         if not self.summary: 
             self.summary = _generate_summary(self.text.raw)
         if not self.meta_keywords:
