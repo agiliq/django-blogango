@@ -7,7 +7,7 @@
     <div class="panel">
       <div class="text">
         <p>
-          Howdy. Welcome to the Zine administration interface, {{ request.user.username }}.
+          Howdy. Welcome to the administration interface, {{ request.user.username }}.
           You have written <strong>{{ request.user.blogentry_set.count }}</strong> post{{ request.user.blogentry_set.count|pluralize }} so far.
       </div>
       <h2>{{ _('Quickstart') }}</h2>

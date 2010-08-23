@@ -60,7 +60,7 @@ def admin_manage_entries(request):
 @staff_member_required
 def admin_manage_comments(request):
     # fetch all comments, objects gets you only public ones
-    comments = Comment.default.all()
+    comments = Comment.default.filter(is_spam=False)
     return render('blogango/admin/manage_comments.html', request, {'comments': comments})
 
 @staff_member_required
