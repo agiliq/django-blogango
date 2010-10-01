@@ -29,7 +29,7 @@
 <!--COMMENT BLOCK STARTS-->
 <h1>Comments</h1>
 {% for comment in comments %}
-    <div class="comment_block">
+    <div id="comments" class="comment_block">
 	    <div class="leftpanel">
 	        <span class="commentor">
 	           {% if comment.user_url %}
@@ -56,7 +56,7 @@
 <!--REACTIONS BLOCK STARTS-->
 <h1>Reactions</h1>
 {% for reaction in reactions %}
-    <div id="comments" class="comment_block">
+    <div id="reactions" class="comment_block">
 	    <div class="leftpanel">
 	        <span class="commentor">
 				<a href="http://twitter.com/{{ reaction.user_name }}">
