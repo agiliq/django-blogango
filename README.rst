@@ -4,12 +4,15 @@ To quickly try it locally:
 --------------------------
 
 #Step1: cd to the example folder  
+
 $cd django-blogango/exmaple/  
 
 #Step2: Install the requirements in the local folder  
+
 $sudo pip install -r ../requirements.txt  
 
 #Step3: Run the server!  
+
 $python manage.py runserver  
 
 Requirements:
