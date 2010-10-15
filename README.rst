@@ -36,3 +36,23 @@ To integrate into your application:
 6. create blog at '/admin/blogango/blog/add/'
 7. check your blog at '/blog/'
 
+To see it in action.
+---------------------------
+
+http://agiliq.com/blog/
+
+Features
+-------------------------
+
+* Comment
+* Comment moderation
+* Category
+* Tagging
+* RSS
+* Akismet Spam Filtering
+* Trackback
+* Reactions via Backtype
+* Date based archives
+* Multi Author
+
+
