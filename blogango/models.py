@@ -7,6 +7,7 @@ from django.template.defaultfilters import slugify
 
 from taggit.managers import TaggableManager
 from markupfield.fields import MarkupField
+from markupfield.markup import DEFAULT_MARKUP_TYPES
 
 class Blog(models.Model):
     """Blog wide settings.
@@ -55,9 +56,10 @@ class BlogEntry(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField()
     text = MarkupField(default_markup_type=getattr(settings,
-                                                      'DEFAULT_MARKUP_TYPE',
-                                                      'markdown'),
-                          markup_choices=settings.MARKUP_RENDERERS)
+                                                   'DEFAULT_MARKUP_TYPE',
+                                                   'plain'),
+                       markup_choices=getattr(settings, "MARKUP_RENDERERS", 
+                                              DEFAULT_MARKUP_TYPES))
     summary = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, unique=False)

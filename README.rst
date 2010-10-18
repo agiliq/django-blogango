@@ -3,12 +3,17 @@ Checkout the application live in use at http://agiliq.com/blog
 To quickly try it locally:
 --------------------------
 
-#Step1: cd to the example folder
-$cd django-blogango/exmaple/
-#Step2: Install the requirements in the local folder
-$sudo pip install -r ../requirements.txt
-#Step3: Run the server!
-$python manage.py runserver
+#Step1: cd to the example folder  
+
+$cd django-blogango/exmaple/  
+
+#Step2: Install the requirements in the local folder  
+
+$sudo pip install -r ../requirements.txt  
+
+#Step3: Run the server!  
+
+$python manage.py runserver  
 
 Requirements:
 -------------
@@ -35,4 +40,24 @@ To integrate into your application:
 
 6. create blog at '/admin/blogango/blog/add/'
 7. check your blog at '/blog/'
+
+To see it in action.
+---------------------------
+
+http://agiliq.com/blog/
+
+Features
+-------------------------
+
+* Comment
+* Comment moderation
+* Category
+* Tagging
+* RSS
+* Akismet Spam Filtering
+* Trackback
+* Reactions via Backtype
+* Date based archives
+* Multi Author
+
 
