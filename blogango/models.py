@@ -124,6 +124,7 @@ class BaseComment(models.Model):
     comment_for = models.ForeignKey(BlogEntry)
     created_on = models.DateTimeField(auto_now_add=True)
     user_name = models.CharField(max_length=100)
+    user_url = models.CharField(max_length=100)
     
     class Meta:
         ordering = ['created_on']
@@ -145,7 +146,6 @@ class Comment(BaseComment):
     """
 
     created_by = models.ForeignKey(User, unique=False, blank=True, null=True)
-    user_url = models.CharField(max_length=100)
     email_id = models.EmailField()
     is_spam = models.BooleanField(default=False)
     is_public = models.NullBooleanField(null=True, blank=True)
@@ -189,3 +189,7 @@ def _generate_summary(text):
      return ' '.join(text.split()[:100])
 
 moderator.register(Comment, CommentModerator)
+
+from south.modelsinspector import add_introspection_rules
+add_introspection_rules([], ["^markupfield\.fields\.MarkupField"])
+
