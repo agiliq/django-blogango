@@ -6,7 +6,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"> 
 <head> 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
-<title>Blog {% block title %} {% endblock %}</title> 
+<title>{% block title %} {{ blog.title }} {% endblock %}</title> 
 <link href="{{ MEDIA_URL }}blogango/css/agiliqblog.css" rel="stylesheet" type="text/css" /> 
 <link href="{{ MEDIA_URL }}blogango/css/prettify.css" rel="stylesheet" type="text/css" />
 <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css' />
