@@ -18,4 +18,18 @@
 {% endfor %}  
 <!--BLOG POST ENDS-->
 
+{% if has_next or has_prev %}
+<div class="pagination"> 
+    <div class="moreinfo">
+        {% if has_next %}
+            <a href='{% url blogango_page page_.next_page_number %}'>&laquo; Previous Entries</a>
+        {% endif %}
+        
+        {% if has_prev %}
+            <span class='right'><a href='{% url blogango_page page_.previous_page_number %}'>Next Entries &raquo;</a></span>
+        {% endif %}
+    </div> 
+</div>
+{% endif %}
+
 {% endblock %}

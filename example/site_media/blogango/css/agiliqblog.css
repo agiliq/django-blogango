@@ -91,6 +91,8 @@ p.post{padding-bottom:20px;border-bottom:1px solid #A4A4A4; }
 
 .moreinfo a:hover{font:bold 11px Tahoma, Geneva, sans-serif; color:#000; line-height:40px; text-decoration:none;  border-bottom:1px dashed #000; }
 
+.pagination{width:600px; display:block; background-color:#FFF; margin-bottom:10px;float:left;}
+.pagination .right{float:right;}
 /**************************************/
 /*              FORMS                 */
 /**************************************/
