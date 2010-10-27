@@ -40,7 +40,7 @@
 	        </span>   
 	        <span class="postdate">{{ comment.created_on|date:'jS N, Y' }}</span><br/>
 	        <div class="comment_post">
-	            <p>{{ comment.text|urlize }}</p>
+	            <p>{{ comment.text|striptags|urlize }}</p>
 	        </div>
 	    </div>
 	    <div class="rightpanel">
@@ -69,7 +69,9 @@
 	        </div>
 	    </div>
 	    <div class="rightpanel">
-	        <img src="{{ reaction.profile_image }}" width="50" height="50" alt="commmenttor" /> 
+            {% if reaction.profile_image %}
+	            <img src="{{ reaction.profile_image }}" width="50" height="50" alt="commmenttor" /> 
+            {% endif %}
 	    </div>
 	    <div class="clear"></div>
     </div>
