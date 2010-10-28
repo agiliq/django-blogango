@@ -1,0 +1,271 @@
+/* :::: GENERIC RESET :::: */
+div.preview div.text {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: black;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-style: normal;
+    font-size: 14px;
+    vertical-align: baseline;
+    text-decoration: none;
+    line-height: normal;
+    max-width: 700px;
+}
+
+/* :::: BLOCK ELEMENTS :::: */
+div.preview div.text map, div.preview div.text dt, div.preview div.text form {
+    display: block;
+}
+
+div.preview div.text {
+    margin: 8px;
+    display: block;
+}
+
+div.preview div.text p, div.preview div.text dl, div.preview div.text multicol {
+    display: block;
+    margin: 1em 0;
+}
+
+div.preview div.text dd {
+    display: block;
+    margin-left: 40px;
+}
+
+div.preview div.text blockquote {
+    display: block;
+    margin: 1em 40px;
+}
+
+div.preview div.text address {
+    display: block;
+    font-style: italic;
+}
+
+div.preview div.text center {
+    display: block;
+    text-align: center;
+}
+
+div.preview div.text h1, div.preview div.text h2, div.preview div.text h3,
+div.preview div.text h4, div.preview div.text h5, div.preview div.text h6 {
+    font-family: 'Trebuchet MS', sans-serif;
+}
+
+div.preview div.text h1 {
+    display: block;
+    font-size: 2em;
+    font-weight: bold;
+    margin: .67em 0;
+    color: red;
+    border-bottom: none; /* thou shalt not use h1 headers */
+}
+
+div.preview div.text h2 {
+    display: block;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: .83em 0;
+}
+
+div.preview div.text h3 {
+    display: block;
+    font-size: 1.17em;
+    font-weight: bold;
+    margin: 1em 0;
+}
+
+div.preview div.text h4 {
+    display: block;
+    font-weight: bold;
+    margin: 1.33em 0;
+}
+
+div.preview div.text h5 {
+    display: block;
+    font-size: 0.83em;
+    font-weight: bold;
+    margin: 1.67em 0;
+}
+
+div.preview div.text h6 {
+    display: block;
+    font-size: 0.67em;
+    font-weight: bold;
+    margin: 2.33em 0;
+}
+
+div.preview div.text pre {
+    display: block;
+    font-family: 'Consolas', 'Bitstream Vera Sans Mono', 'Monaco', monospace;
+    border: 1px solid #adb6bc;
+    white-space: pre;
+    margin: 1em 0;
+    padding: 5px;
+    background: #cdd6db;
+}
+
+div.preview div.text tbody, div.preview div.text thead, div.preview div.text tfoot {
+  vertical-align: middle;
+}
+
+div.preview div.text table {
+    display: table;
+    border: 2px solid #86939a;
+    border-spacing: 0;
+    border-collapse: collapsed;
+}
+
+div.preview div.text td, div.preview div.text th {
+    background: transparent;
+    vertical-align: inherit;
+    border: 1px solid #adb6bc;
+    text-align: inherit; 
+    padding: 3px 5px;
+}
+
+div.preview div.text th {
+    font-weight: bold;
+}
+
+div.preview div.text thead th {
+    background: #cdd6db;
+}
+
+div.preview div.text q:before {
+    content: open-quote;
+}
+
+div.preview div.text q:after {
+    content: close-quote;
+}
+
+/* :::: SPECIAL STUFF :::: */
+div.preview div.text hr {
+    display: block;
+    height: 2px;
+    border: 1px inset;
+    margin: 0.5em auto 0.5em auto;
+    color: gray;
+    border-style: outset;
+}
+
+div.preview div.text a {
+    color: blue;
+    text-decoration: underline;
+}
+
+div.preview div.text a:visited {
+    color: purple;
+}
+
+/* :::: INLINE TEXT STYLES :::: */
+div.preview div.text b, div.preview div.text strong {
+    font-weight: bolder;
+}
+
+div.preview div.text i, div.preview div.text cite, div.preview div.text em,
+div.preview div.text var, div.preview div.text dfn {
+    font-style: italic;
+}
+
+div.preview div.text tt, div.preview div.text code,
+div.preview div.text kbd, div.preview div.text samp {
+    font-family: monospace;
+}
+
+div.preview div.text u, div.preview div.text ins {
+    text-decoration: underline;
+}
+
+div.preview div.text s, div.preview div.text strike, div.preview div.text del {
+    text-decoration: line-through;
+}
+
+div.preview div.text blink {
+    text-decoration: blink;
+}
+
+div.preview div.text big {
+    font-size: larger;
+}
+
+div.preview div.text small {
+    font-size: smaller;
+}
+
+div.preview div.text sub {
+    vertical-align: sub;
+    font-size: smaller;
+    line-height: normal;
+}
+
+div.preview div.text sup {
+    vertical-align: super;
+    font-size: smaller;
+    line-height: normal;
+}
+
+div.preview div.text nobr {
+    white-space: nowrap;
+}
+
+
+/* :::: LIST RENDERING :::: */
+div.preview div.text ul, div.preview div.text menu, div.preview div.text dir {
+    display: block;
+    list-style-type: disc;
+    margin: 1em 0;
+    padding-left: 40px;
+}
+
+div.preview div.text ol {
+    display: block;
+    list-style-type: decimal;
+    margin: 1em 0;
+    padding-left: 40px;
+}
+
+div.preview div.text li {
+    display: list-item;
+}
+
+/* nested lists have no top/bottom margins */
+div.preview div.text ul ul,   div.preview div.text ul ol,   div.preview div.text ul dir,
+div.preview div.text ul menu, div.preview div.text ul dl,   div.preview div.text ol ul,
+div.preview div.text ol ol,   div.preview div.text ol dir,  div.preview div.text ol menu,
+div.preview div.text ol dl,   div.preview div.text dir ul,  div.preview div.text dir ol,
+div.preview div.text dir dir, div.preview div.text dir menu,div.preview div.text dir dl,
+div.preview div.text menu ul, div.preview div.text menu ol, div.preview div.text menu dir,
+div.preview div.text menu menu,div.preview div.text menu dl,div.preview div.text dl ul,
+div.preview div.text dl ol,   div.preview div.text dl dir,  div.preview div.text dl menu,
+div.preview div.text dl dl {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* 2 deep unordered lists use a circle */
+div.preview div.text ol ul,   div.preview div.text ul ul,   div.preview div.text menu ul,   div.preview div.text dir ul,
+div.preview div.text ol menu, div.preview div.text ul menu, div.preview div.text menu menu, div.preview div.text dir menu,
+div.preview div.text ol dir,  div.preview div.text ul dir,  div.preview div.text menu dir,  div.preview div.text dir dir {
+    list-style-type: circle;
+}
+
+/* 3 deep (or more) unordered lists use a square */
+div.preview div.text ol ol ul,     div.preview div.text ol ul ul,     div.preview div.text ol menu ul,     div.preview div.text ol dir ul,
+div.preview div.text ol ol menu,   div.preview div.text ol ul menu,   div.preview div.text ol menu menu,   div.preview div.text ol dir menu,
+div.preview div.text ol ol dir,    div.preview div.text ol ul dir,    div.preview div.text ol menu dir,    div.preview div.text ol dir dir,
+div.preview div.text ul ol ul,     div.preview div.text ul ul ul,     div.preview div.text ul menu ul,     div.preview div.text ul dir ul,
+div.preview div.text ul ol menu,   div.preview div.text ul ul menu,   div.preview div.text ul menu menu,   div.preview div.text ul dir menu,
+div.preview div.text ul ol dir,    div.preview div.text ul ul dir,    div.preview div.text ul menu dir,    div.preview div.text ul dir dir,
+div.preview div.text menu ol ul,   div.preview div.text menu ul ul,   div.preview div.text menu menu ul,   div.preview div.text menu dir ul,
+div.preview div.text menu ol menu, div.preview div.text menu ul menu, div.preview div.text menu menu menu, div.preview div.text menu dir menu,
+div.preview div.text menu ol dir,  div.preview div.text menu ul dir,  div.preview div.text menu menu dir,  div.preview div.text menu dir dir,
+div.preview div.text dir ol ul,    div.preview div.text dir ul ul,    div.preview div.text dir menu ul,    div.preview div.text dir dir ul,
+div.preview div.text dir ol menu,  div.preview div.text dir ul menu,  div.preview div.text dir menu menu,  div.preview div.text dir dir menu,
+div.preview div.text dir ol dir,   div.preview div.text dir ul dir,   div.preview div.text dir menu dir,   div.preview div.text dir dir dir {
+    list-style-type: square;
+}
