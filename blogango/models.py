@@ -86,8 +86,14 @@ class BlogEntry(models.Model):
     def save(self, *args, **kwargs):
         if self.title == None  or self.title == '':
             self.title = _infer_title_or_slug(self.text.raw)
+        
         if self.slug == None or self.slug == '':
-            self.slug = slugify(_infer_title_or_slug(self.title))
+            self.slug = slugify(self.title)
+        
+        slug_count = BlogEntry.objects.filter(slug__startswith=self.slug).exclude(pk=self.pk).count()
+        if slug_count:
+            self.slug += '-%s' %(slug_count + 1)
+        
         if not self.summary: 
             self.summary = _generate_summary(self.text.raw)
         if not self.meta_keywords:
@@ -155,8 +161,7 @@ class Comment(BaseComment):
 
     @permalink
     def get_absolute_url (self):
-        #return '/comment/%s/' %self.id
-          return ('comment_details', self.id)
+        return ('comment_details', self.id)
       
 class Reaction(BaseComment):
     """
@@ -186,7 +191,7 @@ def _infer_title_or_slug(text):
     return '-'.join(text.split()[:5])
 
 def _generate_summary(text):
-     return ' '.join(text.split()[:100])
+    return ' '.join(text.split()[:100])
 
 moderator.register(Comment, CommentModerator)
 
