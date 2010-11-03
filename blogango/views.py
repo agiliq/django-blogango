@@ -148,7 +148,7 @@ def details(request, year, month, slug):
 
     # publsihed check needs to be handled here to allow previews
     if not entry.is_published:
-        if request.user.id == entry.created_by.id and 'preview' in request.GET:
+        if request.user.is_staff and 'preview' in request.GET:
             pass
         else:
             raise Http404
