@@ -128,12 +128,12 @@ def check_comment_spam(request, comment):
     if api.verify_key():
         akismet_data = {'user_ip': request.META['REMOTE_ADDR'], 
                         'user_agent': request.META['HTTP_USER_AGENT'], 
-                        'comment_author': comment.user_name, 
-                        'comment_author_email': comment.email_id, 
+                        'comment_author': comment.user_name.encode('utf8'), 
+                        'comment_author_email': comment.email_id.encode('utf8'), 
                         'comment_author_url': comment.user_url, 
                         'comment_type': 'comment'}
 
-        return api.comment_check(comment.text, akismet_data)
+        return api.comment_check(comment.text.encode('utf8'), akismet_data)
     raise APIKeyError("Akismet API key is invalid.")
 
 
