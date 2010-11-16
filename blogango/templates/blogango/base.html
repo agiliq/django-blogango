@@ -1,0 +1,124 @@
+{% load blogango_filters %}
+
+{% blogango_extra_context %}
+ 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title>{% block title %} {{ blog.title }} {% endblock %}</title> 
+<link href="{{ MEDIA_URL }}blogango/css/agiliqblog.css" rel="stylesheet" type="text/css" /> 
+<link href="{{ MEDIA_URL }}blogango/css/prettify.css" rel="stylesheet" type="text/css" />
+<link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+
+{% if feed_url %}
+    <link rel="alternate" type="application/rss+xml" title="The Agiliq Blog - Django Web Development RSS Feed" href="{{feed_url}}" />
+{% endif %}
+{% if canonical_url %}
+    <link rel="canonical" href='{{ canonical_url }}' />
+{% endif %}
+{# <link rel="pingback" href="{% url xmlrpc %}" /> #}
+<link rel="pingback" href="{{ pingback_xmlrpc_url }}" />
+
+<script type="text/javascript" src="{{ MEDIA_URL }}blogango/js/prettify.js"></script> 
+ 
+</head> 
+<body onload="prettyPrint()"> 
+
+
+<div id="container"> 
+    <div id="header">
+        <a href="{% url blogango_index %}">{{ blog.title }}</a> {{ blog.tag_line }}
+    </div> 
+  
+    <!--LEFT PANEL STARTS--> 
+    <div id="leftpanel">
+        {% block content %}
+        <!--BLOG POST STARTS-->
+        {% for entry in entries %}
+            <div class="leftblock"> 
+                <h1>{{ entry.title }}</h1> 
+                <div class="filed">Filed in : <a href="#">Django Forms</a></div> 
+                <div class="postdetails">
+                    <img src="{{ MEDIA_URL }}blogango/images/blog.png" width="16" height="16" alt="Written by" /> 
+                    <a href="#"> {{ entry.created_by }}</a> &nbsp;&nbsp;&nbsp;
+                    <img src="{{ MEDIA_URL }}blogango/images/date_icon.png" width="16" height="16" alt="Date" />
+                    &nbsp;26th May,2010.
+                </div> 
+                <div class="postcontent"> 
+                    <p>{{ entry.text|truncatewords_html:50|safe }}</p> 
+                </div> 
+                <div class="moreinfo"><a href="{{ entry.get_absolute_url }}">read more </a></div> 
+            </div>
+        {% empty %}
+                <div class="leftblock">
+                  You don't have any entries in your blog.
+                </div>
+        {% endfor %}
+        <!--BLOG POST ENDS-->
+        {% endblock %}
+    </div> 
+    <!-- LEFT PANEL ENDS -->
+   
+    <!--RIGHT PANEL STARTS--> 
+    <div id="rightpanel"> 
+        {% if recents %}
+        <!--POSTS PANEL STARTS--> 
+        <div class="rightblock"> 
+	        <h1>BLOGPOSTS</h1> 
+	        <ul> 
+	            {% for recent in recents %}
+	                <li><a href="{{ recent.get_absolute_url }}">{{ recent.title }}</a></li>
+	            {% endfor %}  
+	        </ul> 
+        </div> 
+        <!--POSTS PANEL ENDS-->
+        {% endif %}
+
+        <!--FRIENDS PANEL STARTS--> 
+        <div class="rightblock"> 
+            {% if blog_rolls %}
+	            <h1 class="orange">BLOG ROLL</h1> 
+	            <ul> 
+                    {% for roll in blog_rolls %}
+                        <li><a href="{{ roll.url }}">{{ roll.text }}</a></li>
+                    {% endfor %}
+	            </ul> 
+            {% endif %}
+        <div class="clear"></div> 
+        </div> 
+        <!--FRIENDS PANEL ENDS-->
+
+        {% if tags %}
+        <!--CATEGORIES PANEL STARTS--> 
+        <div class="rightblock"> 
+            <h1 class="brown">CATEGORIES</h1> 
+            <ul>
+                {% for tag in tags %}
+                    <li><a href="{% url blogango_tag_details tag.slug %}">{{ tag.name }}</a></li>
+                {% endfor %} 
+            </ul> 
+        </div> 
+        <!--CATEGORIES PANEL ENDS-->
+        {% endif %} 
+        
+        {% if archive_months %}
+        <!--ARCHIVES PANEL STARTS--> 
+        <div class="rightblock"> 
+            <h1 class="blue">ARCHIVES</h1> 
+            <ul>
+                {% for month in archive_months %}
+                    <li><a href="{% url blogango_archives month|date:'Y' month|date:'b' %}">{{ month|date:'F Y' }}</a></li>
+                {% endfor %} 
+            </ul> 
+        </div> 
+        <!--ARCHIVES PANEL ENDS-->
+        {% endif %}
+    </div> 
+    <!--RIGHT PANEL ENDS-->
+     
+    <div class="clear"></div> 
+</div> 
+
+</body> 
+</html> 
