@@ -28,3 +28,4 @@ MEDIA_ROOT = 'site_media/'
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = '/site_media/'
 
+AKISMET_API_KEY = '177cd2107e05'

@@ -60,7 +60,7 @@ def admin_manage_entries(request):
 @staff_member_required
 def admin_manage_comments(request):
     # fetch all comments, objects gets you only public ones
-    comments = Comment.default.filter(is_spam=False)
+    comments = Comment.default.filter(is_spam=False).order_by('-created_on')
     return render('blogango/admin/manage_comments.html', request, {'comments': comments})
 
 @staff_member_required
@@ -400,9 +400,9 @@ def render (template, request, payload):
 def _get_sidebar_objects (request):
     """Gets the objects which are always displayed in the sidebar"""
     try:
-       blog = Blog.objects.all()[0]
+        blog = Blog.objects.all()[0]
     except:
-       return {}
+        return {}
     recents = BlogEntry.objects.filter(is_page = False, is_published = True).order_by('-created_on')[:blog.recents]
     blogroll = BlogRoll.objects.filter(is_published=True)
     # pages = BlogEntry.objects.filter(is_page = True, is_published = True)
