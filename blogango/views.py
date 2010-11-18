@@ -169,7 +169,10 @@ def details(request, year, month, slug):
             comment.save()
             return HttpResponseRedirect('.')
     else:
-        comment_f = bforms.CommentForm()
+        init_data = {'name': None}
+        if request.user.is_authenticated():
+            init_data['name'] = request.user.get_full_name() or request.user.username
+        comment_f = bforms.CommentForm(initial=init_data)
             
     comments = Comment.objects.filter(comment_for=entry, is_spam=False)
     reactions = Reaction.objects.filter(comment_for=entry)
@@ -249,14 +252,14 @@ def edit_entry(request, entry_id):
             entry.is_page = create.cleaned_data['is_page']
             entry.comments_allowed = create.cleaned_data['comments_allowed']
             if request.POST.has_key('save'):
-               publish = False
+                publish = False
             elif request.POST.has_key('post'):
-               publish = True   
+                publish = True   
             entry.is_published = publish
             entry.save()
             tags = Tag.objects.filter(tag_for=entry)
             for tag in tags:
-               entry.tag_set.remove(tag)
+                entry.tag_set.remove(tag)
             tags_data = create.cleaned_data['tags']
             tag_list = tags_data.split(' ')
             for tag in tag_list:
