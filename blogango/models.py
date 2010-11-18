@@ -133,7 +133,7 @@ class BaseComment(models.Model):
     user_url = models.CharField(max_length=100)
     
     class Meta:
-        ordering = ['created_on']
+        ordering = ['-created_on']
         abstract = True
 
     def __unicode__(self):
