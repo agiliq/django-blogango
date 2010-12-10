@@ -8,9 +8,9 @@
     <div class="italics">Reactions</div>
   </div>
   <div class="right_panel">
-    <h1 class="post_title"><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h1>
+    <a href="{{ entry.get_absolute_url }}" class='noline'><h1 class="post_title">{{ entry.title }}</h1></a>
     <h6 class="posted_by">By : <a href="{% url blogango_author entry.created_by %}">{{ entry.created_by }}</a> - Django Geek</h6>
-    <p>{{ entry.text|truncatewords_html:50|safe }} </p>
+    <p>{{ entry.text|truncatewords_html:100|safe }} </p>
     <a href="{{ entry.get_absolute_url }}" class="moreinfo">more info..</a>
     <div class="topics">Topics : 
 	{% for tag in entry.tags.all %}

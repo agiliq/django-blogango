@@ -44,16 +44,17 @@ body{background:url(../images/wood_bg.jpg);}
 /**************************************/
 /*            HEADINGS                */
 /**************************************/
-h1{font-family: 'Droid Serif', arial, serif; font-size:24px; font-style:normal; color:#962000;line-height:40px;}
-h2{font-family: 'Droid Serif', arial, serif; font-size:18px; font-style:normal;color:#962000;line-height:30px;}
-h3{font-family: 'Droid Serif', arial, serif; font-size:16px; font-style:normal;color:#962000;line-height:24px;}
-h4{font-family: 'Droid Serif', arial, serif; font-size:14px; font-style:normal;color:#962000;line-height:20px;}
-h5{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:normal;color:#962000;line-height:20px;}
-h6{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:normal;color:#962000;line-height:30px;}
-h1.post_title{font-style:italic; font-weight:normal;border-bottom:1px dashed #CFBD83; }
+h1{font-family: 'Droid Serif', arial, serif; font-size:24px; font-style:normal; color:#962000;line-height:40px; text-decoration:none; font-weight:normal; }
+h2{font-family: 'Droid Serif', arial, serif; font-size:18px; font-style:normal;color:#962000;line-height:30px; text-decoration:none; font-weight:normal;}
+h3{font-family: 'Droid Serif', arial, serif; font-size:16px; font-style:normal;color:#962000;line-height:24px; text-decoration:none; font-weight:normal;}
+h4{font-family: 'Droid Serif', arial, serif; font-size:14px; font-style:normal;color:#962000;line-height:20px; text-decoration:none; font-weight:normal;}
+h5{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:normal;color:#962000;line-height:20px; text-decoration:none; font-weight:normal;}
+h6{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:normal;color:#962000;line-height:30px; text-decoration:none; font-weight:normal;}
+h1.post_title{font-size:24px; font-style:normal; font-weight:normal;border-bottom:1px dashed #CFBD83; text-decoration:none;  }
+h1.post_title:hover{font-size:24px; font-style:normal; font-weight:normal;border-bottom:1px dashed #CFBD83; color:#000; text-decoration:none;  }
 h6.posted_by{font-style:italic;  font-weight:normal; margin-bottom:20px; }
 
-p{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:normal; color:#393939;line-height:20px;  margin-bottom:15px; text-align:justify;}
+p{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:normal; color:#393939;line-height:20px;  margin-bottom:15px; text-align:left;}
 /**************************************/
 /*            BREADCRUMBS             */
 /**************************************/
@@ -70,8 +71,8 @@ a:link, a:visited,#crumbs li a:hover,#crumbs li a:focus {	color:#000;	}
 
 .block_title{font-family: 'Droid Serif', arial, serif; font-size:18px; line-height:30px; text-transform:uppercase; color:#962000; margin-bottom:10px;}
 
-#blogposts_block{background:url(../images/sticky_note.png) no-repeat; padding:20px; height:297px; margin-top:10px;}
-#blogposts_block .list{ width:280px; float:left;font-family: 'Molengo', arial, serif; font-size:14px; padding-top:10px;}
+#blogposts_block{background:url(../images/sticky_note.png) no-repeat; padding:30px; height:287px; margin-top:10px;}
+#blogposts_block .list{ width:280px; float:left;font-family: 'Molengo', arial, serif; font-size:14px; padding-top:0px;}
 #blogposts_block .list li a{font-family: 'Molengo', arial, serif; font-size:14px; color:#962000; text-decoration:none; line-height:20px;  background:url(../images/list_image.png) no-repeat 0px 5px; padding-left:20px;}
 #blogposts_block .list li a:hover{ color:#000; text-decoration:underline; line-height:20px; }
 
@@ -96,8 +97,9 @@ a:link, a:visited,#crumbs li a:hover,#crumbs li a:focus {	color:#000;	}
 .comment_block{border-top:1px dashed #CFBD83; margin-top:25px;  clear:both;}
 .comment_block .left_panel{width:120px; float:left; display:block;}
 .comment_block .right_panel{width:470px; float:right; display:block; padding-left:10px; font-family: 'Droid Serif', arial, serif; font-size:12px; color:#393939; line-height:20px;}
-.comment_block .right_panel a{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:italic;color:#962000; text-decoration:underline; font-weight:bold; }
-.comment_block .right_panel a:hover{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:italic;color:#000; text-decoration:underline; font-weight:bold;}
+.comment_block .right_panel a{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:normal;color:#962000; text-decoration:underline; font-weight:bold; }
+.comment_block .right_panel a:hover{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:normal;color:#000; text-decoration:underline; font-weight:bold;}
+.comment_block .right_panel a.noline {text-decoration:none; }
 
 .comment_block .right_panel ul{ }
 .comment_block .right_panel ul li{ margin-left:30px; list-style-type:disc;}
@@ -116,9 +118,9 @@ a:link, a:visited,#crumbs li a:hover,#crumbs li a:focus {	color:#000;	}
 /**************************************/
 /*              FORMS                 */
 /**************************************/
-.textfield{width:400px; background-color:#F0F0F0; border:1px solid #D1D1D1; padding:5px;}
-.textarea{width:400px; background-color:#F0F0F0; border:1px solid #D1D1D1; padding:5px; margin-bottom:5px;}
-fieldset{border:3px solid #EAEAEA; padding:20px; font:bold 11px Tahoma, Geneva, sans-serif; line-height:30px; margin:10px;}
+.textfield{width:520px; background-color:#F0F0F0; border:1px solid #D1D1D1; padding:5px;}
+.textarea{width:520px; background-color:#F0F0F0; border:1px solid #D1D1D1; padding:5px; margin-bottom:5px;}
+fieldset{border:3px solid #EAEAEA; padding-top:20px; padding-right:30px; padding-bottom:20px; padding-left:30px; font:bold 11px Tahoma, Geneva, sans-serif; line-height:30px; color:#962000;  margin:0px auto; margin-bottom:20px;}
 legend{font:16px Arial, Helvetica, sans-serif; line-height:24px;}
 .but_right{float:right;}
 
@@ -128,11 +130,20 @@ legend{font:16px Arial, Helvetica, sans-serif; line-height:24px;}
 
 
 
-.general_block{ display:block; background-color:#FFF; padding:20px;}
-.commentor_block{ display:block; background-color:#0975B5; padding:20px 30px 20px 30px; margin:10px 0px 10px 0px;}
-.commentor_block .leftnpanel{ display:block; width:360px; float:left;}
+.general_block{ display:block; background-color:#FFF;}
+.commentor_block{ display:block; background-color:#f5f2df; padding:20px 30px 20px 30px; margin:10px 0px 10px 0px;}
+.commentor_block .leftnpanel{ display:block; width:440px; float:left;}
 .commentor_block .rightnpanel{ display:block; width:100px; float:right; text-align:right; }
 .commentor{font:bold 14px Arial, Helvetica, sans-serif;}
-.commentor a {text-decoration: none;color:#0975B5;}
+.commentor a {text-decoration: none;color:#962000;}
 .postdate{font:12px Arial, Helvetica, sans-serif; color:#666; padding-left:20px;}
-.comment_post { margin-top:10px; font:12px Arial, Helvetica, sans-serif; line-height:18px; }
+.comment_post p{ margin-top:10px; font:12px Arial, Helvetica, sans-serif; line-height:18px; }
+#pre {display: block;margin: 2em 0;white-space: pre;overflow: auto;width:500px;line-height: 1.4;border: 3px solid #ccc;background: #F1F1F1;padding:20px;font-family: 'Droid Sans Mono', arial, serif; font-size:12px;}
+
+ul.errorlist {
+    color: red;
+    display: inline;	
+}
+ul.errorlist li {
+    display: inline;
+}

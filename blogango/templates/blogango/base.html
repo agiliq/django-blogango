@@ -7,6 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>{% block title %} {{ blog.title }} {% endblock %}</title>
 <link href="{{ MEDIA_URL }}blogango/css/as_blog_styles.css" rel="stylesheet" type="text/css" />
+<link href="{{ MEDIA_URL }}blogango/css/prettify.css" rel="stylesheet" type="text/css" />
 <link href='http://fonts.googleapis.com/css?family=Droid+Serif:regular,bold&subset=latin' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Molengo&subset=latin' rel='stylesheet' type='text/css'>
 {% if feed_url %}
@@ -45,35 +46,7 @@
     <div id="content_block">
       <div class="leftpanel">
 		{% block content %}
-        <!--FIRST COMMENT STARTS-->
-		{% for entry in entries %}
-        <div class="comment_block">
-          <div class="left_panel">
-            <div class="frame_bg"><img src="{{ MEDIA_URL }}blogango/images/person_img.jpg" width="71" height="72" alt="shabda" /></div>
-            <div class="italics">19th Nov., 2010.</div>
-            <div class="comment_bg">32</div>
-            <div class="italics">Comments</div>
-            <div class="reactions_bg">19</div>
-            <div class="italics">Reactions</div>
-          </div>
-          <div class="right_panel">
-            <h1 class="post_title">{{ entry.title }}</h1>
-            <h6 class="posted_by">By : <a href="#">Shabda</a> - Django Geek</h6>
-            <p>We work on a variety of products and with people. We work in a highly distributed environment, with all of our clients working remotely from us. And while we work out of the same office, we are frequently working from other places as well. Here are the tools which help us stay productive, sane and working. :)</p>
-            <p>Code hosting: Unfuddle and Github.
-              For our open source projects we use Github.
-              For our client and non OS projects, we use Unfuddle.
-              For our client code we need both SVN and Git, </p>
-            <a href="#" class="moreinfo">more info..</a>
-            <div class="topics">Topics : <a href="#">Business</a><a href="#">Python</a><a href="#">Django</a></div>
-          </div>
-        </div>
-		{% empty %}
-                <div class="leftblock">
-                  You don't have any entries in your blog.
-                </div>
-		{% endfor %}
-        <!--FIRST COMMENT ENDS-->
+
 		{% endblock %}
       </div>
       <div class="rightpanel">
@@ -93,7 +66,7 @@
           <div class="block_title">categories</div>
           <ul class="list_left">
 			  {% for tag in tags %}
-                  <li><a href="{% url blogango_tag_details tag.slug %}" class='{% cycle left right %}'>{{ tag.name }}</a></li>
+                  <li><a href="{% url blogango_tag_details tag.slug %}" class='{% cycle "left" "right" %}'>{{ tag.name }}</a></li>
               {% endfor %}
           </ul>
           <div class="clear"></div>
@@ -105,7 +78,7 @@
           <div class="block_title">Archives</div>
           <ul class="list_left">
 			{% for month in archive_months %}
-				<li><a href="{% url blogango_archives month|date:'Y' month|date:'b' %}" class='{% cycle left right %}'>{{ month|date:'F Y' }}</a></li>
+				<li><a href="{% url blogango_archives month|date:'Y' month|date:'b' %}" class='{% cycle "left" "right" %}'>{{ month|date:'F Y' }}</a></li>
 			{% endfor %}
           </ul>
           <div class="clear"></div>

@@ -18,7 +18,7 @@
     <div class="italics">Reactions</div>
   </div>
   <div class="right_panel">
-    <h1 class="post_title"><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h1>
+    <a href="{{ entry.get_absolute_url }}" class='noline'><h1 class="post_title">{{ entry.title }}</h1></a>
     <h6 class="posted_by">By : <a href="{% url blogango_author entry.created_by %}">{{ entry.created_by }}</a> - Django Geek</h6>
     <p>{{ entry.text|safe }} </p>
     <a href="{{ entry.get_absolute_url }}" class="moreinfo">more info..</a>
@@ -56,13 +56,13 @@
 {% endfor %}
 <!--COMMENT BLOCK ENDS-->
 {% endif %}
-
+<div class="clear"></div>
 {% if reactions %}
 <!--REACTIONS BLOCK STARTS-->
 <h1>Reactions</h1>
 {% for reaction in reactions %}
-    <div id="reactions" class="comment_block">
-	    <div class="leftpanel">
+    <div id="reactions" class="commentor_block">
+	    <div class="leftnpanel">
 	        <span class="commentor">
                 <a href="{{ reaction.user_url }}">
 				    {{ reaction.user_name }}
@@ -73,7 +73,7 @@
 	            <p>{{ reaction.text|safe|twitterize }}</p>
 	        </div>
 	    </div>
-	    <div class="rightpanel">
+	    <div class="rightnpanel">
             {% if reaction.profile_image %}
 	            <img src="{{ reaction.profile_image }}" width="50" height="50" alt="commmenttor" /> 
             {% endif %}
