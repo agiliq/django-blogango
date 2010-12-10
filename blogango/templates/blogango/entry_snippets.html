@@ -1,22 +1,21 @@
-<div class="leftblock"> 
-    <h1><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h1> 
-    {% include 'blogango/entry_controls.html' %}
-    
-    <div class="postcontent"> 
-        <p>{{ entry.text|truncatewords_html:50|safe }}</p> 
-    </div> 
-    <div class="moreinfo">
-        <a href="{{ entry.get_absolute_url }}">read more</a>
-        {% if entry.get_num_comments %}
-            <a href="{{ entry.get_absolute_url }}#comments">{{ entry.get_num_comments }} Comments</a>
-        {% endif %}
-        {% if entry.get_num_reactions %}
-            {% if entry.get_num_comments %}
-                and 
-            {% endif %}
-            <a href="{{ entry.get_absolute_url }}#reactions">
-                {{ entry.get_num_reactions }} Reactions
-            </a>
-        {% endif %}
-    </div> 
+<div class="comment_block">
+  <div class="left_panel">
+    <div class="frame_bg"><img src="{{ MEDIA_URL }}blogango/images/person_img.jpg" width="71" height="72" alt="shabda" /></div>
+    <div class="italics">{{ entry.created_on|date:'jS N, Y' }}</div>
+    <div class="comment_bg"><a href="{{ entry.get_absolute_url }}#comments">{{ entry.get_num_comments }}</a></div>
+    <div class="italics">Comments</div>
+    <div class="reactions_bg"><a href="{{ entry.get_absolute_url }}#reactions">{{ entry.get_num_reactions }}</a></div>
+    <div class="italics">Reactions</div>
+  </div>
+  <div class="right_panel">
+    <h1 class="post_title"><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h1>
+    <h6 class="posted_by">By : <a href="{% url blogango_author entry.created_by %}">{{ entry.created_by }}</a> - Django Geek</h6>
+    <p>{{ entry.text|truncatewords_html:50|safe }} </p>
+    <a href="{{ entry.get_absolute_url }}" class="moreinfo">more info..</a>
+    <div class="topics">Topics : 
+	{% for tag in entry.tags.all %}
+		<a href="{% url blogango_tag_details tag.slug %}">{{ tag.name }}</a>
+	{% endfor %}
+	</div>
+  </div>
 </div>
