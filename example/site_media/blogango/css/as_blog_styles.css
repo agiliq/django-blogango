@@ -101,9 +101,10 @@ a:link, a:visited,#crumbs li a:hover,#crumbs li a:focus {	color:#000;	}
 .comment_block .right_panel a:hover{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:normal;color:#000; text-decoration:underline; font-weight:bold;}
 .comment_block .right_panel a.noline {text-decoration:none; }
 
+.comment_block hr{border:1px solid #f5f2df; }
 .comment_block .right_panel ul{ }
 .comment_block .right_panel ul li{ margin-left:30px; list-style-type:disc;}
-
+.picborder{border:5px solid #fff;}
 
 .frame_bg{width:88px; height:93px; background:url(../images/frame_bg.png) no-repeat; padding:14px 0px 0px 24px;}
 .italics{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:italic;color:#962000;line-height:30px; text-align:center;}

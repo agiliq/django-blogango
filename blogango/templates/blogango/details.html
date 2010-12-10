@@ -49,7 +49,7 @@
 	        </div>
 	    </div>
 	    <div class="rightnpanel">
-	        <img src="{% gravatar_url comment.email_id %}" width="50" height="50" alt="commmenttor" /> 
+	        <img src="{% gravatar_url comment.email_id %}" width="50" height="50" alt="commmenttor" class="picborder"/> 
 	    </div>
 	    <div class="clear"></div>
     </div>
@@ -75,7 +75,7 @@
 	    </div>
 	    <div class="rightnpanel">
             {% if reaction.profile_image %}
-	            <img src="{{ reaction.profile_image }}" width="50" height="50" alt="commmenttor" /> 
+	            <img src="{{ reaction.profile_image }}" width="50" height="50" alt="commmenttor" class="picborder" /> 
             {% endif %}
 	    </div>
 	    <div class="clear"></div>
