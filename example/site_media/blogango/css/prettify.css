@@ -9,7 +9,8 @@
 .atn{color:#606}
 .atv{color:#080}
 .dec{color:#606}
-pre.prettyprint{padding:5px;border:3px solid #cec793;background-color:#fafaf3;overflow:scroll;}
+pre.prettyprint{padding:5px;border:3px solid #cec793;background-color:#fafaf3;overflow:scroll; z-index:9999999; position:relative; }
+pre.prettyprint:hover{padding:5px;border:3px solid #cec793;background-color:#fafaf3;overflow:visible; width:800px; z-index:9999999;position:relative; }
 @media print{
 	.str{color:#060}
 .kwd{color:#006;font-weight:bold}
