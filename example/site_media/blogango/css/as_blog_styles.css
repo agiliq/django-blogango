@@ -1,0 +1,154 @@
+@charset "utf-8";
+/* CSS Document */
+/**************************************************************/
+/*       Author : Sai Kiran                                   */
+/*                Design lead @ www.agiliq.com                */
+/**************************************************************/
+/**************************************/
+/*              RESET                 */
+/**************************************/
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, caption, tbody, tfoot, thead {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+}
+ol, ul {
+	list-style: none;
+}
+/* tables still need 'cellspacing="0"' in the markup */
+
+
+blockquote:before, blockquote:after, q:before, q:after {
+	content: "";
+}
+blockquote, q {
+	quotes: "" "";
+}
+.bold {
+	font-weight:bold;
+}
+.clear{clear:both;}
+
+
+/**************************************/
+/*             CONTAINERS             */
+/**************************************/
+body{background:url(../images/wood_bg.jpg);}
+#mainpage_bg{background:url(../images/mainpage_bg.jpg) no-repeat center top;  min-height:1100px;}
+#page_container{width:1000px; display:block; margin:0px auto; min-height:870px; }
+#header{width:950px; display:block; padding-top:90px; margin:0px auto;}
+#breadcrumbs{width:950px; display:block; padding-top:70px; margin:0px auto; }
+#content_block{width:1000px; display:block; background-color:#FFF; margin:0px auto;}
+#content_block .leftpanel{width:600px; display:block; float:left; margin-left:25px; }
+#content_block .rightpanel{width:328px; display:block; float:right; margin-right:15px; }
+#footerbg{width:1000px; margin:0px auto;background:url(../images/footer_bg.png) no-repeat center top; min-height:100px;}
+
+
+/**************************************/
+/*            HEADINGS                */
+/**************************************/
+h1{font-family: 'Droid Serif', arial, serif; font-size:24px; font-style:normal; color:#962000;line-height:40px; text-decoration:none; font-weight:normal; }
+h2{font-family: 'Droid Serif', arial, serif; font-size:18px; font-style:normal;color:#962000;line-height:30px; text-decoration:none; font-weight:normal;}
+h3{font-family: 'Droid Serif', arial, serif; font-size:16px; font-style:normal;color:#962000;line-height:24px; text-decoration:none; font-weight:normal;}
+h4{font-family: 'Droid Serif', arial, serif; font-size:14px; font-style:normal;color:#962000;line-height:20px; text-decoration:none; font-weight:normal;}
+h5{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:normal;color:#962000;line-height:20px; text-decoration:none; font-weight:normal;}
+h6{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:normal;color:#962000;line-height:30px; text-decoration:none; font-weight:normal;}
+h1.post_title{font-size:24px; font-style:normal; font-weight:normal;border-bottom:1px dashed #CFBD83; text-decoration:none;  }
+h1.post_title:hover{font-size:24px; font-style:normal; font-weight:normal;border-bottom:1px dashed #CFBD83; color:#000; text-decoration:none;  }
+h6.posted_by{font-style:italic;  font-weight:normal; margin-bottom:20px; }
+
+p{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:normal; color:#393939;line-height:20px;  margin-bottom:15px; text-align:left;}
+/**************************************/
+/*            BREADCRUMBS             */
+/**************************************/
+ul, li {list-style-type:none;padding:0;	margin:0; }		
+#crumbs {height:2.3em;	border:1px solid #E6DCBB; font-family: 'Droid Serif', arial, serif; font-size:12px;}
+#crumbs li {float:left;	line-height:2.3em;	color:#962000;	padding-left:.75em;	}		
+#crumbs li a {	background:url(../images/crumbs.gif) no-repeat right center;	display:block;	color:#962000;	padding:0 15px 0 0;	}							
+#crumbs li a:link,#crumbs li a:visited {	color:#962000;	text-decoration:none;	}	
+a:link, a:visited,#crumbs li a:hover,#crumbs li a:focus {	color:#000;	}		
+
+/**************************************/
+/* BLOGPOSTS,CATEGORIES AND ARCHIEVES */
+/**************************************/
+
+.block_title{font-family: 'Droid Serif', arial, serif; font-size:18px; line-height:30px; text-transform:uppercase; color:#962000; margin-bottom:10px;}
+
+#blogposts_block{background:url(../images/sticky_note.png) no-repeat; padding:30px; height:287px; margin-top:10px;}
+#blogposts_block .list{ width:280px; float:left;font-family: 'Molengo', arial, serif; font-size:14px; padding-top:0px;}
+#blogposts_block .list li a{font-family: 'Molengo', arial, serif; font-size:14px; color:#962000; text-decoration:none; line-height:20px;  background:url(../images/list_image.png) no-repeat 0px 5px; padding-left:20px;}
+#blogposts_block .list li a:hover{ color:#000; text-decoration:underline; line-height:20px; }
+
+#categories_block{background:#F9F0D2; padding:20px;}
+#categories_block .list_left{ width:280px; float:left;font-family: 'Molengo', arial, serif; font-size:12px;}
+#categories_block .list_left li a{font-family: 'Molengo', arial, serif; font-size:12px; color:#962000; text-transform:uppercase;text-decoration:underline; line-height:20px;display:inline;}
+#categories_block .list_left li a:hover{ color:#000;text-decoration:underline; line-height:20px; }
+#categories_block .list_left .left {float:left;width:150px;}
+#categories_block .list_left .right {float:left;text-align:left;}
+
+#archives_block{background:#EAD89E; padding:20px; margin:20px 0px 20px 0px;}
+#archives_block .list_left{ width:280px; float:left;font-family: 'Molengo', arial, serif; font-size:12px;}
+#archives_block .list_left li a{font-family: 'Molengo', arial, serif; font-size:12px; color:#962000; text-transform:uppercase;text-decoration:underline; line-height:20px;}
+#archives_block .list_left li a:hover{ color:#000;text-decoration:underline; line-height:20px; }
+#archives_block .list_left .left {float:left;width:150px;}
+#archives_block .list_left .right {float:left;text-align:left;}
+
+
+/**************************************/
+/*             COMMENTS               */
+/**************************************/
+.comment_block{border-top:1px dashed #CFBD83; margin-top:25px;  clear:both;}
+.comment_block .left_panel{width:120px; float:left; display:block;}
+.comment_block .right_panel{width:470px; float:right; display:block; padding-left:10px; font-family: 'Droid Serif', arial, serif; font-size:12px; color:#393939; line-height:20px;}
+.comment_block .right_panel a{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:normal;color:#962000; text-decoration:underline; font-weight:bold; }
+.comment_block .right_panel a:hover{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:normal;color:#000; text-decoration:underline; font-weight:bold;}
+.comment_block .right_panel a.noline {text-decoration:none; }
+
+.comment_block hr{border:1px solid #f5f2df; }
+.comment_block .right_panel ul{ }
+.comment_block .right_panel ul li{ margin-left:30px; list-style-type:disc;}
+.picborder{border:5px solid #fff;}
+
+.frame_bg{width:88px; height:93px; background:url(../images/frame_bg.png) no-repeat; padding:14px 0px 0px 24px;}
+.italics{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:italic;color:#962000;line-height:30px; text-align:center;}
+.comment_bg{ background:url(../images/bubble_bg.png) no-repeat; width:41px; height:39px; margin:0px auto; font-family: 'Droid Serif', arial, serif; font-size:14px; font-style:italic;color:#962000;line-height:30px; color:#FFF; text-align:center;}
+.reactions_bg{ background:url(../images/reactions_bg.png) no-repeat; width:44px; height:44px; margin:0px auto;  font-family: 'Droid Serif', arial, serif; font-size:14px; font-style:italic;color:#962000;line-height:40px; color:#FFF; text-align:center;}
+.topics{font:bold 11px Tahoma, Geneva, sans-serif; color:#962000; clear:both; margin-bottom:50px;}
+.topics a{font:bold 11px Tahoma, Geneva, sans-serif; color:#962000;padding:5px; background:#EDDA9C; margin:0px 5px 0px 5px;}
+.topics a:hover{font:bold 11px Tahoma, Geneva, sans-serif; color:#FFF; padding:5px; background:#905533; }
+.moreinfo{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:italic;color:#962000;line-height:20px; float:right;}
+.moreinfo:hover{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:italic;color:#962000;line-height:20px; float:right;}
+
+/**************************************/
+/*              FORMS                 */
+/**************************************/
+.textfield{width:520px; background-color:#F0F0F0; border:1px solid #D1D1D1; padding:5px;}
+.textarea{width:520px; background-color:#F0F0F0; border:1px solid #D1D1D1; padding:5px; margin-bottom:5px;}
+fieldset{border:3px solid #EAEAEA; padding-top:20px; padding-right:30px; padding-bottom:20px; padding-left:30px; font:bold 11px Tahoma, Geneva, sans-serif; line-height:30px; color:#962000;  margin:0px auto; margin-bottom:20px;}
+legend{font:16px Arial, Helvetica, sans-serif; line-height:24px;}
+.but_right{float:right;}
+
+
+.submit{ text-align:right; padding:3px;}
+
+
+
+
+.general_block{ display:block; background-color:#FFF;}
+.commentor_block{ display:block; background-color:#f5f2df; padding:20px 30px 20px 30px; margin:10px 0px 10px 0px;}
+.commentor_block .leftnpanel{ display:block; width:440px; float:left;}
+.commentor_block .rightnpanel{ display:block; width:100px; float:right; text-align:right; }
+.commentor{font:bold 14px Arial, Helvetica, sans-serif;}
+.commentor a {text-decoration: none;color:#962000;}
+.postdate{font:12px Arial, Helvetica, sans-serif; color:#666; padding-left:20px;}
+.comment_post p{ margin-top:10px; font:12px Arial, Helvetica, sans-serif; line-height:18px; }
+#pre {display: block;margin: 2em 0;white-space: pre;overflow: auto;width:500px;line-height: 1.4;border: 3px solid #ccc;background: #F1F1F1;padding:20px;font-family: 'Droid Sans Mono', arial, serif; font-size:12px;}
+
+ul.errorlist {
+    color: red;
+    display: inline;	
+}
+ul.errorlist li {
+    display: inline;
+}

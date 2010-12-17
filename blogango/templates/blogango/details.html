@@ -8,29 +8,34 @@
 {% endblock %}
 
 {% block content %}
-<div class="leftblock"> 
-    <h1>{{ entry.title }}</h1> 
-    
-    {% include 'blogango/entry_controls.html' %} 
-    
-    <div class="postcontent"> 
-        <p>{{ entry.text|safe }}</p> 
-    </div>
-    <div class="moreinfo"> <br/> </div> 
-</div>
-
-<div class="tags">
-{% for tag in tags %}
-    <a href="{{tag.get_absolute_url}}">{{tag.tag_txt}}</a>
-{% endfor %}
+<div class="comment_block">
+  <div class="left_panel">
+    <div class="frame_bg"><img src="{{ MEDIA_URL }}blogango/images/person_img.jpg" width="71" height="72" alt="shabda" /></div>
+    <div class="italics">{{ entry.created_on|date:'jS N, Y' }}</div>
+    <div class="comment_bg"><a href="{{ entry.get_absolute_url }}#comments">{{ entry.get_num_comments }}</a></div>
+    <div class="italics">Comments</div>
+    <div class="reactions_bg"><a href="{{ entry.get_absolute_url }}#reactions">{{ entry.get_num_reactions }}</a></div>
+    <div class="italics">Reactions</div>
+  </div>
+  <div class="right_panel">
+    <a href="{{ entry.get_absolute_url }}" class='noline'><h1 class="post_title">{{ entry.title }}</h1></a>
+    <h6 class="posted_by">By : <a href="{% url blogango_author entry.created_by %}">{{ entry.created_by }}</a> - Django Geek</h6>
+    <p>{{ entry.text|safe }} </p>
+    <a href="{{ entry.get_absolute_url }}" class="moreinfo">more info..</a>
+    <div class="topics">Topics : 
+	{% for tag in entry.tags.all %}
+		<a href="{% url blogango_tag_details tag.slug %}">{{ tag.name }}</a>
+	{% endfor %}
+	</div>
+  </div>
 </div>
 
 {% if comments %}
 <!--COMMENT BLOCK STARTS-->
 <h1>Comments</h1>
 {% for comment in comments %}
-    <div id="comments" class="comment_block">
-	    <div class="leftpanel">
+    <div id="comments" class="commentor_block">
+	    <div class="leftnpanel">
 	        <span class="commentor">
 	           {% if comment.user_url %}
 	               <a href='{{ comment.user_url }}' rel='nofollow' target='_blank'>{{ comment.user_name }}</a>
@@ -43,21 +48,21 @@
 	            <p>{{ comment.text|striptags|urlize }}</p>
 	        </div>
 	    </div>
-	    <div class="rightpanel">
-	        <img src="{% gravatar_url comment.email_id %}" width="50" height="50" alt="commmenttor" /> 
+	    <div class="rightnpanel">
+	        <img src="{% gravatar_url comment.email_id %}" width="50" height="50" alt="commmenttor" class="picborder"/> 
 	    </div>
 	    <div class="clear"></div>
     </div>
 {% endfor %}
 <!--COMMENT BLOCK ENDS-->
 {% endif %}
-
+<div class="clear"></div>
 {% if reactions %}
 <!--REACTIONS BLOCK STARTS-->
 <h1>Reactions</h1>
 {% for reaction in reactions %}
-    <div id="reactions" class="comment_block">
-	    <div class="leftpanel">
+    <div id="reactions" class="commentor_block">
+	    <div class="leftnpanel">
 	        <span class="commentor">
                 <a href="{{ reaction.user_url }}">
 				    {{ reaction.user_name }}
@@ -68,9 +73,9 @@
 	            <p>{{ reaction.text|safe|twitterize }}</p>
 	        </div>
 	    </div>
-	    <div class="rightpanel">
+	    <div class="rightnpanel">
             {% if reaction.profile_image %}
-	            <img src="{{ reaction.profile_image }}" width="50" height="50" alt="commmenttor" /> 
+	            <img src="{{ reaction.profile_image }}" width="50" height="50" alt="commmenttor" class="picborder" /> 
             {% endif %}
 	    </div>
 	    <div class="clear"></div>
