@@ -304,9 +304,9 @@ def moderate_comments(request):
         else:
             spammeds = {}
         for spammed in spammeds:
-             comment = Comment.objects.get(id = spammed)
-             comment.is_spam = True
-             comment.save()
+            comment = Comment.objects.get(id = spammed)
+            comment.is_spam = True
+            comment.save()
         if request.POST.has_key('delete'):
             deleteds = request.POST['delete']
         else:
@@ -324,10 +324,10 @@ def install_blog(request):
     if request.method == 'GET':
         install_form = bforms.InstallForm()
     if request.method == 'POST':
-       install_form = bforms.InstallForm(request.POST)
-       if install_form.is_valid():
-          install_form.save()         
-          return HttpResponseRedirect(reverse('blogango_index'))
+        install_form = bforms.InstallForm(request.POST)
+        if install_form.is_valid():
+            install_form.save()         
+            return HttpResponseRedirect(reverse('blogango_index'))
     payload = {"install_form": install_form}
     return render('blogango/install.html', request, payload)
 
@@ -375,7 +375,6 @@ def author(request, username):
                                                     'author_posts': author_posts})
     
 def monthly_view(request, year, month):
-    # print year, month
     queryset = BlogEntry.objects.filter(is_page=False, is_published=True)
     return archive_month(request=request, 
                          template_name='blogango/archive_view.html', 
