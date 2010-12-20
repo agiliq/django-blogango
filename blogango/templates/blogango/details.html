@@ -7,7 +7,19 @@
     {{entry.title}} - {{block.super}}
 {% endblock %}
 
+{% block breadcrumbs %}
+    <li><a href="{% url blogango_index %}">Blog</a></li>
+    <li><a href="{% url blogango_archives entry.created_on.year entry.created_on|date:'b' %}"> {{ entry.created_on|date:'N Y' }}</a></li>
+	<li>{{ entry.title }}</li>
+{% endblock %}
+
 {% block content %}
+
+{% with 'True' as post_detail %}
+    {% include 'blogango/entry_snippets.html' %}
+{% endwith %}
+
+{% comment %}
 <div class="comment_block">
   <div class="left_panel">
     <div class="frame_bg"><img src="{{ MEDIA_URL }}blogango/images/person_img.jpg" width="71" height="72" alt="shabda" /></div>
@@ -19,7 +31,7 @@
   </div>
   <div class="right_panel">
     <a href="{{ entry.get_absolute_url }}" class='noline'><h1 class="post_title">{{ entry.title }}</h1></a>
-    <h6 class="posted_by">By : <a href="{% url blogango_author entry.created_by %}">{{ entry.created_by }}</a> - Django Geek</h6>
+    <h6 class="posted_by">By : <a href="{% url blogango_author entry.created_by %}">{{ entry.created_by }}</a>{# - Django Geek #}</h6>
     <p>{{ entry.text|safe }} </p>
     <a href="{{ entry.get_absolute_url }}" class="moreinfo">more info..</a>
     <div class="topics">Topics : 
@@ -29,6 +41,7 @@
 	</div>
   </div>
 </div>
+{% endcomment %}
 
 {% if comments %}
 <!--COMMENT BLOCK STARTS-->

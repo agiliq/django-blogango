@@ -4,6 +4,11 @@
     {{block.super}} - Tagged with {{ tag.name }}
 {% endblock %}
 
+{% block breadcrumbs %}
+    <li><a href="{% url blogango_index %}">Blog</a></li>
+    <li>Category: {{ tag.name }}</li>
+{% endblock %}
+
 {% block content %}
 	{% for entry in entries %}
 	    {% include 'blogango/entry_snippets.html' %}

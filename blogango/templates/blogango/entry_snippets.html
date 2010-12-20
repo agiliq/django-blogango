@@ -10,7 +10,11 @@
   <div class="right_panel">
     <a href="{{ entry.get_absolute_url }}" class='noline'><h1 class="post_title">{{ entry.title }}</h1></a>
     <h6 class="posted_by">By : <a href="{% url blogango_author entry.created_by %}">{{ entry.created_by }}</a> - Django Geek</h6>
-    <p>{{ entry.text|truncatewords_html:100|safe }} </p>
+	{% if post_detail %}
+	  <p>{{ entry.text|safe }}</p>
+	{% else %}
+	  <p>{{ entry.text|truncatewords_html:100|safe }} </p>
+	{% endif %}
     <a href="{{ entry.get_absolute_url }}" class="moreinfo">more info..</a>
     <div class="topics">Topics : 
 	{% for tag in entry.tags.all %}

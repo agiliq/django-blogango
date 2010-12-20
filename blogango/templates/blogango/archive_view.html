@@ -4,19 +4,15 @@
 - Archives for {{ month|date:"F" }} {{ month|date:"Y" }}
 {% endblock %}
 
+{% block breadcrumbs %}
+    <li><a href="{% url blogango_index %}">Blog</a></li>
+    <li>{{ month|date:'N Y' }}</li>
+{% endblock %}
+
 {% block content %}
 
 {% for entry in object_list %}
-    <div class="leftblock"> 
-        <h1><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h1> 
-        {% include 'blogango/entry_controls.html' %}
-        
-        <div class="postcontent"> 
-            <p>{{ entry.text|truncatewords_html:50|safe }}</p> 
-        </div> 
-        <div class="moreinfo"><a href="{{ entry.get_absolute_url }}">read more </a></div> 
-    </div>
-    
+    {% include 'blogango/entry_snippets.html' %}
 {% endfor %}
 
 {% endblock %}
