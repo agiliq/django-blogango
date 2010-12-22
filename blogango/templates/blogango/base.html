@@ -55,7 +55,7 @@
      	  <div class="block_title">Blog Posts</div>
           <ul class="list">
 			{% for recent in recents %}
-				<li><a href="{{ recent.get_absolute_url }}">{{ recent.title }}</a></li>
+				<li><a href="{{ recent.get_absolute_url }}" title='{{ recent.title }}'>{{ recent.title|truncate_chars:40 }}</a></li>
 			{% endfor %}
           </ul>
         </div>

@@ -43,3 +43,9 @@ def twitterize(token):
 twitterize.is_safe = True
     
 register.tag('blogango_extra_context', blogango_extra_context)
+
+@register.filter
+def truncate_chars(ip_string, length=30):
+    length, dots = int(length), 3
+    if len(ip_string) < length:return ip_string
+    else:return ip_string[:length-dots] + '.' * dots

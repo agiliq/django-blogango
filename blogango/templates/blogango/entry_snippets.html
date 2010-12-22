@@ -22,9 +22,10 @@
 	  <p>{{ entry.text|truncatewords_html:100|safe }} </p>
 	{% endif %}
     <a href="{{ entry.get_absolute_url }}" class="moreinfo">more info..</a>
-    <div class="topics">Topics : 
+    <div class="topics">
 	{% for tag in entry.tags.all %}
-		<a href="{% url blogango_tag_details tag.slug %}">{{ tag.name }}</a>
+      {% if forloop.first %}Topics : {% endif %}
+	  <a href="{% url blogango_tag_details tag.slug %}">{{ tag.name }}</a>
 	{% endfor %}
 	</div>
   </div>
