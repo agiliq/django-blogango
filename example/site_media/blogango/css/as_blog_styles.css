@@ -13,7 +13,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 	border: 0;
 	outline: 0;
 }
-ol, ul {
+ul {
 	list-style: none;
 }
 /* tables still need 'cellspacing="0"' in the markup */
@@ -37,12 +37,13 @@ blockquote, q {
 body{background:url(../images/wood_bg.jpg);}
 #mainpage_bg{background:url(../images/mainpage_bg.jpg) no-repeat center top;  min-height:1100px;}
 #page_container{width:1000px; display:block; margin:0px auto; min-height:870px; }
-#header{width:950px; display:block; padding-top:90px; margin:0px auto;}
-#breadcrumbs{width:950px; display:block; padding-top:70px; margin:0px auto; }
+#header{width:950px; display:block; padding-top:90px; margin:0px auto; height:127px;}
+#breadcrumbs{width:950px; display:block; padding-top:10px; margin:0px auto; }
 #content_block{width:1000px; display:block; background-color:#FFF; margin:0px auto;}
 #content_block .leftpanel{width:600px; display:block; float:left; margin-left:25px; }
 #content_block .rightpanel{width:328px; display:block; float:right; margin-right:15px; }
 #footerbg{width:1000px; margin:0px auto;background:url(../images/footer_bg.png) no-repeat center top; min-height:100px;}
+#footerbg .footertext {float:right; margin:10px 120px 0px 0px ;font-family: 'Droid Serif', arial, serif; font-size:14px; font-style:normal; color:#962000;line-height:40px; text-decoration:none; font-weight:normal; }
 
 
 /**************************************/
@@ -57,6 +58,7 @@ h6{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:normal;c
 h1.post_title{font-size:24px; font-style:normal; font-weight:normal;border-bottom:1px dashed #CFBD83; text-decoration:none;  }
 h1.post_title:hover{font-size:24px; font-style:normal; font-weight:normal;border-bottom:1px dashed #CFBD83; color:#000; text-decoration:none;  }
 h6.posted_by{font-style:italic;  font-weight:normal; margin-bottom:20px; }
+h1.message{width:300px; float:right; font-family: 'Lobster', arial, serif; font-size:16px; line-height:20px; font-weight:normal; padding-top:20px; color:#A6A6A6; letter-spacing:1px;}
 
 p{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:normal; color:#393939;line-height:20px;  margin-bottom:15px; text-align:left;}
 /**************************************/
@@ -108,12 +110,18 @@ a:link, a:visited,#crumbs li a:hover,#crumbs li a:focus {	color:#000;	}
 .comment_block hr{border:1px solid #f5f2df; }
 .comment_block .right_panel ul{ }
 .comment_block .right_panel ul li{ margin-left:30px; list-style-type:disc;}
+.comment_block .right_panel ol{ margin:10px 0px 10px 30px; }
+.comment_block .right_panel ol li{ list-style-type:decimal;}
 .picborder{border:5px solid #fff;}
 
 .frame_bg{width:88px; height:93px; background:url(../images/frame_bg.png) no-repeat; padding:14px 0px 0px 24px;}
 .italics{font-family: 'Droid Serif', arial, serif; font-size:12px; font-style:italic;color:#962000;line-height:30px; text-align:center;}
+.italics a{color:#962000;text-decoration:none;}
+.italics a:hover{color:#000;}
 .comment_bg{ background:url(../images/bubble_bg.png) no-repeat; width:41px; height:39px; margin:0px auto; font-family: 'Droid Serif', arial, serif; font-size:14px; font-style:italic;color:#962000;line-height:30px; color:#FFF; text-align:center;}
+.comment_bg a{text-decoration:none;}
 .reactions_bg{ background:url(../images/reactions_bg.png) no-repeat; width:44px; height:44px; margin:0px auto;  font-family: 'Droid Serif', arial, serif; font-size:14px; font-style:italic;color:#962000;line-height:40px; color:#FFF; text-align:center;}
+.reactions_bg a{text-decoration:none;}
 .topics{font:bold 11px Tahoma, Geneva, sans-serif; color:#962000; clear:both; margin-bottom:50px;}
 .topics a{font:bold 11px Tahoma, Geneva, sans-serif; color:#962000;padding:5px; background:#EDDA9C; margin:0px 5px 0px 5px;}
 .topics a:hover{font:bold 11px Tahoma, Geneva, sans-serif; color:#FFF; padding:5px; background:#905533; }

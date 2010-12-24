@@ -9,6 +9,7 @@
 <link href="{{ MEDIA_URL }}blogango/css/as_blog_styles.css" rel="stylesheet" type="text/css" />
 <link href="{{ MEDIA_URL }}blogango/css/prettify.css" rel="stylesheet" type="text/css" />
 <link href='http://fonts.googleapis.com/css?family=Droid+Serif:regular,bold&subset=latin' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Molengo&subset=latin' rel='stylesheet' type='text/css'>
 {% if feed_url %}
     <link rel="alternate" type="application/rss+xml" title="The Agiliq Blog - Django Web Development RSS Feed" href="{{feed_url}}" />
@@ -28,7 +29,15 @@
   <!--PAGE CONTAINER STARTS-->
   <div id="page_container">
     <!-- HEADER STARTS HERE -->
-    <div id="header"><a href="{% url blogango_index %}"><img src="{{ MEDIA_URL }}blogango/images/agiliq_blog_logo.png" width="206" height="67" alt="Agiliq Solutions" /></a></div>
+    <div id="header">
+	  <a href="{% url blogango_index %}">
+		<img src="{{ MEDIA_URL }}blogango/images/agiliq_blog_logo.png" width="206" height="67" alt="Agiliq Solutions" />
+	  </a>
+	  <h1 class="message">
+		We love designing and developing websites, but what really drives us is 
+		solving problems and cultivating strong relationships with our clients
+	  </h1>
+	</div>
     <!-- HEADER ENDS HERE -->
     <!-- BREADCRUMBS STARTS HERE -->
     <div id="breadcrumbs">
@@ -92,7 +101,9 @@
   </div>
   <!--PAGE CONTAINER ENDS-->
   <!--FOOTER CONTAINER STARTS-->
-  <div id="footerbg"></div>
+  <div id="footerbg">
+	<span class='footertext'>&copy;COPYRIGHT AGILIQ SOLUTIONS</span>
+  </div>
   <!--FOOTER CONTAINER ENDS-->
 </div>
 <!--BASE CONTAINER ENDS-->
