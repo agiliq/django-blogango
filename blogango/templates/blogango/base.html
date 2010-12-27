@@ -61,7 +61,7 @@
       <div class="rightpanel">
         {% if recents %}
         <div id="blogposts_block">
-     	  <div class="block_title">Blog Posts</div>
+     	  <div class="block_title">Posts</div>
           <ul class="list">
 			{% for recent in recents %}
 				<li><a href="{{ recent.get_absolute_url }}" title='{{ recent.title }}'>{{ recent.title|truncate_chars:40 }}</a></li>
@@ -72,7 +72,7 @@
 		
 		{% if tags %}
         <div id="categories_block">
-          <div class="block_title">categories</div>
+          <div class="block_title">Topics</div>
           <ul class="list_left">
 			  {% for tag in tags %}
                   <li><a href="{% url blogango_tag_details tag.slug %}" class='{% cycle "left" "right" %}'>{{ tag.name }}</a></li>

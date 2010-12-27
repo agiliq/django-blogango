@@ -14,8 +14,10 @@
 	</div>
     <div class="comment_bg"><a href="{{ entry.get_absolute_url }}#comments">{{ entry.get_num_comments }}</a></div>
     <div class="italics">Comments</div>
-    <div class="reactions_bg"><a href="{{ entry.get_absolute_url }}#reactions">{{ entry.get_num_reactions }}</a></div>
-    <div class="italics">Reactions</div>
+	{% if entry.get_num_reactions %}
+	  <div class="reactions_bg"><a href="{{ entry.get_absolute_url }}#reactions">{{ entry.get_num_reactions }}</a></div>
+	  <div class="italics">Reactions</div>
+	{% endif %}
   </div>
   <div class="right_panel">
     <a href="{{ entry.get_absolute_url }}" class='noline'><h1 class="post_title">{{ entry.title }}</h1></a>
