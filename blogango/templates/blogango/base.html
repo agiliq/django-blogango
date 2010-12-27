@@ -94,6 +94,20 @@
         </div>
         <!--ARCHIEVES ENDS HERE-->
 		{% endif %}
+		{% if blogroll %}
+		<!--BLOGROLL STARTS HERE-->
+        <div id="archives_block">
+          <div class="block_title">BLOG ROLL</div>
+          <ul class="list">
+			{% for br in blogroll %}
+				<li><a href="{{ br.url }}">{{ br.text }}</a></li>
+			{% endfor %}
+          </ul>
+          <div class="clear"></div>
+        </div>
+        <!--BLOGROLL ENDS HERE-->
+		{% endif %}
+
       </div>
       <div class="clear"></div>
     </div>
