@@ -20,10 +20,27 @@
 {# <link rel="pingback" href="{% url xmlrpc %}" /> #}
 <link rel="pingback" href="{{ pingback_xmlrpc_url }}" />
 
-<script type="text/javascript" src="{{ MEDIA_URL }}blogango/js/prettify.js"></script> 
+<script type="text/javascript" src="{{ MEDIA_URL }}blogango/js/jquery.min.js"></script> 
+<script type="text/javascript">
+function pretty_print(){
+  $(document).ready(function() {
+  
+	// add prettyprint class to all <pre></pre> blocks
+	var prettify = false;
+	$("pre").each(function() {
+	  $(this).addClass('prettyprint');
+	  prettify = true;
+	});
 
+	// if code blocks were found, bring in the prettifier ...
+	if ( prettify ) {
+		$.getScript("{{ MEDIA_URL }}blogango/js/prettify.js", function() { prettyPrint() });
+	}
+  });
+}
+</script>
 </head>
-<body onload="prettyPrint()">
+<body onload="pretty_print()">
 <!--BASE CONTAINER STARTS-->
 <div id="mainpage_bg">
   <!--PAGE CONTAINER STARTS-->
