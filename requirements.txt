@@ -2,3 +2,5 @@ django-taggit
 django-xmlrpc
 BeautifulSoup
 django-markupfield
+django-pingback
+south
