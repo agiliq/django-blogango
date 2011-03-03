@@ -58,7 +58,7 @@
 	        </span>   
 	        <span class="postdate">{{ comment.created_on|date:'jS N, Y' }}</span><br/>
 	        <div class="comment_post">
-	            <p>{{ comment.text|striptags|urlize }}</p>
+	            <p>{{ comment.text|striptags|urlize|linebreaks }}</p>
 	        </div>
 	    </div>
 	    <div class="rightnpanel">
