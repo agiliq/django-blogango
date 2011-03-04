@@ -65,3 +65,7 @@ feeds = {'latest': feeds.main_feed, 'tag':feeds.CatFeed}
 urlpatterns += patterns('',
     url(r'^rss/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}, name='blogango_feed')
 )
+
+urlpatterns += pattern('blogango.views',
+    url(r'^(?P<slug>[-\w]+)/$', 'page_details', name='blogango_page_details'),
+)

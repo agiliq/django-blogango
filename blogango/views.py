@@ -137,6 +137,7 @@ def check_comment_spam(request, comment):
     raise APIKeyError("Akismet API key is invalid.")
 
 
+
 @handle404
 def details(request, year, month, slug):
     if not _is_blog_installed():
@@ -146,7 +147,50 @@ def details(request, year, month, slug):
                                   created_on__month=month, 
                                   slug=slug)
 
-    # publsihed check needs to be handled here to allow previews
+    # published check needs to be handled here to allow previews
+    if not entry.is_published:
+        if request.user.is_staff and 'preview' in request.GET:
+            pass
+        else:
+            raise Http404
+
+    if request.method == 'POST':
+        comment_f = bforms.CommentForm(request.POST)
+        if comment_f.is_valid():
+            comment_by = request.user if request.user.is_authenticated() else None
+            comment = Comment(text=comment_f.cleaned_data['text'], 
+                              created_by=comment_by, 
+                              comment_for=entry, 
+                              user_name=comment_f.cleaned_data['name'],
+                              user_url=comment_f.cleaned_data['url'], 
+                              email_id=comment_f.cleaned_data['email'])
+            comment.is_public = getattr(settings, 'AUTO_APPROVE_COMMENTS', True)
+            if AKISMET_COMMENT:
+                comment.is_spam = check_comment_spam(request, comment)
+            comment.save()
+            return HttpResponseRedirect('.')
+    else:
+        init_data = {'name': None}
+        if request.user.is_authenticated():
+            init_data['name'] = request.user.get_full_name() or request.user.username
+        comment_f = bforms.CommentForm(initial=init_data)
+            
+    comments = Comment.objects.filter(comment_for=entry, is_spam=False)
+    reactions = Reaction.objects.filter(comment_for=entry)
+    # tags = Tag.objects.filter(tag_for=entry)
+    payload = {'entry': entry, 'comments': comments, 'reactions': reactions, 'comment_form': comment_f}
+    return render('blogango/details.html', request, payload)
+
+
+@handle404
+def page_details(request, slug):
+    if not _is_blog_installed():
+        return HttpResponseRedirect(reverse('blogango_install'))
+    
+    entry = BlogEntry.default.get(is_page=True,
+                                  slug=slug)
+
+    # published check needs to be handled here to allow previews
     if not entry.is_published:
         if request.user.is_staff and 'preview' in request.GET:
             pass
