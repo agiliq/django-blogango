@@ -167,12 +167,18 @@ def details(request, year, month, slug):
             comment.is_public = getattr(settings, 'AUTO_APPROVE_COMMENTS', True)
             if AKISMET_COMMENT:
                 comment.is_spam = check_comment_spam(request, comment)
+            if not comment.is_spam:
+                request.session["name"] = comment_f.cleaned_data['name']
+                request.session["email"] = comment_f.cleaned_data['email']
+                request.session["url"] = comment_f.cleaned_data['url']
             comment.save()
             return HttpResponseRedirect('.')
     else:
         init_data = {'name': None}
         if request.user.is_authenticated():
-            init_data['name'] = request.user.get_full_name() or request.user.username
+            init_data['name'] = request.user.get_full_name() or request.user.username or request.session.get("name", "")
+            init_data['email'] = request.user.email or request.session.get("email", "")
+            init_data['url'] = request.session.get("url", "")
         comment_f = bforms.CommentForm(initial=init_data)
             
     comments = Comment.objects.filter(comment_for=entry, is_spam=False)
