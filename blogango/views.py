@@ -174,10 +174,13 @@ def details(request, year, month, slug):
             comment.save()
             return HttpResponseRedirect('.')
     else:
-        init_data = {'name': None}
+        init_data = {}
         if request.user.is_authenticated():
-            init_data['name'] = request.user.get_full_name() or request.user.username or request.session.get("name", "")
-            init_data['email'] = request.user.email or request.session.get("email", "")
+            init_data['name'] = request.user.get_full_name() or request.user.username
+            init_data['email'] = request.user.email
+        else:
+            init_data['name'] = request.session.get("name", "")
+            init_data['email'] = request.session.get("email", "")
             init_data['url'] = request.session.get("url", "")
         comment_f = bforms.CommentForm(initial=init_data)
             
