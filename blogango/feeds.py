@@ -21,6 +21,9 @@ class main_feed(Feed):
     
     def items (self):
         return BlogEntry.objects.filter(is_published=True)[:10]
+
+    def item_description(self, item):
+        return item.text
     
 class CatFeed(Feed):
     def get_object(self, bits):
