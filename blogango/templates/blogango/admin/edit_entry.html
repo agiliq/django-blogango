@@ -29,7 +29,7 @@
             {% if entry.is_published %}
                 <a href="{{ entry.get_absolute_url }}" class="preview">{{ _("View Entry") }}</a>
             {% else %}
-                <a href="{{ entry.get_absolute_url }}?preview" class="preview">{{ _("Preview Entry") }}</a>
+                <a href="{{ entry.get_absolute_url }}?preview" class="preview" target="_blank">{{ _("Preview Entry") }}</a>
             {% endif %}
         </h1>
     {% endif %}
