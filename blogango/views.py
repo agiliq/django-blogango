@@ -435,6 +435,7 @@ def monthly_view(request, year, month):
                          month=month, 
                          queryset=queryset, 
                          date_field='created_on', 
+                         allow_empty=True,
                          extra_context=_get_sidebar_objects(request))
              
 
