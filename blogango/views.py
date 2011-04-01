@@ -123,11 +123,11 @@ def index(request, page = 1):
 
 def check_comment_spam(request, comment):
     from blogango.akismet import Akismet, APIKeyError
-    api = Akismet(AKISMET_API_KEY, 'http://%s' % (request.get_host()), request.META['HTTP_USER_AGENT'])
+    api = Akismet(AKISMET_API_KEY, 'http://%s' % (request.get_host()), request.META.get('HTTP_USER_AGENT', ''))
     
     if api.verify_key():
         akismet_data = {'user_ip': request.META['REMOTE_ADDR'], 
-                        'user_agent': request.META['HTTP_USER_AGENT'], 
+                        'user_agent': request.META.get('HTTP_USER_AGENT', ''), 
                         'comment_author': comment.user_name.encode('utf8'), 
                         'comment_author_email': comment.email_id.encode('utf8'), 
                         'comment_author_url': comment.user_url, 
