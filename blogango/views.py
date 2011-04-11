@@ -133,12 +133,12 @@ def check_comment_spam(request, comment):
     if is_verified:
         akismet_data = {'user_ip': request.META['REMOTE_ADDR'], 
                         'user_agent': request.META.get('HTTP_USER_AGENT', ''), 
-                        'comment_author': comment.user_name.encode('utf8'), 
-                        'comment_author_email': comment.email_id.encode('utf8'), 
+                        'comment_author': comment.user_name.decode('utf8'), 
+                        'comment_author_email': comment.email_id.decode('utf8'), 
                         'comment_author_url': comment.user_url, 
                         'comment_type': 'comment'}
 
-        return api.comment_check(comment.text.encode('utf8'), akismet_data)
+        return api.comment_check(comment.text.decode('utf8'), akismet_data)
     raise AkismetError(message)
 
 
