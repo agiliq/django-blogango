@@ -16,6 +16,7 @@ from taggit.models import Tag
 from blogango.models import Blog, BlogEntry, Comment, BlogRoll, Reaction, _infer_title_or_slug, _generate_summary
 from blogango import forms as bforms
 from blogango.conf.settings import AKISMET_COMMENT, AKISMET_API_KEY
+from blogango.akismet import Akismet, AkismetError
 
 @staff_member_required
 def admin_dashboard(request):
@@ -122,10 +123,14 @@ def index(request, page = 1):
 
 
 def check_comment_spam(request, comment):
-    from blogango.akismet import Akismet, APIKeyError
     api = Akismet(AKISMET_API_KEY, 'http://%s' % (request.get_host()), request.META.get('HTTP_USER_AGENT', ''))
-    
-    if api.verify_key():
+
+    message = "Akismet API key is invalid."
+    try:
+        is_verified = api.verify_key()
+    except AkismetError, e:
+        is_verified = False
+    if is_verified:
         akismet_data = {'user_ip': request.META['REMOTE_ADDR'], 
                         'user_agent': request.META.get('HTTP_USER_AGENT', ''), 
                         'comment_author': comment.user_name.encode('utf8'), 
@@ -134,7 +139,7 @@ def check_comment_spam(request, comment):
                         'comment_type': 'comment'}
 
         return api.comment_check(comment.text.encode('utf8'), akismet_data)
-    raise APIKeyError("Akismet API key is invalid.")
+    raise AkismetError(message)
 
 
 
@@ -166,7 +171,11 @@ def details(request, year, month, slug):
                               email_id=comment_f.cleaned_data['email'])
             comment.is_public = getattr(settings, 'AUTO_APPROVE_COMMENTS', True)
             if AKISMET_COMMENT:
-                comment.is_spam = check_comment_spam(request, comment)
+                try:
+                    comment.is_spam = check_comment_spam(request, comment)
+                except AkismetError:
+                    # Most likely could be a timeout to a spam message
+                    comment.is_spam = True
             if not comment.is_spam:
                 request.session["name"] = comment_f.cleaned_data['name']
                 request.session["email"] = comment_f.cleaned_data['email']
@@ -218,7 +227,11 @@ def page_details(request, slug):
                               email_id=comment_f.cleaned_data['email'])
             comment.is_public = getattr(settings, 'AUTO_APPROVE_COMMENTS', True)
             if AKISMET_COMMENT:
-                comment.is_spam = check_comment_spam(request, comment)
+                try:
+                    comment.is_spam = check_comment_spam(request, comment)
+                except AkismetError:
+                    # Most likely spam causing timeout error.
+                    comment.is_spam = True
             comment.save()
             return HttpResponseRedirect('.')
     else:
