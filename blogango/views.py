@@ -10,6 +10,7 @@ from django.views.generic.date_based import archive_month
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.admin.views.decorators import staff_member_required 
+from django.utils.encoding import smart_str
 
 from taggit.models import Tag
 
@@ -133,12 +134,12 @@ def check_comment_spam(request, comment):
     if is_verified:
         akismet_data = {'user_ip': request.META['REMOTE_ADDR'], 
                         'user_agent': request.META.get('HTTP_USER_AGENT', ''), 
-                        'comment_author': comment.user_name.decode('utf8'), 
-                        'comment_author_email': comment.email_id.decode('utf8'), 
-                        'comment_author_url': comment.user_url, 
+                        'comment_author': smart_str(comment.user_name), 
+                        'comment_author_email': smart_str(comment.email_id), 
+                        'comment_author_url': smart_str(comment.user_url), 
                         'comment_type': 'comment'}
 
-        return api.comment_check(comment.text.decode('utf8'), akismet_data)
+        return api.comment_check(smart_str(comment.text), akismet_data)
     raise AkismetError(message)
 
 
