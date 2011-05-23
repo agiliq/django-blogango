@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from django.views.generic.date_based import archive_month
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.admin.views.decorators import staff_member_required 
+from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.encoding import smart_str
 
 from taggit.models import Tag
@@ -132,11 +132,11 @@ def check_comment_spam(request, comment):
     except AkismetError, e:
         is_verified = False
     if is_verified:
-        akismet_data = {'user_ip': request.META['REMOTE_ADDR'], 
-                        'user_agent': request.META.get('HTTP_USER_AGENT', ''), 
-                        'comment_author': smart_str(comment.user_name), 
-                        'comment_author_email': smart_str(comment.email_id), 
-                        'comment_author_url': smart_str(comment.user_url), 
+        akismet_data = {'user_ip': request.META['REMOTE_ADDR'],
+                        'user_agent': request.META.get('HTTP_USER_AGENT', ''),
+                        'comment_author': smart_str(comment.user_name),
+                        'comment_author_email': smart_str(comment.email_id),
+                        'comment_author_url': smart_str(comment.user_url),
                         'comment_type': 'comment'}
 
         return api.comment_check(smart_str(comment.text), akismet_data)
@@ -148,9 +148,9 @@ def check_comment_spam(request, comment):
 def details(request, year, month, slug):
     if not _is_blog_installed():
         return HttpResponseRedirect(reverse('blogango_install'))
-    
-    entry = BlogEntry.default.get(created_on__year=year, 
-                                  created_on__month=month, 
+
+    entry = BlogEntry.default.get(created_on__year=year,
+                                  created_on__month=month,
                                   slug=slug)
 
     # published check needs to be handled here to allow previews
@@ -164,11 +164,11 @@ def details(request, year, month, slug):
         comment_f = bforms.CommentForm(request.POST)
         if comment_f.is_valid():
             comment_by = request.user if request.user.is_authenticated() else None
-            comment = Comment(text=comment_f.cleaned_data['text'], 
-                              created_by=comment_by, 
-                              comment_for=entry, 
+            comment = Comment(text=comment_f.cleaned_data['text'],
+                              created_by=comment_by,
+                              comment_for=entry,
                               user_name=comment_f.cleaned_data['name'],
-                              user_url=comment_f.cleaned_data['url'], 
+                              user_url=comment_f.cleaned_data['url'],
                               email_id=comment_f.cleaned_data['email'])
             comment.is_public = getattr(settings, 'AUTO_APPROVE_COMMENTS', True)
             if AKISMET_COMMENT:
@@ -182,7 +182,7 @@ def details(request, year, month, slug):
                 request.session["email"] = comment_f.cleaned_data['email']
                 request.session["url"] = comment_f.cleaned_data['url']
             comment.save()
-            return HttpResponseRedirect('.')
+            return HttpResponseRedirect('#comment-%s' % comment.pk)
     else:
         init_data = {}
         if request.user.is_authenticated():
@@ -193,7 +193,7 @@ def details(request, year, month, slug):
             init_data['email'] = request.session.get("email", "")
             init_data['url'] = request.session.get("url", "")
         comment_f = bforms.CommentForm(initial=init_data)
-            
+
     comments = Comment.objects.filter(comment_for=entry, is_spam=False)
     reactions = Reaction.objects.filter(comment_for=entry)
     # tags = Tag.objects.filter(tag_for=entry)
@@ -205,7 +205,7 @@ def details(request, year, month, slug):
 def page_details(request, slug):
     if not _is_blog_installed():
         return HttpResponseRedirect(reverse('blogango_install'))
-    
+
     entry = BlogEntry.default.get(is_page=True,
                                   slug=slug)
 
@@ -220,11 +220,11 @@ def page_details(request, slug):
         comment_f = bforms.CommentForm(request.POST)
         if comment_f.is_valid():
             comment_by = request.user if request.user.is_authenticated() else None
-            comment = Comment(text=comment_f.cleaned_data['text'], 
-                              created_by=comment_by, 
-                              comment_for=entry, 
+            comment = Comment(text=comment_f.cleaned_data['text'],
+                              created_by=comment_by,
+                              comment_for=entry,
                               user_name=comment_f.cleaned_data['name'],
-                              user_url=comment_f.cleaned_data['url'], 
+                              user_url=comment_f.cleaned_data['url'],
                               email_id=comment_f.cleaned_data['email'])
             comment.is_public = getattr(settings, 'AUTO_APPROVE_COMMENTS', True)
             if AKISMET_COMMENT:
@@ -234,26 +234,26 @@ def page_details(request, slug):
                     # Most likely spam causing timeout error.
                     comment.is_spam = True
             comment.save()
-            return HttpResponseRedirect('.')
+            return HttpResponseRedirect('#comment-%s' % comment.pk)
     else:
         init_data = {'name': None}
         if request.user.is_authenticated():
             init_data['name'] = request.user.get_full_name() or request.user.username
         comment_f = bforms.CommentForm(initial=init_data)
-            
+
     comments = Comment.objects.filter(comment_for=entry, is_spam=False)
     reactions = Reaction.objects.filter(comment_for=entry)
     # tags = Tag.objects.filter(tag_for=entry)
     payload = {'entry': entry, 'comments': comments, 'reactions': reactions, 'comment_form': comment_f}
     return render('blogango/details.html', request, payload)
- 
+
 
 @handle404
 def comment_details(request, comment_id):
     comment = Comment.objects.get(id=comment_id)
     payload = locals()
-    return render('blogango/comment.html', request, payload)         
-       
+    return render('blogango/comment.html', request, payload)
+
 
 def tag_details(request, tag_slug):
     from taggit.models import Tag
@@ -263,7 +263,7 @@ def tag_details(request, tag_slug):
     entries = BlogEntry.objects.filter(is_published=True, tags__in=[tag])
     feed_url = getattr(settings, 'FEED_URL', reverse('blogango_feed', args=['tag']) + tag.slug + '/')
     payload = {'tag': tag, 'entries': entries, 'feed_url': feed_url}
-    return render('blogango/tag_details.html', request, payload)    
+    return render('blogango/tag_details.html', request, payload)
 
 
 @login_required
@@ -276,13 +276,13 @@ def create_entry(request):
             if request.POST.has_key('save'):
                 publish = False
             elif request.POST.has_key('post'):
-                publish = True       
-            entry = BlogEntry(created_by=request.user, 
-                              text=create.cleaned_data['text'], 
-                              title=create.cleaned_data['title'], 
-                              slug=create.cleaned_data['slug'], 
-                              is_page=create.cleaned_data['is_page'], 
-                              is_published=publish, 
+                publish = True
+            entry = BlogEntry(created_by=request.user,
+                              text=create.cleaned_data['text'],
+                              title=create.cleaned_data['title'],
+                              slug=create.cleaned_data['slug'],
+                              is_page=create.cleaned_data['is_page'],
+                              is_published=publish,
                               is_rte=create.cleaned_data['is_rte'])
             entry.save()
             tags = create.cleaned_data['tags']
@@ -321,7 +321,7 @@ def edit_entry(request, entry_id):
             if request.POST.has_key('save'):
                 publish = False
             elif request.POST.has_key('post'):
-                publish = True   
+                publish = True
             entry.is_published = publish
             entry.save()
             tags = Tag.objects.filter(tag_for=entry)
@@ -355,11 +355,11 @@ def mod_entries(request):
             entry_ids = request.POST['entries']
             # print request.POST
             # print entry_ids
-            BlogEntry.objects.filter(id__in=entry_ids).delete()                
+            BlogEntry.objects.filter(id__in=entry_ids).delete()
         return HttpResponseRedirect('.')
 
 
-@login_required 
+@login_required
 def moderate_comments(request):
     if request.method == 'GET':
         comments = Comment.objects.filter()
@@ -387,13 +387,13 @@ def moderate_comments(request):
 def install_blog(request):
     if _is_blog_installed():
         return HttpResponseRedirect(reverse('blogango_index'))
-    
+
     if request.method == 'GET':
         install_form = bforms.InstallForm()
     if request.method == 'POST':
         install_form = bforms.InstallForm(request.POST)
         if install_form.is_valid():
-            install_form.save()         
+            install_form.save()
             return HttpResponseRedirect(reverse('blogango_index'))
     payload = {"install_form": install_form}
     return render('blogango/install.html', request, payload)
@@ -409,7 +409,7 @@ def  create_blogroll(request):
             blogroll_form.save()
             return HttpResponseRedirect('.')
     payload = {"blogroll_form": blogroll_form}
-    return render('blogango/blogroll.html', request, payload)    
+    return render('blogango/blogroll.html', request, payload)
 
 
 @login_required
@@ -422,44 +422,44 @@ def edit_preferences(request):
             blog = Blog.objects.all()[0]
             # print blog.id
             blog.entries_per_page = prefs_form.cleaned_data['entries_per_page']
-            blog.recents = prefs_form.cleaned_data['recents']     
+            blog.recents = prefs_form.cleaned_data['recents']
             blog.recent_comments = prefs_form.cleaned_data['recents']
             blog.save()
             return HttpResponseRedirect('.')
     payload = {"install_form": prefs_form}
-    return render('blogango/edit_preferences.html', request, payload)  
+    return render('blogango/edit_preferences.html', request, payload)
 
 
 @login_required
 def manage(request):
-    return render('blogango/manage.html', request, {})   
+    return render('blogango/manage.html', request, {})
 
 
 def author(request, username):
     author = get_object_or_404(User, username=username)
     author_posts = author.blogentry_set.filter(is_published=True)
-    return render('blogango/author.html', request, {'author': author, 
+    return render('blogango/author.html', request, {'author': author,
                                                     'author_posts': author_posts})
-    
+
 def monthly_view(request, year, month):
     queryset = BlogEntry.objects.filter(is_page=False, is_published=True)
-    return archive_month(request=request, 
-                         template_name='blogango/archive_view.html', 
-                         year=year, 
-                         month=month, 
-                         queryset=queryset, 
-                         date_field='created_on', 
+    return archive_month(request=request,
+                         template_name='blogango/archive_view.html',
+                         year=year,
+                         month=month,
+                         queryset=queryset,
+                         date_field='created_on',
                          allow_empty=True,
                          extra_context=_get_sidebar_objects(request))
-             
+
 
 #Helper methods.
 def _is_blog_installed():
     if Blog.objects.count() == 0:
         return False
     return True
-       
-        
+
+
 def render (template, request, payload):
     """Wrapper on render_to_response.
     Adds sidebar objects. Adds RequestContext"""
@@ -478,8 +478,8 @@ def _get_sidebar_objects (request):
     # pages = BlogEntry.objects.filter(is_page = True, is_published = True)
     # recent_comments = Comment.objects.all().order_by('-created_on')[:blog.recent_comments]
     # date_list = _get_archive_months()
-    return {'blog':blog, 
-            'recents':recents, 
+    return {'blog':blog,
+            'recents':recents,
             'blogroll':blogroll,
             'canonical_url': request.build_absolute_uri(),
             'pingback_xmlrpc_url': request.build_absolute_uri(reverse('xmlrpc')),}
@@ -501,15 +501,15 @@ def _generic_form_display(request, form_class):
     if request.method == 'POST':
         form_inst = form_class(request.POST)
         if form_inst.is_valid():
-            form_inst.save()         
+            form_inst.save()
             return HttpResponseRedirect('.')
     payload = {"install_form": form_inst}
     return render('blogango/install.html', request, payload)
-        
+
 
 def generic(request): # A generic form processor.
     if request.method == 'GET':
         pass
     if request.method == 'POST':
        pass
-        
+
