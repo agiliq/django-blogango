@@ -57,7 +57,9 @@
 	               {{ comment.user_name }}
 	           {% endif %}
 	        </span>   
-	        <span class="postdate">{{ comment.created_on|date:'jS N, Y' }}</span><br/>
+            <span class="postdate">
+                <a href="#comment-{{ comment.pk }}">{{ comment.created_on|date:'jS N, Y' }}</a>
+            </span><br/>
 	        <div class="comment_post">
 	            <p>{{ comment.text|striptags|urlize|linebreaks }}</p>
 	        </div>
