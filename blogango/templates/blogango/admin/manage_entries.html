@@ -35,7 +35,13 @@
 		      {% endfor %}
 		      </td>
 		      <td class="comments"><a href="{{ entry.get_absolute_url }}#comments">{{ entry.get_num_comments }}</a></td>
-		      <td class="date">{{ entry.created_on }}</td>
+              <td class="date">
+                  {% ifequal entry.created_on.year 9999 %}
+                      Not published yet.
+                  {% else %}
+                      {{ entry.created_on }}
+                  {% endifequal %}
+              </td>
 		    </tr>
 		    {% endfor %}
         </tbody>

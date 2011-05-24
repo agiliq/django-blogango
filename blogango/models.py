@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.db.models import permalink
 from django.contrib.auth.models import User
@@ -23,20 +24,20 @@ class Blog(models.Model):
     entries_per_page = models.IntegerField(default=10)
     recents = models.IntegerField(default=5)
     recent_comments = models.IntegerField(default=5)
-     
+
     def __unicode__(self):
         return self.title
-     
+
     def save(self):
         """There should not be more than one Blog object"""
         if Blog.objects.count() > 1 and self.id:
             raise Exception("Only one blog object allowed.")
         super(Blog, self).save() # Call the "real" save() method.
 
-        
+
 class BlogPublishedManager(models.Manager):
     use_for_related_fields = True
-    
+
     def get_query_set(self):
         return super(BlogPublishedManager, self).get_query_set().filter(is_published=True)
 
@@ -52,30 +53,30 @@ class BlogEntry(models.Model):
     is_published: Is this page published. If yes then we would display this on site, otherwise no. Default to true.
     comments_allowed: Are comments allowed on this post? Default to True
     is_rte: Was this post done using a Rich text editor?"""
-    
+
     title = models.CharField(max_length=100)
     slug = models.SlugField()
     text = MarkupField(default_markup_type=getattr(settings,
                                                    'DEFAULT_MARKUP_TYPE',
                                                    'plain'),
-                       markup_choices=getattr(settings, "MARKUP_RENDERERS", 
+                       markup_choices=getattr(settings, "MARKUP_RENDERERS",
                                               DEFAULT_MARKUP_TYPES))
     summary = models.TextField()
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(default=datetime.datetime.max, editable=False)
     created_by = models.ForeignKey(User, unique=False)
     is_page = models.BooleanField(default=False)
     is_published = models.BooleanField(default=True)
     comments_allowed = models.BooleanField(default=True)
     is_rte = models.BooleanField(default=False)
-    
+
     meta_keywords = models.TextField(blank=True, null=True)
     meta_description = models.TextField(blank=True, null=True)
 
     tags = TaggableManager()
-    
+
     default = models.Manager()
     objects = BlogPublishedManager()
-    
+
     class Meta:
         ordering = ['-created_on']
         verbose_name_plural = 'Blog entries'
@@ -86,33 +87,33 @@ class BlogEntry(models.Model):
     def save(self, *args, **kwargs):
         if self.title == None  or self.title == '':
             self.title = _infer_title_or_slug(self.text.raw)
-        
+
         if self.slug == None or self.slug == '':
             self.slug = slugify(self.title)
-        
+
         slug_count = BlogEntry.objects.filter(slug__startswith=self.slug).exclude(pk=self.pk).count()
         if slug_count:
             self.slug += '-%s' %(slug_count + 1)
-        
-        if not self.summary: 
+
+        if not self.summary:
             self.summary = _generate_summary(self.text.raw)
         if not self.meta_keywords:
             self.meta_keywords = self.summary
         if not self.meta_description:
             self.meta_description = self.summary
-         
+
         super(BlogEntry, self).save() # Call the "real" save() method.
-        
+
     @permalink
     def get_absolute_url(self):
         return ('blogango_details', (), {'year': self.created_on.strftime('%Y'),
                                          'month': self.created_on.strftime('%m'),
                                          'slug': self.slug})
-    
-    @permalink 
+
+    @permalink
     def get_edit_url(self):
         return ('blogango.views.admin_entry_edit', [self.id])
-     
+
     def get_num_comments(self):
         cmnt_count = Comment.objects.filter(comment_for=self, is_spam=False).count()
         return cmnt_count
@@ -131,7 +132,7 @@ class BaseComment(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     user_name = models.CharField(max_length=100)
     user_url = models.CharField(max_length=100)
-    
+
     class Meta:
         ordering = ['created_on']
         abstract = True
@@ -162,7 +163,7 @@ class Comment(BaseComment):
     @permalink
     def get_absolute_url (self):
         return ('comment_details', self.id)
-      
+
 class Reaction(BaseComment):
     """
     Reactions from various social media sites
@@ -185,7 +186,7 @@ class BlogRoll(models.Model):
 class CommentModerator(CommentModerator):
     email_notification = True
     enable_field = 'is_public'
-        
+
 #Helper methods
 def _infer_title_or_slug(text):
     return '-'.join(text.split()[:5])

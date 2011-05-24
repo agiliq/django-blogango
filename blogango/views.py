@@ -1,3 +1,4 @@
+import datetime
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
@@ -40,6 +41,9 @@ def admin_entry_edit(request, entry_id=None):
             new_entry = entry_form.save(commit=False)
             if "publish" in request.POST:
                 new_entry.is_published = True
+                #default value for created_on is datetime.datetime.max whose year is 9999
+                if new_entry.created_on.year == 9999:
+                    new_entry.created_on = datetime.datetime.now()
             if "page" in request.POST:
                 new_entry.is_page = True
             new_entry.save()
