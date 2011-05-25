@@ -27,7 +27,7 @@ To integrate into your application:
 -----------------------------------
 
 0. Install the requirements
-1. Include 'blogango', 'pingback', 'taggit' in installed apps.
+1. Include 'blogango', 'pingback', 'taggit', 'django.contrib.sitemaps' in installed apps.
 2. include blog urls in urls.py
     
     url(r'^blog/', include('blogango.urls')),

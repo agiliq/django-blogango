@@ -8,7 +8,7 @@ from blogango.models import BlogEntry
 
 blog_info_dict = {
     'queryset': BlogEntry.objects.filter(is_published=True, publish_date__lte=datetime.now),
-    'date_field': 'published_on',
+    'date_field': 'publish_date',
 }
 sitemaps = {
     'blog': GenericSitemap(blog_info_dict, priority=0.5)

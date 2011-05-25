@@ -2,7 +2,7 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-ADMINS = ( 
+ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
 
@@ -49,7 +49,7 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.load_template_source',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = ( 
+TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
@@ -75,6 +75,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.markup',
     'django.contrib.humanize',
+    'django.contrib.sitemaps',
     'blogango',
     'pingback',
     'django_xmlrpc',
