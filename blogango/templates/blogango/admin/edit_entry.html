@@ -1,4 +1,5 @@
 {% extends "blogango/admin/base.html" %}
+{% load adminmedia %}
 {% block title %}
     {% if entry %}
         Editing entry:: {{ entry_form.initial.title }}
@@ -6,6 +7,17 @@
         New Entry
     {% endif %}
     &#8203;{{ title_suffix }}
+{% endblock %}
+{% block page_head %}
+<link rel="stylesheet" type="text/css" href="/media/css/forms.css" />
+
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="/media/js/core.js"></script>
+<script type="text/javascript" src="/media/js/calendar.js"></script>
+<script type="text/javascript" src="/media/js/admin/DateTimeShortcuts.js"></script>
+<script type="text/javascript">
+    window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";
+</script>
 {% endblock %}
 {% block subnavbar %}
     <ul class="ctxnavbar">
@@ -63,6 +75,10 @@
 		      <h3><label for="id_created_by">Author</label></h3>
 		      {{ entry_form.created_by }}
 		</div>	
+		<div class="formbox">
+		      <h3><label for="id_published_date">Publish date</label></h3>
+              {{ entry_form.publish_date }}
+		</div>
 		<div class="formbox toggleable collapsed">
 		      <h3><label for="id_meta_keywords">Keywords</label></h3>
 		      {{ entry_form.meta_keywords }}

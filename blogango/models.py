@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from django.db import models
 from django.db.models import permalink
 from django.contrib.auth.models import User
@@ -39,7 +39,8 @@ class BlogPublishedManager(models.Manager):
     use_for_related_fields = True
 
     def get_query_set(self):
-        return super(BlogPublishedManager, self).get_query_set().filter(is_published=True)
+        return super(BlogPublishedManager, self).get_query_set().filter(is_published=True,
+                publish_date__lte=datetime.now())
 
 class BlogEntry(models.Model):
     """Each blog entry.
@@ -62,10 +63,11 @@ class BlogEntry(models.Model):
                        markup_choices=getattr(settings, "MARKUP_RENDERERS",
                                               DEFAULT_MARKUP_TYPES))
     summary = models.TextField()
-    created_on = models.DateTimeField(default=datetime.datetime.max, editable=False)
+    created_on = models.DateTimeField(default=datetime.max, editable=False)
     created_by = models.ForeignKey(User, unique=False)
     is_page = models.BooleanField(default=False)
     is_published = models.BooleanField(default=True)
+    publish_date = models.DateTimeField()
     comments_allowed = models.BooleanField(default=True)
     is_rte = models.BooleanField(default=False)
 
@@ -102,6 +104,10 @@ class BlogEntry(models.Model):
         if not self.meta_description:
             self.meta_description = self.summary
 
+        if self.is_published:
+            #default value for created_on is datetime.max whose year is 9999
+            if self.created_on.year == 9999:
+                self.created_on = self.publish_date
         super(BlogEntry, self).save() # Call the "real" save() method.
 
     @permalink

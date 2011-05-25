@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.conf.urls.defaults import *
 from django.contrib.auth.views import login, logout, password_change, password_reset
 from django.contrib.sitemaps import GenericSitemap
@@ -6,8 +7,8 @@ from blogango import feeds
 from blogango.models import BlogEntry
 
 blog_info_dict = {
-    'queryset': BlogEntry.objects.filter(is_published=True),
-    'date_field': 'created_on',
+    'queryset': BlogEntry.objects.filter(is_published=True, publish_date__lte=datetime.now),
+    'date_field': 'published_on',
 }
 sitemaps = {
     'blog': GenericSitemap(blog_info_dict, priority=0.5)
@@ -17,7 +18,7 @@ urlpatterns = patterns('blogango.views',
     url(r'^welcome/$', 'welcome', name='blogango_welcome'),
     url(r'^install/$', 'install_blog', name='blogango_install'),
     url(r'^preferences/$', 'edit_preferences', name='blogango_edit_preferences'),
-     
+
     url(r'^$', 'index', name='blogango_index'),
     url(r'^page/(?P<page>\d+)/$', 'index',  name='blogango_page'),
     url(r'^(?P<year>\d{4})/(?P<month>\d{2})/(?P<slug>[-\w]+)/$', 'details', name='blogango_details'),
@@ -30,7 +31,7 @@ urlpatterns = patterns('blogango.views',
     url(r'^edit/(?P<entry_id>\d+)/$', 'edit_entry', name='blogango_edit_entry'),
     url(r'^comment/(?P<comment_id>\d+)/$', 'comment_details', name='blogango_comment_details'),
     url(r'^author/(?P<username>[\w.@+-]+)/$', 'author', name='blogango_author'),
-    
+
     url(r'^admin/$', 'admin_dashboard', name='blogango_admin_dashboard'),
     url(r'^admin/entry/new/$', 'admin_entry_edit', name='blogango_admin_entry_new'),
     url(r'^admin/entry/edit/(?P<entry_id>\d+)/$', 'admin_entry_edit', name='blogango_admin_entry_edit'),
@@ -43,13 +44,13 @@ urlpatterns = patterns('blogango.views',
 
 #search view
 urlpatterns += patterns('blogango.search',
-    url(r'^search/$', 'search', name = 'search'),        
+    url(r'^search/$', 'search', name = 'search'),
 )
 
 # sitemap.xml
 urlpatterns += patterns('django.contrib.sitemaps.views',
-    url(r'^sitemap\.xml$', 'sitemap', {'sitemaps': sitemaps}),        
-)     
+    url(r'^sitemap\.xml$', 'sitemap', {'sitemaps': sitemaps}),
+)
 
 # Archive view
 urlpatterns += patterns('blogango.views',
