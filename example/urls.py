@@ -6,7 +6,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     ('^admin/', include(admin.site.urls)),
-    (r'^', include('blogango.urls')),
+    (r'^blog/', include('blogango.urls')),
 )
 
 if settings.DEBUG:    
