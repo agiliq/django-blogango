@@ -42,7 +42,7 @@ class TestViews(unittest.TestCase):
         self.assertEqual(response.status_code,302)
         blog = BlogEntry.default.all()
         self.assertEqual(1,blog.count())
-        print blog[0].get_absolute_url()
+        
 
 
         def test_entry_existence(self):
