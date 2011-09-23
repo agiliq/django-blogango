@@ -44,10 +44,9 @@ class TestViews(unittest.TestCase):
         self.assertEqual(1,blog.count())
         
 
-
-        def test_entry_existence(self):
-            response = self.c.get('/blog/2011/09/test-post/')
-            self.assertEqual(response.status_code,200)
+    def test_entry_existence(self):
+        response = self.c.get('/blog/2011/09/test-post/')
+        self.assertEqual(response.status_code,200)
     
     
             
