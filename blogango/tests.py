@@ -15,7 +15,7 @@ class BlogTestCase(TestCase):
         response = self.c.get(reverse("blogango_index"))
         self.assertEqual(response.status_code,302)
         self.assertRedirects(response,reverse('blogango_install'))
-        response = self.c.get(reverse("blogango_install"))
+
 
 
     def test_single_existence(self):
