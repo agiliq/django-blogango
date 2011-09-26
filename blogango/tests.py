@@ -118,6 +118,7 @@ class TestAdminActions(TestCase):
         self.assertEqual(1,comments.count())
 
     def test_admin_commentapprove(self):
+        """Check if admin can properly approve a comment"""
         #first add a comment
         entry = BlogEntry.default.all()[0]
         reponse = self.c.post (entry.get_absolute_url(), {'name':'gonecrazy','email':'plaban@agiliq.com',
