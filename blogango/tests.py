@@ -80,6 +80,82 @@ class TestViews(TestCase):
         comment = Comment.objects.filter(comment_for=entry)
         self.assertEqual(1,comment.count())
         self.assertEqual(comment.text,'this is a comment')
+
+    def test_author_details(self):
+        response = self.c.get("/blog/author/gonecrazy")
+        author_posts = response.context['author_posts']
+        self.assertEqual(1,author_posts.count())
+
+
+class TestAdminActions(TestCase):
+    """check for admin action on the blog"""
+    def setUp(self):
+        self.c = Client()
+
+    def test_check_adminpage(self):
+        """Check that the admin page is accessible to everyone"""
+        response = self.c.get(reverse('blogango_admin_dashboard'))
+        self.assertEqual(response.status_code,200)
+
+    def test_change_preferences(self):
+        """check if the admin can change the preferences of blog """
+        response = self.c.login(username='gonecrazy',password='gonecrazy')
+        response = self.c.post(reverse('blogango_admin_edit_preferences'),{'title':'new Blog','tag_line':'my new blog',
+                                                                           'entries_per_page':10,'recents':5,'recent_comments':5})
+        blog = Blog.objects.all()[0]
+        self.assertEqual(blog.title,'new Blog')
+
+    def test_admin_entrymanage(self):
+        """Check if all the entries are retrieved to manage"""
+        response = self.c.get(reverse('blogango_admin_entry_manage'))
+        entries = response.context['entries']
+        self.assertEqual(1,entries.count())
+
+    def test_admin_commentmanage(self):
+        """check if all the comments are retrieved to manage"""
+        response = self.c.get(reverse('blogango_admin_comments_manage'))
+        comments = response.context['comments']
+        self.assertEqual(1,comments.count())
+
+    def test_admin_commentapprove(self):
+        #first add a comment
+        entry = BlogEntry.default.all()[0]
+        reponse = self.c.post (entry.get_absolute_url(), {'name':'gonecrazy','email':'plaban@agiliq.com',
+                                                          'text':'this is a comment','button':'Comment'})
+        #check that the comment is not public
+        comment = Comment.objects.filter(comment_for=entry)[-1]
+        self.assertEqual(comment.is_public,False)
+        #approve the comment
+        
+        response = self.c.get("/blog/admin/approve/comment/%s/" str(comment.id))
+        comment = Comment.objects.filter(comment_for=entry)[-1]
+        self.assertEqual(comment.is_public,True)
+        
+    def test_admin_commentsblock(self):
+        """check if admin can block a comment properly"""
+        entry = BlogEntry.default.all()[0]
+        comment = Comment.objects.filter(comment_for=entry)[-1]
+        self.assertEqual(comment.is_public,True )
+        response = self.c.get("/blog/admin/approve/block/%s/" str(comment.id))
+        comment = Comment.objects.filter(comment_for=entry)[-1]
+        self.assertEqual(comment.is_public,False)
+        
+        
+        
+        
+        
+        
+
+
+            
+
+
+        
+
+        
+        
+
+        
         
 
     
