@@ -2,7 +2,6 @@ from datetime import datetime
 from django.conf.urls.defaults import *
 from django.contrib.auth.views import login, logout, password_change, password_reset
 from django.contrib.sitemaps import GenericSitemap
-
 from blogango import feeds
 from blogango.models import BlogEntry
 
@@ -15,11 +14,9 @@ sitemaps = {
 }
 
 urlpatterns = patterns('blogango.views',
-    url(r'^welcome/$', 'welcome', name='blogango_welcome'),
+    url(r'^$', 'index', name='blogango_index'),
     url(r'^install/$', 'install_blog', name='blogango_install'),
     url(r'^preferences/$', 'edit_preferences', name='blogango_edit_preferences'),
-
-    url(r'^$', 'index', name='blogango_index'),
     url(r'^page/(?P<page>\d+)/$', 'index',  name='blogango_page'),
     url(r'^(?P<year>\d{4})/(?P<month>\d{2})/(?P<slug>[-\w]+)/$', 'details', name='blogango_details'),
     url(r'^new/$', 'create_entry', name='blogango_create'),
