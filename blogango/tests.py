@@ -1,5 +1,5 @@
 from django.test  import TestCase
-from models import Blog,BlogEntry
+from models import Blog,BlogEntry,Comment
 from django.test.client import Client
 from datetime import datetime
 from django.contrib.auth.models import User
@@ -69,10 +69,20 @@ class TestViews(TestCase):
          #edit a post .. the title is changed
         response = self.c.post( "/blog/admin/entry/edit/1/",{'title':'the new test post','text':'this is the test post','publish_date_0':'2011-09-22','publish_date_1':'17:17:55','text_markup_type':"html",'created_by':1,'publish':'Save and Publish'})       #retrieve the entry
         entry = BlogEntry.default.all()[0]
-        print entry.title
         self.assertEqual(blog.title,"the new test post")
 
+    def test_add_comment(self):
+        #test if a comment can be added to entry
+        entry = BlogEntry.default.all()[0]
+       
+        reponse = self.c.post (entry.get_absolute_url(), {'name':'gonecrazy','email':'plaban@agiliq.com',
+                                                          'text':'this is a comment','button':'Comment'})
+        comment = Comment.objects.filter(comment_for=entry)
+        self.assertEqual(1,comment.count())
+        self.assertEqual(comment.text,'this is a comment')
         
+
+    
           
 
         
