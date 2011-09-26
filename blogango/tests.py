@@ -65,7 +65,6 @@ class TestViews(TestCase):
     
     def test_edit_entry(self):
         """Test for editing a entry in the blog"""
-        response = self.c.login(username='gonecrazy',password='gonecrazy')
          #edit a post .. the title is changed
         response = self.c.post( "/blog/admin/entry/edit/1/",{'title':'the new test post','text':'this is the test post','publish_date_0':'2011-09-22','publish_date_1':'17:17:55','text_markup_type':"html",'created_by':1,'publish':'Save and Publish'})       #retrieve the entry
         entry = BlogEntry.default.all()[0]
@@ -91,6 +90,8 @@ class TestAdminActions(TestCase):
     """check for admin action on the blog"""
     def setUp(self):
         self.c = Client()
+        response = self.c.login(username='gonecrazy',password='gonecrazy')
+
 
     def test_check_adminpage(self):
         """Check that the admin page is accessible to everyone"""
