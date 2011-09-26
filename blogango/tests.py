@@ -128,7 +128,7 @@ class TestAdminActions(TestCase):
         self.assertEqual(comment.is_public,False)
         #approve the comment
         
-        response = self.c.get("/blog/admin/approve/comment/%s/" str(comment.id))
+        response = self.c.get("/blog/admin/approve/comment/%s/"  % str(comment.id))
         comment = Comment.objects.filter(comment_for=entry)[-1]
         self.assertEqual(comment.is_public,True)
         
@@ -137,7 +137,7 @@ class TestAdminActions(TestCase):
         entry = BlogEntry.default.all()[0]
         comment = Comment.objects.filter(comment_for=entry)[-1]
         self.assertEqual(comment.is_public,True )
-        response = self.c.get("/blog/admin/approve/block/%s/" str(comment.id))
+        response = self.c.get("/blog/admin/approve/block/%s/" % str(comment.id))
         comment = Comment.objects.filter(comment_for=entry)[-1]
         self.assertEqual(comment.is_public,False)
         
