@@ -91,8 +91,6 @@ def admin_comment_block(request, comment_id):
     comment.save()
     return redirect('blogango_admin_comments_manage')
 
-def welcome(request):
-    return render_to_response('mainpage.html', {})
 
 
 def handle404(view_function):
