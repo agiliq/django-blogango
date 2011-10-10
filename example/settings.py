@@ -80,7 +80,8 @@ INSTALLED_APPS = (
     'pingback',
     'django_xmlrpc',
     'taggit',
-    'django.contrib.comments'
+    'django.contrib.comments',
+    'google_analytics',
 )
 
 from localsettings import *
