@@ -1,11 +1,8 @@
-import ez_setup
-ez_setup.use_setuptools()
-from setuptools import setup, find_packages
+from distutils.core import setup
 
 setup(
     name="django-blogango",
-    version="0.1",
-    py_modules=['ez_setup'],
+    version="0.2",
     packages=['blogango',
               'blogango/conf',
               'blogango/management',
@@ -17,7 +14,6 @@ setup(
                                'templates/blogango/*.html'
                                ]
     },
-    zip_safe=False,
     author="Agiliq Solutions",
     author_email="hello@agiliq.com",
     description="A django based blog",
