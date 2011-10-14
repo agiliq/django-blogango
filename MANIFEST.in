@@ -1,2 +1,3 @@
 include blogango/templates/*.html 
 include blogango/templates/blogango/*.html 
+include blogango/templates/blogango/admin/*.html

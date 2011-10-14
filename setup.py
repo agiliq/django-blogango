@@ -11,7 +11,8 @@ setup(
               ],
     package_dir={'blogango': 'blogango'},
     package_data={'blogango': ['templates/*.html',
-                               'templates/blogango/*.html'
+                               'templates/blogango/*.html',
+                               'templates/blogango/admin/*.html',
                                ]
     },
     author="Agiliq Solutions",
