@@ -31,16 +31,16 @@
 	  <a href="{% url blogango_index %}">
 		<img src="{{ MEDIA_URL }}blogango/images/agiliq_blog_logo.png" width="206" height="67" alt="Agiliq Solutions" />
 	  </a>
-	  <h1 class="message">
+	  <h2 class="message">
 		We love designing and developing websites, but what really drives us is 
 		solving problems and cultivating strong relationships with our clients
-	  </h1>
+	  </h2>
 	</div>
     <!-- HEADER ENDS HERE -->
     <!-- BREADCRUMBS STARTS HERE -->
     <div id="breadcrumbs">
       <ul id="crumbs">
-        <li><a href="/">Home</a></li>
+        <li><a href="/" rel="nofollow">Home</a></li>
 		{% block breadcrumbs %}
         <li><a href="#">Main section</a></li>
         <li><a href="#">Sub section</a></li>
@@ -62,7 +62,7 @@
      	  <div class="block_title">Posts</div>
           <ul class="list">
 			{% for recent in recents %}
-				<li><a href="{{ recent.get_absolute_url }}" title='{{ recent.title }}'>{{ recent.title|truncate_chars:40 }}</a></li>
+				<li><a href="{{ recent.get_absolute_url }}" title='{{ recent.title }}'>{{ recent.title }}</a></li>
 			{% endfor %}
           </ul>
         </div>
@@ -73,7 +73,7 @@
           <div class="block_title">Topics</div>
           <ul class="list_left">
 			  {% for tag in tags %}
-                  <li><a href="{% url blogango_tag_details tag.slug %}" class='{% cycle "left" "right" %}'>{{ tag.name }}</a></li>
+                  <li><a href="{% url blogango_tag_details tag.slug %}" class='{% cycle "left" "right" %}' rel="nofollow">{{ tag.name }}</a></li>
               {% endfor %}
           </ul>
           <div class="clear"></div>
@@ -85,7 +85,7 @@
           <div class="block_title">Archives</div>
           <ul class="list_left">
 			{% for month in archive_months %}
-				<li><a href="{% url blogango_archives month|date:'Y' month|date:'b' %}" class='{% cycle "left" "right" %}'>{{ month|date:'F Y' }}</a></li>
+				<li><a href="{% url blogango_archives month|date:'Y' month|date:'b' %}" class='{% cycle "left" "right" %}' rel="nofollow">{{ month|date:'F Y' }}</a></li>
 			{% endfor %}
           </ul>
           <div class="clear"></div>

@@ -8,8 +8,8 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <li><a href="{% url blogango_index %}">Blog</a></li>
-    <li><a href="{% url blogango_archives entry.created_on.year entry.created_on|date:'b' %}"> {{ entry.created_on|date:'N Y' }}</a></li>
+    <li><a href="{% url blogango_index %}" rel="nofollow">Blog</a></li>
+    <li><a href="{% url blogango_archives entry.created_on.year entry.created_on|date:'b' %}" rel="nofollow"> {{ entry.created_on|date:'N Y' }}</a></li>
 	<li>{{ entry.title }}</li>
 {% endblock %}
 
@@ -45,7 +45,7 @@
 
 {% if comments %}
 <!--COMMENT BLOCK STARTS-->
-<h1>Comments</h1>
+<h2 style="clear:both;">Comments</h2>
 {% for comment in comments %}
     <a name="comment-{{ comment.pk }}">
     <div id="comments" class="commentor_block">
@@ -122,7 +122,7 @@
         <form action="." method="post">
             {% csrf_token %}
             <fieldset>
-                <legend>Comments</legend>
+                <legend>Post a comment</legend>
                 Name : {{comment_form.name.errors}}<br/> {{comment_form.name}} <br/>
 	            Email : {{comment_form.email.errors}} <br/> {{comment_form.email}} <br/>
 	            Your site url: {{comment_form.url.errors}} <br/> {{comment_form.url}} <br/>
