@@ -10,3 +10,5 @@ localsettings.py
 *.tmp*~
 *CACHE*
 *.kpf
+MANIFEST
+dist/*
