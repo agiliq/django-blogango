@@ -9,14 +9,12 @@ class BlogTestCase(TestCase):
 
     def setUp(self):
         self.c = Client()
-
+ 
     def test_bloginstall_redirect(self):
         #check that the blog redirects to install page when there is no blog installed    
         response = self.c.get(reverse("blogango_index"))
         self.assertEqual(response.status_code,302)
-        #self.assertRedirects(response,reverse('blogango_install'))
-
-
+        self.assertRedirects(response,reverse('blogango_install'))
 
     def test_single_existence(self):
         """Test that the blog is created only once """
@@ -59,11 +57,10 @@ class TestViews(TestCase):
         self.assertEqual(1,entries.count())
         
         
-
     def test_entry_existence(self):
         """Test for the existence of entry"""
+        self.test_add_entry()
         entries = BlogEntry.default.all()
-        print entries
         response = self.c.get('/blog/2011/09/test-post/')
         self.assertEqual(response.status_code,200)
 
@@ -102,9 +99,16 @@ class TestAdminActions(TestCase):
     """check for admin action on the blog"""
     def setUp(self):
         self.c = Client()
-        response = self.c.login(username='gonecrazy',password='gonecrazy')
-
-
+        self.blog = Blog(title = "test",tag_line = "new blog",entries_per_page=10,recents = 5, recent_comments = 5)                                                     
+        self.blog.save()  
+        self.user  = User.objects.create_user(username = 'gonecrazy',email='gonecrazy@gmail.com',password = 'gonecrazy')
+        self.user.is_staff = True
+        self.user.save()
+        self.c.login(username='gonecrazy',password='gonecrazy')
+        response = self.c.post( reverse("blogango_admin_entry_new"),{'title':'test post','text':'this is the test post','publish_date_0':'2011-09-22','publish_date_1':'17:17:55','text_markup_type':"html",'created_by':1,'publish':'Save and Publish'})                                                                                       
+        #check for successful posting of entry                                                                                                                          
+        self.assertEqual(response.status_code,302)                       
+        # 
     def test_check_adminpage(self):
         """Check that the admin page is accessible to everyone"""
         response = self.c.get(reverse('blogango_admin_dashboard'))
@@ -113,6 +117,7 @@ class TestAdminActions(TestCase):
     def test_change_preferences(self):
         """check if the admin can change the preferences of blog """
         response = self.c.login(username='gonecrazy',password='gonecrazy')
+
         response = self.c.post(reverse('blogango_admin_edit_preferences'),{'title':'new Blog','tag_line':'my new blog',
                                                                            'entries_per_page':10,'recents':5,'recent_comments':5})
         blog = Blog.objects.all()[0]
@@ -124,63 +129,38 @@ class TestAdminActions(TestCase):
         entries = response.context['entries']
         self.assertEqual(1,entries.count())
 
-    def test_admin_commentmanage(self):
-        """check if all the comments are retrieved to manage"""
-        response = self.c.get(reverse('blogango_admin_comments_manage'))
-        comments = response.context['comments']
-        self.assertEqual(1,comments.count())
-
     def test_admin_commentapprove(self):
         """Check if admin can properly approve a comment"""
         #first add a comment
+        self.assertTrue(BlogEntry.objects.count() > 0)
         entry = BlogEntry.default.all()[0]
         reponse = self.c.post (entry.get_absolute_url(), {'name':'gonecrazy','email':'plaban@agiliq.com',
                                                           'text':'this is a comment','button':'Comment'})
         #check that the comment is not public
-        comment = Comment.objects.filter(comment_for=entry)[-1]
+        comment = Comment.objects.filter(comment_for=entry).reverse()[0]
+        #the default is true for every new comment. expect this test to fail
         self.assertEqual(comment.is_public,False)
         #approve the comment
         
         response = self.c.get("/blog/admin/approve/comment/%s/"  % str(comment.id))
-        comment = Comment.objects.filter(comment_for=entry)[-1]
+        comment = Comment.objects.filter(comment_for=entry).reverse()[0]
         self.assertEqual(comment.is_public,True)
         
+    def test_admin_commentmanage(self):
+        """check if all the comments are retrieved to manage"""
+        entry = BlogEntry.default.all()[0]
+        reponse = self.c.post (entry.get_absolute_url(), {'name':'gonecrazy','email':'plaban@agiliq.com',
+                                                          'text':'this is a comment','button':'Comment'})
+        response = self.c.get(reverse('blogango_admin_comments_manage'))
+        comments = response.context['comments']
+        self.assertEqual(1,comments.count())
+
     def test_admin_commentsblock(self):
         """check if admin can block a comment properly"""
+        self.assertTrue(BlogEntry.objects.count() > 0)
         entry = BlogEntry.default.all()[0]
-        comment = Comment.objects.filter(comment_for=entry)[-1]
+        comment = Comment.objects.filter(comment_for=entry).reverse()[0]
         self.assertEqual(comment.is_public,True )
         response = self.c.get("/blog/admin/approve/block/%s/" % str(comment.id))
         comment = Comment.objects.filter(comment_for=entry)[-1]
         self.assertEqual(comment.is_public,False)
-        
-        
-        
-        
-        
-        
-
-
-            
-
-
-        
-
-        
-        
-
-        
-        
-
-    
-          
-
-        
-
-        
-
-        
-        
-        
-    
-

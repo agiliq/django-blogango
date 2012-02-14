@@ -19,6 +19,7 @@ from blogango import forms as bforms
 from blogango.conf.settings import AKISMET_COMMENT, AKISMET_API_KEY
 from blogango.akismet import Akismet, AkismetError
 
+
 @staff_member_required
 def admin_dashboard(request):
     recent_drafts = BlogEntry.objects.filter(is_published=False).order_by('-created_on')[:5]
@@ -381,7 +382,7 @@ def moderate_comments(request):
         return HttpResponseRedirect('.')
 
 
-@login_required
+@staff_member_required
 def install_blog(request):
     if _is_blog_installed():
         return HttpResponseRedirect(reverse('blogango_index'))
@@ -462,7 +463,7 @@ def render (template, request, payload):
     """Wrapper on render_to_response.
     Adds sidebar objects. Adds RequestContext"""
     payload.update(_get_sidebar_objects(request))
-    return render_to_response(template, payload, context_instance=RequestContext(request),)
+    return render_to_response(template, payload, context_instance=RequestContext(request))
 
 
 def _get_sidebar_objects (request):
