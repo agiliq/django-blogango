@@ -109,7 +109,7 @@ class BlogEntry(models.Model):
             #default value for created_on is datetime.max whose year is 9999
             if self.created_on.year == 9999:
                 self.created_on = self.publish_date
-        super(BlogEntry, self).save() # Call the "real" save() method.
+        super(BlogEntry, self).save(*args, **kwargs) # Call the "real" save() method.
 
     @permalink
     def get_absolute_url(self):
