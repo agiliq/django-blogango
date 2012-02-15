@@ -1,20 +1,34 @@
+import re
+import logging
+
 from django.test  import TestCase
 from models import Blog,BlogEntry,Comment
 from django.test.client import Client
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+import blogango.utils
+import blogango.utils2
+
+logger = logging.getLogger(__name__)
 
 class BlogTestCase(TestCase):
 
     def setUp(self):
         self.c = Client()
+        self.user  = User.objects.create_user(username = 'admin',email='admin@email.com',password = 'admin')
+        self.user.is_staff = True
+        self.user.save()
+        self.c.login(username='admin',password='admin')
+        
  
     def test_bloginstall_redirect(self):
         #check that the blog redirects to install page when there is no blog installed    
-        response = self.c.get(reverse("blogango_index"))
-        self.assertEqual(response.status_code,302)
+        response = self.c.get(reverse("blogango_index"),follow=True)
         self.assertRedirects(response,reverse('blogango_install'))
+        logger.warn("foo")
+        self.assertTrue(re.search(r'<input name="install" type="submit" value="Install Blog" class="button"/>',response.content))
+
 
     def test_single_existence(self):
         """Test that the blog is created only once """
@@ -59,7 +73,6 @@ class TestViews(TestCase):
         
     def test_entry_existence(self):
         """Test for the existence of entry"""
-        self.test_add_entry()
         entries = BlogEntry.default.all()
         response = self.c.get('/blog/2011/09/test-post/')
         self.assertEqual(response.status_code,200)

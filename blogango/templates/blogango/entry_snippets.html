@@ -9,7 +9,7 @@
     </div>
     <div class="italics">
 	  <a href='{% url blogango_archives entry.created_on.year entry.created_on|date:"b" %}'>
-		{{ entry.created_on|date:'jS N, Y' }}
+		{{ entry.publish_date|date:'jS N, Y' }}
 	  </a>
 	</div>
     <div class="comment_bg"><a href="{{ entry.get_absolute_url }}#comments">{{ entry.get_num_comments }}</a></div>

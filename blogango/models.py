@@ -64,7 +64,7 @@ class BlogEntry(models.Model):
                        markup_choices=getattr(settings, "MARKUP_RENDERERS",
                                               DEFAULT_MARKUP_TYPES))
     summary = models.TextField()
-    created_on = models.DateTimeField(default=datetime.max, editable=False)
+    created_on = models.DateTimeField()
     created_by = models.ForeignKey(User, unique=False)
     is_page = models.BooleanField(default=False)
     is_published = models.BooleanField(default=True)
