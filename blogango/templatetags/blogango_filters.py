@@ -8,7 +8,6 @@ from django.contrib.sites.models import Site
 from taggit.models import Tag
 from blogango.views import _get_archive_months
 from blogango.models import Blog
-from blogango.views import _is_blog_installed
 
 register = template.Library()
 
@@ -19,15 +18,15 @@ class BlogangoContext(template.Node):
     def render(self, context):
         #only one blog must be present
         blog = None
-        if _is_blog_installed():
+        if Blog._is_installed():
             blog = Blog.objects.get(pk=1)
         tags = Tag.objects.all()
-        feed_url = getattr(settings, 'FEED_URL', reverse('blogango_feed', args=['latest'])) 
+        feed_url = getattr(settings, 'FEED_URL', reverse('blogango_feed', args=['latest']))
         archive_months = _get_archive_months()
         site = Site.objects.get_current()
-                
+
         extra_context = {
-                         'tags': tags, 
+                         'tags': tags,
                          'feed_url': feed_url,
                          'archive_months': archive_months,
                          'blog': blog,
@@ -35,7 +34,7 @@ class BlogangoContext(template.Node):
                          }
         context.update(extra_context)
         return ''
-    
+
 def blogango_extra_context(parser, token):
     return BlogangoContext()
 
@@ -44,7 +43,7 @@ def blogango_extra_context(parser, token):
 def twitterize(token):
     return re.sub(r'\W(@(\w+))', r'<a href="https://twitter.com/\2">\1</a>', token)
 twitterize.is_safe = True
-    
+
 register.tag('blogango_extra_context', blogango_extra_context)
 
 @register.filter
