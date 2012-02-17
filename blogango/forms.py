@@ -22,8 +22,8 @@ class EntryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(EntryForm, self).__init__(*args, **kwargs)
         self.fields['created_by'].queryset = User.objects.filter(is_staff=True)
-        self.fields['created_on'].widget = widgets.AdminSplitDateTime()
         self.fields['publish_date'].widget = widgets.AdminSplitDateTime()
+        self.fields['created_on'].widget = widgets.AdminSplitDateTime()
 
     title = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'size':'40'}))
     text = forms.CharField(widget=WideTextArea(attrs={'class': 'resizable'}))

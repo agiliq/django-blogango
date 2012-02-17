@@ -18,7 +18,7 @@ class BlogangoContext(template.Node):
     def render(self, context):
         #only one blog must be present
         blog = None
-        if Blog._is_installed():
+        if Blog.is_installed():
             blog = Blog.objects.get(pk=1)
         tags = Tag.objects.all()
         feed_url = getattr(settings, 'FEED_URL', reverse('blogango_feed', args=['latest']))

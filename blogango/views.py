@@ -104,7 +104,7 @@ def handle404(view_function):
 
 
 def index(request, page = 1):
-    if not Blog._is_installed:
+    if not Blog.is_installed():
         return HttpResponseRedirect(reverse('blogango_install'))
     page = int(page)
     blog = Blog.objects.all()[0]
@@ -145,7 +145,7 @@ def check_comment_spam(request, comment):
 
 @handle404
 def details(request, year, month, slug):
-    if not Blog._is_installed:
+    if not Blog.is_installed():
         return HttpResponseRedirect(reverse('blogango_install'))
 
     entry = BlogEntry.default.get(created_on__year=year,
@@ -202,7 +202,7 @@ def details(request, year, month, slug):
 
 @handle404
 def page_details(request, slug):
-    if not Blog._is_installed:
+    if not Blog.is_installed():
         return HttpResponseRedirect(reverse('blogango_install'))
 
     entry = BlogEntry.default.get(is_page=True,
@@ -384,7 +384,7 @@ def moderate_comments(request):
 
 @staff_member_required
 def install_blog(request):
-    if Blog._is_installed:
+    if Blog.is_installed():
         return HttpResponseRedirect(reverse('blogango_index'))
 
     if request.method == 'GET':

@@ -30,7 +30,7 @@
     </ul>
 {% endblock %}
 {% block contents %}
-      <div class="notification-messages">      
+      <div class="notification-messages">
 	    {% if 'done' in request.GET %}
 	        <div class="message message-info">Blog entry saved successfully</div>
 	    {% endif %}
@@ -74,9 +74,9 @@
 		<div class="formbox toggleable collapsed">
 		      <h3><label for="id_created_by">Author</label></h3>
 		      {{ entry_form.created_by }}
-		</div>	
+		</div>
 		<div class="formbox">
-		      <h3><label for="id_published_date">Created On</label></h3>
+		      <h3><label for="id_created_on">Created On</label></h3>
               {{ entry_form.created_on }}
 		</div>
 			<div class="formbox">
