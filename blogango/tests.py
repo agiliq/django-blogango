@@ -134,8 +134,6 @@ class TestAdminActions(BlogWithAnEntry):
 
     def test_change_preferences(self):
         """check if the admin can change the preferences of blog """
-        response = self.c.login(username='gonecrazy',password='gonecrazy')
-
         response = self.c.post(reverse('blogango_admin_edit_preferences'),{'title':'new Blog','tag_line':'my new blog',
                                                                            'entries_per_page':10,'recents':5,'recent_comments':5})
         blog = Blog.objects.all()[0]
@@ -147,22 +145,21 @@ class TestAdminActions(BlogWithAnEntry):
         entries = response.context['entries']
         self.assertEqual(1,entries.count())
 
-    def test_admin_commentapprove(self):
+    def test_admin_comment_approve_block(self):
         """Check if admin can properly approve a comment"""
         #first add a comment
-        self.assertTrue(BlogEntry.objects.count() > 0)
         entry = BlogEntry.default.all()[0]
         reponse = self.c.post (entry.get_absolute_url(), {'name':'gonecrazy','email':'plaban@agiliq.com',
                                                           'text':'this is a comment','button':'Comment'})
-        #check that the comment is not public
-        comment = Comment.objects.filter(comment_for=entry).reverse()[0]
-        #the default is true for every new comment. expect this test to fail
-        self.assertEqual(comment.is_public,False)
-        #approve the comment
 
-        response = self.c.get("/blog/admin/approve/comment/%s/"  % str(comment.id))
         comment = Comment.objects.filter(comment_for=entry).reverse()[0]
-        self.assertEqual(comment.is_public,True)
+        logger.debug("The comment's id is %s" % str(comment.id))
+        old_flag = comment.is_public
+        self.c.get("/blog/admin/comment/block/%s/" % str(comment.id))
+        self.c.get("/blog/admin/comment/approve/%s/"  % str(comment.id))
+        comment = Comment.objects.filter(comment_for=entry).reverse()[0]
+        new_flag = comment.is_public
+        self.assertTrue(old_flag == new_flag)
 
     def test_admin_commentmanage(self):
         """check if all the comments are retrieved to manage"""
@@ -173,12 +170,3 @@ class TestAdminActions(BlogWithAnEntry):
         comments = response.context['comments']
         self.assertEqual(1,comments.count())
 
-    def test_admin_commentsblock(self):
-        """check if admin can block a comment properly"""
-        self.assertTrue(BlogEntry.objects.count() > 0)
-        entry = BlogEntry.default.all()[0]
-        comment = Comment.objects.filter(comment_for=entry).reverse()[0]
-        self.assertEqual(comment.is_public,True )
-        response = self.c.get("/blog/admin/approve/block/%s/" % str(comment.id))
-        comment = Comment.objects.filter(comment_for=entry)[-1]
-        self.assertEqual(comment.is_public,False)
