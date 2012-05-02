@@ -35,6 +35,11 @@ class Blog(models.Model):
             raise Exception("Only one blog object allowed.")
         super(Blog, self).save() # Call the "real" save() method.
 
+    @staticmethod
+    def is_installed():
+        if Blog.objects.count() == 0:
+            return False
+        return True
 
 class BlogPublishedManager(models.Manager):
     use_for_related_fields = True
@@ -64,7 +69,7 @@ class BlogEntry(models.Model):
                        markup_choices=getattr(settings, "MARKUP_RENDERERS",
                                               DEFAULT_MARKUP_TYPES))
     summary = models.TextField()
-    created_on = models.DateTimeField(default=datetime.max, editable=False)
+    created_on = models.DateTimeField(default=datetime.max)
     created_by = models.ForeignKey(User, unique=False)
     is_page = models.BooleanField(default=False)
     is_published = models.BooleanField(default=True)

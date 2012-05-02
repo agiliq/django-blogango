@@ -2,7 +2,7 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-ADMINS = ( 
+ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
 
@@ -16,14 +16,7 @@ DATABASES = {
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-        'TEST NAME':'test_database.sqlite',
-        
-        
-        
-
-        
-        
-
+        'TEST_NAME':'test_database.sqlite3`',
     }
 }
 

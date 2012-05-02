@@ -12,3 +12,5 @@ localsettings.py
 *.kpf
 MANIFEST
 dist/*
+*.db
+tags

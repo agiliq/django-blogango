@@ -19,6 +19,7 @@ from blogango import forms as bforms
 from blogango.conf.settings import AKISMET_COMMENT, AKISMET_API_KEY
 from blogango.akismet import Akismet, AkismetError
 
+
 @staff_member_required
 def admin_dashboard(request):
     recent_drafts = BlogEntry.objects.filter(is_published=False).order_by('-created_on')[:5]
@@ -103,7 +104,7 @@ def handle404(view_function):
 
 
 def index(request, page = 1):
-    if not _is_blog_installed():
+    if not Blog.is_installed():
         return HttpResponseRedirect(reverse('blogango_install'))
     page = int(page)
     blog = Blog.objects.all()[0]
@@ -144,7 +145,7 @@ def check_comment_spam(request, comment):
 
 @handle404
 def details(request, year, month, slug):
-    if not _is_blog_installed():
+    if not Blog.is_installed():
         return HttpResponseRedirect(reverse('blogango_install'))
 
     entry = BlogEntry.default.get(created_on__year=year,
@@ -201,7 +202,7 @@ def details(request, year, month, slug):
 
 @handle404
 def page_details(request, slug):
-    if not _is_blog_installed():
+    if not Blog.is_installed():
         return HttpResponseRedirect(reverse('blogango_install'))
 
     entry = BlogEntry.default.get(is_page=True,
@@ -381,9 +382,9 @@ def moderate_comments(request):
         return HttpResponseRedirect('.')
 
 
-@login_required
+@staff_member_required
 def install_blog(request):
-    if _is_blog_installed():
+    if Blog.is_installed():
         return HttpResponseRedirect(reverse('blogango_index'))
 
     if request.method == 'GET':
@@ -452,17 +453,12 @@ def monthly_view(request, year, month):
 
 
 #Helper methods.
-def _is_blog_installed():
-    if Blog.objects.count() == 0:
-        return False
-    return True
-
 
 def render (template, request, payload):
     """Wrapper on render_to_response.
     Adds sidebar objects. Adds RequestContext"""
     payload.update(_get_sidebar_objects(request))
-    return render_to_response(template, payload, context_instance=RequestContext(request),)
+    return render_to_response(template, payload, context_instance=RequestContext(request))
 
 
 def _get_sidebar_objects (request):

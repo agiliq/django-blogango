@@ -14,17 +14,19 @@ register = template.Library()
 class BlogangoContext(template.Node):
     def __init__(self):
         pass
-    
+
     def render(self, context):
         #only one blog must be present
-        blog = Blog.objects.get(pk=1)
+        blog = None
+        if Blog.is_installed():
+            blog = Blog.objects.get(pk=1)
         tags = Tag.objects.all()
-        feed_url = getattr(settings, 'FEED_URL', reverse('blogango_feed', args=['latest'])) 
+        feed_url = getattr(settings, 'FEED_URL', reverse('blogango_feed', args=['latest']))
         archive_months = _get_archive_months()
         site = Site.objects.get_current()
-                
+
         extra_context = {
-                         'tags': tags, 
+                         'tags': tags,
                          'feed_url': feed_url,
                          'archive_months': archive_months,
                          'blog': blog,
@@ -32,7 +34,7 @@ class BlogangoContext(template.Node):
                          }
         context.update(extra_context)
         return ''
-    
+
 def blogango_extra_context(parser, token):
     return BlogangoContext()
 
@@ -41,7 +43,7 @@ def blogango_extra_context(parser, token):
 def twitterize(token):
     return re.sub(r'\W(@(\w+))', r'<a href="https://twitter.com/\2">\1</a>', token)
 twitterize.is_safe = True
-    
+
 register.tag('blogango_extra_context', blogango_extra_context)
 
 @register.filter
