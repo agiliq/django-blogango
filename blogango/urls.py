@@ -40,9 +40,11 @@ urlpatterns = patterns('blogango.views',
 )
 
 #search view
-urlpatterns += patterns('blogango.search',
-    url(r'^search/$', 'search', name = 'search'),
+urlpatterns += patterns('',
+    url(r'^search/', include('haystack.urls')),
 )
+
+
 
 # sitemap.xml
 urlpatterns += patterns('django.contrib.sitemaps.views',

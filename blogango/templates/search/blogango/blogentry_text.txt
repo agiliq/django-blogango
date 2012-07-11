@@ -1,0 +1,11 @@
+{{ object.post }}
+{{ object.title }}
+{{ object.slug }}
+{{ object.text }}
+{{ object.summary }}
+{{ object.created_by.first_name }}
+    
+{{ object.meta_keywords }}
+{{ object.meta_description }}
+    
+{{ object.tags }}
