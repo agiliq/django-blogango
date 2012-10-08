@@ -29,4 +29,4 @@ xmlrpcdispatcher.register_function(ping_func, 'pingback.ping')
 def get_blog_text(instance):
     return instance.text.rendered
 
-signals.post_save.connect(ping_external_links(content_func=get_blog_text, url_attr='get_absolute_url'), sender=BlogEntry, weak=False)
+signals.post_save.connect(ping_external_links(content_func=get_blog_text, url_attr='get_absolute_url'), sender=BlogEntry, weak=True)

@@ -83,3 +83,4 @@ INSTALLED_APPS = (
 )
 
 from localsettings import *
+STATIC_URL = "/static/"

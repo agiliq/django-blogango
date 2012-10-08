@@ -206,3 +206,4 @@ moderator.register(Comment, CommentModerator)
 from south.modelsinspector import add_introspection_rules
 add_introspection_rules([], ["^markupfield\.fields\.MarkupField"])
 
+
