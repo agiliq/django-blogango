@@ -41,7 +41,7 @@ urlpatterns = patterns('blogango.views',
 
 #search view
 urlpatterns += patterns('',
-    url(r'^search/', include('haystack.urls')),
+    #url(r'^search/', include('haystack.urls')),
 )
 
 
@@ -63,7 +63,7 @@ urlpatterns += patterns('django_xmlrpc.views',
 feeds = {'latest': feeds.main_feed, 'tag':feeds.CatFeed}
 # feeds = {'latest': feeds.main_feed}
 urlpatterns += patterns('',
-    url(r'^rss/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}, name='blogango_feed')
+    url(r'^rss/(?P<url>.*)/$', 'django.contrib.syndication.views.Feed', {'feed_dict': feeds}, name='blogango_feed')
 )
 
 urlpatterns += patterns('blogango.views',
