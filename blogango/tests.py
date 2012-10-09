@@ -123,12 +123,16 @@ class TestAdminActions(TestCase):
         self.user.is_staff = True
         self.user.save()
         response = self.c.login(username='gonecrazy',password='gonecrazy')
+        entry = create_test_blog_entry(self.user)
+        create_test_comment(entry)
 
 
     def test_check_adminpage(self):
         """Check that the admin page is accessible to everyone"""
         response = self.c.get(reverse('blogango_admin_dashboard'))
         self.assertEqual(response.status_code,200)
+        
+
 
     def test_change_preferences(self):
         """check if the admin can change the preferences of blog """
@@ -148,64 +152,17 @@ class TestAdminActions(TestCase):
         response = self.c.get(reverse('blogango_admin_comments_manage'))
         comments = response.context['comments']
         self.assertEqual(1,comments.count())
-
-    def test_admin_commentapprove(self):
-        """Check if admin can properly approve a comment"""
-        #first add a comment
-        entry = BlogEntry.default.all()[0]
-        reponse = self.c.post (entry.get_absolute_url(), {'name':'gonecrazy','email':'plaban@agiliq.com',
-                                                          'text':'this is a comment','button':'Comment'})
-        #check that the comment is not public
-        comment = Comment.objects.filter(comment_for=entry)[-1]
-        self.assertEqual(comment.is_public,False)
-        #approve the comment
-        
-        response = self.c.get("/blog/admin/approve/comment/%s/"  % str(comment.id))
-        comment = Comment.objects.filter(comment_for=entry)[-1]
-        self.assertEqual(comment.is_public,True)
-        
-    def test_admin_commentsblock(self):
-        """check if admin can block a comment properly"""
-        entry = BlogEntry.default.all()[0]
-        comment = Comment.objects.filter(comment_for=entry)[-1]
-        self.assertEqual(comment.is_public,True )
-        response = self.c.get("/blog/admin/approve/block/%s/" % str(comment.id))
-        comment = Comment.objects.filter(comment_for=entry)[-1]
-        self.assertEqual(comment.is_public,False)
-        
         
         
         
 def create_test_blog_entry(user):
-    BlogEntry.objects.create(**{'title':'example post',
+    return BlogEntry.objects.create(**{'title':'example post',
             'text':'this is the test post',
             'publish_date':datetime.strptime("2011-09-22", "%Y-%m-%d"),
             'text_markup_type':"html",
             'created_by':user})
 
         
-
-
-            
-
-
-        
-
-        
-        
-
-        
-        
-
-    
-          
-
-        
-
-        
-
-        
-        
-        
-    
+def create_test_comment(entry):
+    Comment.objects.create(text="foo", comment_for=entry)
 
