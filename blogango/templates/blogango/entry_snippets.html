@@ -4,7 +4,7 @@
         {% if entry.created_by.teammember.photo %}
             <img src="{{ entry.created_by.teammember.photo.url }}" width="71" height="72" alt="{{ entry.created_by }}" />
         {% else %}
-            <img src="{{ MEDIA_URL }}blogango/images/person_default.jpg" width="71" height="72" alt="{{ entry.created_by }}" />
+            <img src="{{ STATIC_URL }}blogango/images/person_default.jpg" width="71" height="72" alt="{{ entry.created_by }}" />
         {% endif %}
     </div>
     <div class="italics">

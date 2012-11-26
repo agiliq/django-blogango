@@ -1,6 +1,6 @@
 {% if entry.tags.all %}
     <div class="filed">Filed in :
-        {% for tag in entry.tags.all %} 
+        {% for tag in entry.tags.all %}
             <a href="{% url blogango_tag_details tag.slug %}">{{ tag.name }}</a>
         {% endfor %}
     </div>
@@ -9,8 +9,8 @@
 {% endif %}
 
 <div class="postdetails">
-    <img src="{{ MEDIA_URL }}blogango/images/blog.png" width="16" height="16" alt="Written by" /> 
+    <img src="{{ STATIC_URL }}blogango/images/blog.png" width="16" height="16" alt="Written by" />
     <a href="{% url blogango_author entry.created_by %}"> {{ entry.created_by }}</a> &nbsp;&nbsp;&nbsp;
-    <img src="{{ MEDIA_URL }}blogango/images/date_icon.png" width="16" height="16" alt="Date" />
+    <img src="{{ STATIC_URL }}blogango/images/date_icon.png" width="16" height="16" alt="Date" />
     &nbsp;{{ entry.created_on|date:'jS N, Y' }}.
-</div> 
+</div>

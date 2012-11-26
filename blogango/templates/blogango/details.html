@@ -22,7 +22,7 @@
 {% comment %}
 <div class="comment_block">
   <div class="left_panel">
-    <div class="frame_bg"><img src="{{ MEDIA_URL }}blogango/images/person_img.jpg" width="71" height="72" alt="shabda" /></div>
+    <div class="frame_bg"><img src="{{ STATIC_URL }}blogango/images/person_img.jpg" width="71" height="72" alt="shabda" /></div>
     <div class="italics">{{ entry.created_on|date:'jS N, Y' }}</div>
     <div class="comment_bg"><a href="{{ entry.get_absolute_url }}#comments">{{ entry.get_num_comments }}</a></div>
     <div class="italics">Comments</div>
@@ -34,7 +34,7 @@
     <h6 class="posted_by">By : <a href="{% url blogango_author entry.created_by %}">{{ entry.created_by }}</a>{# - Django Geek #}</h6>
     <p>{{ entry.text|safe }} </p>
     <a href="{{ entry.get_absolute_url }}" class="moreinfo">more info..</a>
-    <div class="topics">Topics : 
+    <div class="topics">Topics :
 	{% for tag in entry.tags.all %}
 		<a href="{% url blogango_tag_details tag.slug %}">{{ tag.name }}</a>
 	{% endfor %}
@@ -56,7 +56,7 @@
 	           {% else %}
 	               {{ comment.user_name }}
 	           {% endif %}
-	        </span>   
+	        </span>
             <span class="postdate">
                 <a href="#comment-{{ comment.pk }}">{{ comment.created_on|date:'jS N, Y' }}</a>
             </span><br/>
@@ -65,7 +65,7 @@
 	        </div>
 	    </div>
 	    <div class="rightnpanel">
-	        <img src="{% gravatar_url comment.email_id %}" width="50" height="50" alt="commmenttor" class="picborder"/> 
+	        <img src="{% gravatar_url comment.email_id %}" width="50" height="50" alt="commmenttor" class="picborder"/>
 	    </div>
 	    <div class="clear"></div>
     </div>
@@ -91,7 +91,7 @@
 	    </div>
 	    <div class="rightnpanel">
             {% if reaction.profile_image %}
-	            <img src="{{ reaction.profile_image }}" width="50" height="50" alt="commmenttor" class="picborder" /> 
+	            <img src="{{ reaction.profile_image }}" width="50" height="50" alt="commmenttor" class="picborder" />
             {% endif %}
 	    </div>
 	    <div class="clear"></div>
@@ -112,7 +112,7 @@
             <span class="postdate">{{ pingback.date|date:'jS N, Y' }}, pingback from {{ pingback.url|urlizetrunc:40 }}</span>
             <div class="comment_post">{{ pinback.content }}</div>
         </div>
-    {% endfor %} 
+    {% endfor %}
 {% endif %}
 <!--  Ping Backs ends -->
 
