@@ -1,3 +1,4 @@
+{% load blogango_filters %}
 <div class="comment_block">
   <div class="left_panel">
     <div class="frame_bg">
@@ -35,6 +36,18 @@
       {% if forloop.first %}Topics : {% endif %}
 	  <a href="{% url blogango_tag_details tag.slug %}">{{ tag.name }}</a>
 	{% endfor %}
+    {% related_posts entry as related_posts %}
+    {% if related_posts %}
+    <h4>You may want to read</h4>
+    <ul>
+
+    {% for post in related_posts %}
+        <li>
+            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+        </li>
+    {% endfor %}
+    {% endif %}
+    </ul>
 	</div>
   </div>
 </div>

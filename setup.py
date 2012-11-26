@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name="django-blogango",
-    version="0.4b",
+    version="0.4d",
     packages=['blogango',
               'blogango/conf',
               'blogango/management',
@@ -21,7 +21,7 @@ setup(
     long_description=
     """
         Blogango is a simple but robust blogging application written with django
-        
+
         Some of the features include comments using contrib.comments framework,
         backtype and pingback support, rich text using django-markupfield,
         month based archiving, tagging using django-tagging and categorization
