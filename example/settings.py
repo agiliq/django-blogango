@@ -1,3 +1,5 @@
+import os
+SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -25,14 +27,15 @@ SITE_ID = 1
 # to load the internationalization machinery.
 USE_I18N = True
 
-# Absolute path to the directory that holds media.
-# Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = os.path.join(SITE_ROOT, 'media/')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = '/site_media/'
+STATIC_URL = "/static/"
+MEDIA_ROOT = os.path.join(SITE_ROOT, 'static/')
+
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -47,12 +50,13 @@ TEMPLATE_LOADERS = ('django.template.loaders.filesystem.Loader',
 	 'django.template.loaders.app_directories.Loader'
 		)
 
-		
+
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
+    'django.core.context_processors.static',
     'django.contrib.messages.context_processors.messages',
 )
 
@@ -61,6 +65,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.doc.XViewMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
 )
 
 ROOT_URLCONF = 'example.urls'
@@ -74,6 +79,7 @@ INSTALLED_APPS = (
     'django.contrib.markup',
     'django.contrib.humanize',
     'django.contrib.sitemaps',
+    'django.contrib.staticfiles',
     'blogango',
     'pingback',
     'django_xmlrpc',

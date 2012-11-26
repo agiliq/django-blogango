@@ -1,13 +1,12 @@
 {% load blogango_filters analytics %}
-
 {% blogango_extra_context %}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>{% block title %} {{ blog.title }} {% endblock %}</title>
-<link href="{{ STATIC__URL }}blogango/css/as_blog_styles.css" rel="stylesheet" type="text/css" />
-<link href="{{ STATIC__URL }}blogango/css/prettify.css" rel="stylesheet" type="text/css" />
+<link href="{{ STATIC_URL }}blogango/css/as_blog_styles.css" rel="stylesheet" type="text/css" />
+<link href="{{ STATIC_URL }}blogango/css/prettify.css" rel="stylesheet" type="text/css" />
 <link href='http://fonts.googleapis.com/css?family=Droid+Serif:regular,bold&subset=latin' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Molengo&subset=latin' rel='stylesheet' type='text/css'>
@@ -29,7 +28,7 @@
     <!-- HEADER STARTS HERE -->
     <div id="header">
 	  <a href="{% url blogango_index %}">
-		<img src="{{ STATIC__URL }}blogango/images/agiliq_blog_logo.png" width="206" height="67" alt="Agiliq Solutions" />
+		<img src="{{ STATIC_URL }}blogango/images/agiliq_blog_logo.png" width="206" height="67" alt="Agiliq Solutions" />
 	  </a>
 	  <h2 class="message">
 		We love designing and developing websites, but what really drives us is
@@ -119,7 +118,7 @@
   <!--FOOTER CONTAINER ENDS-->
 </div>
 <!--BASE CONTAINER ENDS-->
-<script type="text/javascript" src="{{ STATIC__URL }}blogango/js/jquery.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}blogango/js/jquery.min.js"></script>
 <script type="text/javascript">
     function pretty_print(){
         $(document).ready(function() {
@@ -133,7 +132,7 @@
 
     // if code blocks were found, bring in the prettifier ...
     if ( prettify ) {
-        $.getScript("{{ STATIC__URL }}blogango/js/prettify.js", function() { prettyPrint() });
+        $.getScript("{{ STATIC_URL }}blogango/js/prettify.js", function() { prettyPrint() });
     }
 });
 }
