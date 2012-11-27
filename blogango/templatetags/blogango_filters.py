@@ -42,8 +42,8 @@ def blogango_extra_context(parser, token):
 def related_posts(post):
     tags = post.tags.all()
     related_posts = TaggedItem.objects.filter(tag__in=tags).filter(
-        blogentry__is_published=
-        True).distinct().order_by("-blogentry__created_on")[:5]
+        blogentry__is_published=True).exclude(blogentry=post
+        ).distinct().order_by("-blogentry__created_on")[:5]
     return set([el.content_object for el in related_posts])
 
 #django snippets #2107
