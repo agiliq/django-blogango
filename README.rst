@@ -5,7 +5,7 @@ To quickly try it locally:
 
 #Step1: cd to the example folder  
 
-$cd django-blogango/exmaple/  
+$cd django-blogango/example/  
 
 #Step2: Install the requirements in the local folder  
 
