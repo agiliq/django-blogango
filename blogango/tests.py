@@ -11,7 +11,7 @@ class BlogTestCase(TestCase):
         self.c = Client()
 
     def test_bloginstall_redirect(self):
-        #check that the blog redirects to install page when there is no blog installed    
+        "check that the blog redirects to install page when there is no blog installed"    
         response = self.c.get(reverse("blogango_index"))
         self.assertEqual(response.status_code,302)
         #self.assertRedirects(response,reverse('blogango_install'))
