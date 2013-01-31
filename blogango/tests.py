@@ -56,7 +56,8 @@ class TestViews(TestCase):
         response = self.c.post( reverse("blogango_admin_entry_new"),{'title':'test post',
             'text':'this is the test post','publish_date_0':'2011-09-22',
             'publish_date_1':'17:17:55','text_markup_type':"html",
-            'created_by':1,'publish':'Save and Publish'})
+            'created_by':1,'publish':'Save and Publish',
+            'tags': "testing"})
         #check for successful posting of entry
         self.assertEqual(response.status_code,302)
         entries  = BlogEntry.default.all()
@@ -84,7 +85,9 @@ class TestViews(TestCase):
         response = self.c.post("/blog/admin/entry/edit/1/",
                 {'title':'the new test post','text':'this is the test post',
                 'publish_date_0':'2011-09-22','publish_date_1':'17:17:55',
-                'text_markup_type':"html",'created_by':1,'publish':'Save and Publish'})     #retrieve the entry
+                'text_markup_type':"html",'created_by':1,'publish':'Save and Publish',
+                'tags': 'testing'})
+        self.assertEqual(response.status_code, 302)
         entry = BlogEntry.default.all()
         self.assertEqual(entry[0].title,"the new test post")
 
