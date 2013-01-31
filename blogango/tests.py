@@ -59,7 +59,7 @@ class TestViews(TestCase):
         response = self.c.post( reverse("blogango_admin_entry_new"),{'title':'test post',
             'text':'this is the test post','publish_date_0':'2011-09-22',
             'publish_date_1':'17:17:55','text_markup_type':"html",
-            'created_by':1,'publish':'Save and Publish',
+            'created_by': self.user.pk,'publish':'Save and Publish',
             'tags': "testing"})
         #check for successful posting of entry
         self.assertEqual(response.status_code,302)
@@ -85,14 +85,19 @@ class TestViews(TestCase):
         create_test_blog_entry(self.user)
         self.c.login(username='gonecrazy',password='gonecrazy')
         #edit a post .. the title is changed
-        response = self.c.post("/blog/admin/entry/edit/1/",
+        post = BlogEntry.objects.create(**{'title':'test post',
+                    'text':'this is the test post',
+                    'publish_date':datetime.strptime("2011-09-22", "%Y-%m-%d"),
+                    'text_markup_type':"html",
+                    'created_by':self.user})
+        response = self.c.post("/blog/admin/entry/edit/%s/"%post.pk,
                 {'title':'the new test post','text':'this is the test post',
                 'publish_date_0':'2011-09-22','publish_date_1':'17:17:55',
-                'text_markup_type':"html",'created_by':1,'publish':'Save and Publish',
+                'text_markup_type':"html",'created_by':self.user.pk,'publish':'Save and Publish',
                 'tags': 'testing'})
         self.assertEqual(response.status_code, 302)
-        entry = BlogEntry.default.all()
-        self.assertEqual(entry[0].title,"the new test post")
+        entry = BlogEntry.default.get(pk=post.pk)
+        self.assertEqual(entry.title,"the new test post")
 
     def test_add_comment(self):
         #test if a comment can be added to entry
