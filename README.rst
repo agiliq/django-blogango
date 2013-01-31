@@ -1,3 +1,5 @@
+.. image:: https://travis-ci.org/agiliq/django-blogango.png?branch=master
+
 Checkout the application live in use at http://agiliq.com/blog
 
 To quickly try it locally:
