@@ -10,6 +10,10 @@ from taggit.managers import TaggableManager
 from markupfield.fields import MarkupField
 from markupfield.markup import DEFAULT_MARKUP_TYPES
 
+class BlogManager(models.Manager):
+    def get_blog(self):
+        return self.all()[0]
+
 class Blog(models.Model):
     """Blog wide settings.
      title:title of the Blog.
@@ -24,6 +28,8 @@ class Blog(models.Model):
     entries_per_page = models.IntegerField(default=10)
     recents = models.IntegerField(default=5)
     recent_comments = models.IntegerField(default=5)
+
+    objects = BlogManager()
 
     def __unicode__(self):
         return self.title

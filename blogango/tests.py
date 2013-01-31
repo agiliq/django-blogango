@@ -20,9 +20,11 @@ class BlogTestCase(TestCase):
 
     def test_single_existence(self):
         """Test that the blog is created only once """
-        self.blog = Blog(title = "test",tag_line = "new blog",entries_per_page=10,recents = 5, recent_comments = 5)
+        self.blog = Blog(title = "test",tag_line = "new blog",entries_per_page=10,
+                        recents = 5, recent_comments = 5)
         self.blog.save()
-        blog = Blog(title = "test",tag_line = "new blog",entries_per_page=10,recents = 5, recent_comments = 5)
+        blog = Blog(title = "test",tag_line = "new blog",entries_per_page=10,
+                    recents = 5, recent_comments = 5)
         #should raise Exception when another blog is created
         self.assertRaises(Exception,blog.save())
         self.blog.delete()
@@ -32,7 +34,8 @@ class TestViews(TestCase):
     """Test Views  of the blog"""
 
     def setUp(self):
-        self.blog = Blog(title = "test",tag_line = "new blog",entries_per_page=10,recents = 5, recent_comments = 5)
+        self.blog = Blog(title = "test",tag_line = "new blog",entries_per_page=10,
+                    recents = 5, recent_comments = 5)
         self.blog.save()
         self.c = Client()
         self.user  = User.objects.create_user(username = 'gonecrazy',email='gonecrazy@gmail.com',password = 'gonecrazy')
@@ -109,9 +112,9 @@ class TestViews(TestCase):
         self.assertEqual(1,author_posts.count())
     
     def tearDown(self):
-        #self.blog.delete()
-        #self.user.delete()
-        pass
+        self.blog.delete()
+        self.user.delete()
+        
 
         
 

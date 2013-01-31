@@ -68,7 +68,7 @@ def admin_manage_comments(request):
 @staff_member_required
 def admin_edit_preferences(request):
     #only one blog must be present
-    blog = Blog.objects.get(pk=1)
+    blog = Blog.objects.get_blog()
     form = bforms.PreferencesForm(instance=blog)
     if request.POST:
         form = bforms.PreferencesForm(request.POST, instance=blog)
