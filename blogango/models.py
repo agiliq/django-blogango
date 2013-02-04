@@ -54,12 +54,12 @@ class BlogEntry(models.Model):
     Title: Post title.
     Slug: Post slug. These two if not given are inferred directly from entry text.
     text = The main data for the post.
-    summary = The summary for the text. probably can can be derived from text, bit we dont want do do that each time main page is displayed.
+    summary = The summary for the text. probably can be derived from text, but we dont want do do that each time main page is displayed.
     created_on = The date this entry was created. Defaults to now.
     Created by: The user who wrote this.
     is_page: IS this a page or a post? Pages are the more important posts, which might be displayed differently. Defaults to false.
-    is_published: Is this page published. If yes then we would display this on site, otherwise no. Default to true.
-    comments_allowed: Are comments allowed on this post? Default to True
+    is_published: Is this page published. If yes then we would display this on site, otherwise no. Defaults to true.
+    comments_allowed: Are comments allowed on this post? Defaults to True
     is_rte: Was this post done using a Rich text editor?"""
 
     title = models.CharField(max_length=100)
