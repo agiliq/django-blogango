@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.contrib.comments.moderation import CommentModerator, moderator
 from django.template.defaultfilters import slugify
+from django.core.urlresolvers import reverse
 
 from taggit.managers import TaggableManager
 from markupfield.fields import MarkupField
@@ -117,9 +118,8 @@ class BlogEntry(models.Model):
                 self.created_on = self.publish_date
         super(BlogEntry, self).save(*args, **kwargs) # Call the "real" save() method.
 
-    @permalink
     def get_absolute_url(self):
-        return ('blogango_details', (), {'year': self.created_on.strftime('%Y'),
+        return reverse('blogango_details', kwargs={'year': self.created_on.strftime('%Y'),
                                          'month': self.created_on.strftime('%m'),
                                          'slug': self.slug})
 
