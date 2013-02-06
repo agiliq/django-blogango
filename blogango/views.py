@@ -115,8 +115,6 @@ def index(request, page = 1):
     entries = page_.object_list
     has_next = page_.has_next()
     has_prev = page_.has_previous()
-    next = page + 1
-    prev = page - 1
     payload = locals()
     return render('blogango/mainpage.html', request, payload)
 
