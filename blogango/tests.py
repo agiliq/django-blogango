@@ -4,6 +4,8 @@ from django.test.client import Client
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.contrib.staticfiles import finders
+from django.contrib.staticfiles.storage import staticfiles_storage
 
 class BlogTestCase(TestCase):
 
@@ -166,6 +168,19 @@ class TestAdminActions(TestCase):
         
         
         
+class TestStaticFiles(TestCase):
+    """Check if app contains required static files"""
+    def test_images(self):
+        abs_path = finders.find('blogango/images/agiliq_blog_logo.png')
+        self.assertTrue(staticfiles_storage.exists(abs_path))
+        abs_path = finders.find('blogango/images/person_default.jpg')
+        self.assertTrue(staticfiles_storage.exists(abs_path))
+
+    def test_css(self):
+        abs_path = finders.find('blogango/css/as_blog_styles.css')
+        self.assertTrue(staticfiles_storage.exists(abs_path))
+        abs_path = finders.find('blogango/css/prettify.css')
+
 def create_test_blog_entry(user):
     return BlogEntry.objects.create(**{'title':'example post',
             'text':'this is the test post',
