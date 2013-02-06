@@ -511,5 +511,5 @@ def generic(request): # A generic form processor.
     if request.method == 'GET':
         pass
     if request.method == 'POST':
-       pass
+        pass
 
