@@ -173,9 +173,8 @@ class Comment(BaseComment):
     default = models.Manager()
     objects = CommentManager()
 
-    @permalink
     def get_absolute_url (self):
-        return ('comment_details', self.id)
+        return reverse('blogango_comment_details', args=[self.id,])
 
 class Reaction(BaseComment):
     """
