@@ -416,7 +416,6 @@ def edit_preferences(request):
         prefs_form = bforms.PreferencesForm(request.POST)
         if prefs_form.is_valid():
             blog = Blog.objects.all()[0]
-            # print blog.id
             blog.entries_per_page = prefs_form.cleaned_data['entries_per_page']
             blog.recents = prefs_form.cleaned_data['recents']
             blog.recent_comments = prefs_form.cleaned_data['recents']
