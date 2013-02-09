@@ -349,8 +349,6 @@ def mod_entries(request):
                 entry.save()
         elif request.POST.has_key("del"):
             entry_ids = request.POST['entries']
-            # print request.POST
-            # print entry_ids
             BlogEntry.objects.filter(id__in=entry_ids).delete()
         return HttpResponseRedirect('.')
 

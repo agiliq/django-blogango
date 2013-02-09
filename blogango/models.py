@@ -123,9 +123,8 @@ class BlogEntry(models.Model):
                                          'month': self.created_on.strftime('%m'),
                                          'slug': self.slug})
 
-    @permalink
     def get_edit_url(self):
-        return ('blogango.views.admin_entry_edit', [self.id])
+        return reverse('blogango_admin_entry_edit', args=[self.id])
 
     def get_num_comments(self):
         cmnt_count = Comment.objects.filter(comment_for=self, is_spam=False).count()
