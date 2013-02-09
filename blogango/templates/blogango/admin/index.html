@@ -25,7 +25,7 @@
       {% for draft in recent_drafts %}
         <li>
             <a href="{{ draft.get_edit_url }}">{{ draft.title }}</a>
-            <span class="meta">[<a href="{{ draft.get_absolute_url }}">{{ _('show') }}</a>]</span>,
+            <span class="meta">[<a href="{{ draft.get_absolute_url }}?preview">{{ _('show') }}</a>]</span>,
             {{ draft.created_on }}
         </li>
       {% endfor %}

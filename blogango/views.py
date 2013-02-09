@@ -21,7 +21,7 @@ from blogango.akismet import Akismet, AkismetError
 
 @staff_member_required
 def admin_dashboard(request):
-    recent_drafts = BlogEntry.objects.filter(is_published=False).order_by('-created_on')[:5]
+    recent_drafts = BlogEntry.default.filter(is_published=False).order_by('-created_on')[:5]
     recent_entries = BlogEntry.objects.filter(is_published=True).order_by('-created_on')[:5]
     return render('blogango/admin/index.html', request, {'recent_drafts': recent_drafts,
                                                          'recent_entries': recent_entries})
