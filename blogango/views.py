@@ -261,40 +261,6 @@ def tag_details(request, tag_slug):
     payload = {'tag': tag, 'entries': entries, 'feed_url': feed_url}
     return render('blogango/tag_details.html', request, payload)
 
-
-@login_required
-def create_entry(request):
-    if request.method == 'GET':
-        create = bforms.EntryForm()
-    elif request.method == 'POST':
-        create = bforms.EntryForm(request.POST)
-        if create.is_valid():
-            if request.POST.has_key('save'):
-                publish = False
-            elif request.POST.has_key('post'):
-                publish = True
-            entry = BlogEntry(created_by=request.user,
-                              text=create.cleaned_data['text'],
-                              title=create.cleaned_data['title'],
-                              slug=create.cleaned_data['slug'],
-                              is_page=create.cleaned_data['is_page'],
-                              is_published=publish,
-                              is_rte=create.cleaned_data['is_rte'])
-            entry.save()
-            tags = create.cleaned_data['tags']
-            tag_list = tags.split()
-            for tag in tag_list:
-                tag_, created = Tag.objects.get_or_create(tag_txt=tag.strip())
-                tag_.save()
-                entry.tag_set.add(tag_)
-            if request.POST.has_key('save'):
-                return HttpResponseRedirect('.')
-            elif request.POST.has_key('post'):
-                return HttpResponseRedirect(entry.get_absolute_url())
-    payload = {'create_form': create,}
-    return render('blogango/create.html', request, payload)
-
-
 @login_required
 def edit_entry(request, entry_id):
     if request.method == 'GET':
