@@ -262,45 +262,6 @@ def tag_details(request, tag_slug):
     return render('blogango/tag_details.html', request, payload)
 
 @login_required
-def edit_entry(request, entry_id):
-    if request.method == 'GET':
-        entry = BlogEntry.objects.filter(id=entry_id).values()[0]
-        entry_ = BlogEntry.objects.get(id=entry_id)
-        tags = Tag.objects.filter(tag_for=entry_)
-        tags = [tag.tag_txt for tag in tags]
-        tag_ = " ".join(tags)
-        entry['tags'] = tag_
-        create = bforms.EntryForm(entry)
-    elif request.method == 'POST':
-        create = bforms.EntryForm(request.POST)
-        if create.is_valid():
-            entry = BlogEntry.objects.get(id=entry_id)
-            entry.text = create.cleaned_data['text']
-            entry.title = create.cleaned_data['title']
-            entry.slug = create.cleaned_data['slug']
-            entry.is_page = create.cleaned_data['is_page']
-            entry.comments_allowed = create.cleaned_data['comments_allowed']
-            if request.POST.has_key('save'):
-                publish = False
-            elif request.POST.has_key('post'):
-                publish = True
-            entry.is_published = publish
-            entry.save()
-            tags = Tag.objects.filter(tag_for=entry)
-            for tag in tags:
-                entry.tag_set.remove(tag)
-            tags_data = create.cleaned_data['tags']
-            tag_list = tags_data.split(' ')
-            for tag in tag_list:
-                tag_, created = Tag.objects.get_or_create(tag_txt=tag.strip())
-                tag_.save()
-                entry.tag_set.add(tag_)
-            return HttpResponseRedirect(entry.get_absolute_url())
-    payload = {'create_form': create,}
-    return render('blogango/create.html', request, payload)
-
-
-@login_required
 def install_blog(request):
     if _is_blog_installed():
         return HttpResponseRedirect(reverse('blogango_index'))
