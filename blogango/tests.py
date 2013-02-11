@@ -16,9 +16,14 @@ class BlogTestCase(TestCase):
         "check that the blog redirects to install page when there is no blog installed"    
         response = self.c.get(reverse("blogango_index"))
         self.assertEqual(response.status_code,302)
-        #self.assertRedirects(response,reverse('blogango_install'))
 
-
+    def test_bloginstall(self):
+        User.objects.create_user(username='foo', password='bar')
+        response = self.c.get(reverse('blogango_install'))
+        self.assertEqual(response.status_code, 302)
+        self.c.login(username='foo', password='bar')
+        response = self.c.get(reverse('blogango_install'))
+        self.assertEqual(response.status_code, 200)
 
     def test_single_existence(self):
         """Test that the blog is created only once """

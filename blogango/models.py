@@ -13,7 +13,10 @@ from markupfield.markup import DEFAULT_MARKUP_TYPES
 
 class BlogManager(models.Manager):
     def get_blog(self):
-        return self.all()[0]
+        blogs = self.all()
+        if blogs:
+            return blogs[0]
+        return None
 
 class Blog(models.Model):
     """Blog wide settings.
