@@ -320,30 +320,6 @@ def mod_entries(request):
 
 
 @login_required
-def moderate_comments(request):
-    if request.method == 'GET':
-        comments = Comment.objects.filter()
-        payload = {"comments": comments}
-        return render('blogango/mod_comment.html', request, payload)
-    elif request.method == 'POST':
-        if request.POST.has_key('spam'):
-            spammeds = request.POST['spam']
-        else:
-            spammeds = {}
-        for spammed in spammeds:
-            comment = Comment.objects.get(id = spammed)
-            comment.is_spam = True
-            comment.save()
-        if request.POST.has_key('delete'):
-            deleteds = request.POST['delete']
-        else:
-            deleteds = {}
-        for deleted in deleteds:
-            Comment.objects.get(id = deleted).delete()
-        return HttpResponseRedirect('.')
-
-
-@login_required
 def install_blog(request):
     if _is_blog_installed():
         return HttpResponseRedirect(reverse('blogango_index'))
