@@ -41,7 +41,7 @@ class Blog(models.Model):
     def save(self):
 
         """There should not be more than one Blog object"""
-        if Blog.objects.count() > 1 and self.id:
+        if Blog.objects.count() == 1 and not self.id:
             raise Exception("Only one blog object allowed.")
         super(Blog, self).save() # Call the "real" save() method.
 

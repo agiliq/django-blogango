@@ -35,8 +35,12 @@ class BlogTestCase(TestCase):
         blog = Blog(title="test", tag_line="new blog", entries_per_page=10,
                     recents=5, recent_comments=5)
         #should raise Exception when another blog is created
-        self.assertRaises(Exception, blog.save())
-        self.blog.delete()
+        self.assertRaises(Exception, blog.save)
+        blog = Blog.objects.get()
+        blog.title = 'edited'
+        blog.save()
+        self.assertEqual(Blog.objects.count(), 1)
+        self.assertEqual(Blog.objects.get().title, 'edited')
 
 
 class TestViews(TestCase):
