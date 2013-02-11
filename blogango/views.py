@@ -372,28 +372,6 @@ def  create_blogroll(request):
     return render('blogango/blogroll.html', request, payload)
 
 
-@login_required
-def edit_preferences(request):
-    if request.method == 'GET':
-        prefs_form = bforms.PreferencesForm(Blog.objects.all().values()[0])
-    if request.method == 'POST':
-        prefs_form = bforms.PreferencesForm(request.POST)
-        if prefs_form.is_valid():
-            blog = Blog.objects.all()[0]
-            blog.entries_per_page = prefs_form.cleaned_data['entries_per_page']
-            blog.recents = prefs_form.cleaned_data['recents']
-            blog.recent_comments = prefs_form.cleaned_data['recents']
-            blog.save()
-            return HttpResponseRedirect('.')
-    payload = {"install_form": prefs_form}
-    return render('blogango/edit_preferences.html', request, payload)
-
-
-@login_required
-def manage(request):
-    return render('blogango/manage.html', request, {})
-
-
 def author(request, username):
     author = get_object_or_404(User, username=username)
     author_posts = author.blogentry_set.filter(is_published=True)
