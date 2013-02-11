@@ -301,25 +301,6 @@ def edit_entry(request, entry_id):
 
 
 @login_required
-def mod_entries(request):
-    if request.method == 'GET':
-        entries = BlogEntry.objects.all()
-        payload = locals()
-        return render('blogango/manage_entries.html', request, payload)
-    if request.method == 'POST':
-        if request.POST.has_key("unpublish"):
-            entry_ids = request.POST['entries']
-            entries = BlogEntry.objects.filter(id__in=entry_ids)
-            for entry in entries:
-                entry.is_published = False
-                entry.save()
-        elif request.POST.has_key("del"):
-            entry_ids = request.POST['entries']
-            BlogEntry.objects.filter(id__in=entry_ids).delete()
-        return HttpResponseRedirect('.')
-
-
-@login_required
 def install_blog(request):
     if _is_blog_installed():
         return HttpResponseRedirect(reverse('blogango_index'))
