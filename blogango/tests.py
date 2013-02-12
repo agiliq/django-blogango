@@ -19,6 +19,12 @@ class BlogTestCase(TestCase):
         response = self.c.get(reverse("blogango_index"))
         self.assertEqual(response.status_code, 302)
 
+    def test_blogindex_access(self):
+        Blog.objects.create(title='test', tag_line="blog",
+                entries_per_page=10, recents=5, recent_comments=5)
+        response = self.c.get(reverse("blogango_index"))
+        self.assertEqual(response.status_code, 200)
+
     def test_bloginstall(self):
         User.objects.create_user(username='foo', password='bar')
         response = self.c.get(reverse('blogango_install'))

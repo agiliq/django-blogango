@@ -38,12 +38,12 @@ class Blog(models.Model):
     def __unicode__(self):
         return self.title
 
-    def save(self):
+    def save(self, *args, **kwargs):
 
         """There should not be more than one Blog object"""
         if Blog.objects.count() == 1 and not self.id:
             raise Exception("Only one blog object allowed.")
-        super(Blog, self).save() # Call the "real" save() method.
+        super(Blog, self).save(*args, **kwargs) # Call the "real" save() method.
 
 
 class BlogPublishedManager(models.Manager):
