@@ -70,6 +70,19 @@ class TestViews(TestCase):
         #it should return 200 for all users
         self.assertEqual(response.status_code, 200)
 
+    def test_entries_pagination(self):
+        num_entries = 15
+        for each in range(num_entries):
+            BlogEntry.objects.create(title="test", text='foo', created_by=self.user,
+                    publish_date=datetime.today(), text_markup_type='plain')
+        self.assertEqual(BlogEntry.objects.count(), 15)
+        response = self.c.get(reverse('blogango_page', args=[1,]))
+        self.assertEqual(response.status_code, 200)
+        response = self.c.get(reverse('blogango_page', args=[2,]))
+        self.assertEqual(response.status_code, 200)
+        response = self.c.get(reverse('blogango_page', args=[3,]))
+        self.assertEqual(response.status_code, 302)
+
     def test_admin_page(self):
         response = self.c.get(reverse("blogango_admin_dashboard"))
         self.assertEqual(response.status_code, 200)
