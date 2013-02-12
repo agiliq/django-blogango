@@ -89,13 +89,12 @@ class TestViews(TestCase):
 
     def test_entry_existence(self):
         """Test for the existence of entry"""
-        entries = BlogEntry.default.all()
         BlogEntry.objects.create(**{'title': 'test post',
             'text': 'this is the test post',
             'publish_date': datetime.strptime("2011-09-22", "%Y-%m-%d"),
             'text_markup_type': "html",
             'created_by': self.user})
-        response = self.c.get('/blog/2011/09/test-post/')
+        response = self.c.get(reverse('blogango_details', args=['2011', '09', 'test-post']))
         self.assertEqual(response.status_code, 200)
 
     def test_edit_entry(self):
