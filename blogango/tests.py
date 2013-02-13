@@ -130,19 +130,6 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['entries']), 1)
 
-    def test_add_entry(self):
-        """Test whether a entry can be added to the blog """
-        response = self.c.login(username='gonecrazy', password='gonecrazy')
-        response = self.c.post(reverse("blogango_admin_entry_new"), {'title': 'test post',
-            'text': 'this is the test post', 'publish_date_0': '2011-09-22',
-            'publish_date_1': '17:17:55', 'text_markup_type': "html",
-            'created_by': self.user.pk, 'publish': 'Save and Publish',
-            'tags': "testing"})
-        #check for successful posting of entry
-        self.assertEqual(response.status_code, 302)
-        entries = BlogEntry.default.all()
-        self.assertEqual(1, entries.count())
-
     def test_entry_existence(self):
         """Test for the existence of entry"""
         BlogEntry.objects.create(**{'title': 'test post',
@@ -153,25 +140,6 @@ class TestViews(TestCase):
         response = self.c.get(reverse('blogango_details', args=['2011', '09', 'test-post']))
         self.assertEqual(response.status_code, 200)
 
-    def test_edit_entry(self):
-        """Test for editing a entry in the blog"""
-        create_test_blog_entry(self.user)
-        self.c.login(username='gonecrazy', password='gonecrazy')
-        #edit a post .. the title is changed
-        post = BlogEntry.objects.create(**{'title': 'test post',
-                    'text': 'this is the test post',
-                    'publish_date': datetime.strptime("2011-09-22", "%Y-%m-%d"),
-                    'text_markup_type': "html",
-                    'created_by': self.user})
-        response = self.c.post("/blog/admin/entry/edit/%s/" % post.pk,
-                {'title': 'the new test post', 'text': 'this is the test post',
-                'publish_date_0': '2011-09-22', 'publish_date_1': '17:17:55',
-                'text_markup_type': "html", 'created_by': self.user.pk, 'publish': 'Save and Publish',
-                'tags': 'testing'})
-        self.assertEqual(response.status_code, 302)
-        entry = BlogEntry.default.get(pk=post.pk)
-        self.assertEqual(entry.title, "the new test post")
-
     def test_add_comment(self):
         #test if a comment can be added to entry
         create_test_blog_entry(self.user)
@@ -180,7 +148,7 @@ class TestViews(TestCase):
                                                           'text': 'this is a comment', 'button': 'Comment'})
         comment = Comment.objects.get(comment_for=entry)
         comments = Comment.objects.filter(comment_for=entry)
-        self.assertEqual(1, comments.count())
+        self.assertEqual(comments.count(), 1)
         self.assertEqual(comment.text, 'this is a comment')
 
     def test_author_details(self):
@@ -211,6 +179,37 @@ class TestAdminActions(TestCase):
         """Check that the admin page is accessible to everyone"""
         response = self.c.get(reverse('blogango_admin_dashboard'))
         self.assertEqual(response.status_code, 200)
+
+    def test_add_entry(self):
+        """Test whether a entry can be added to the blog """
+        self.assertEqual(BlogEntry.objects.count(), 1)
+        response = self.c.login(username='gonecrazy', password='gonecrazy')
+        response = self.c.post(reverse("blogango_admin_entry_new"), {'title': 'test post',
+            'text': 'this is the test post', 'publish_date_0': '2011-09-22',
+            'publish_date_1': '17:17:55', 'text_markup_type': "html",
+            'created_by': self.user.pk, 'publish': 'Save and Publish',
+            'tags': "testing"})
+        #check for successful posting of entry
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(BlogEntry.objects.count(), 2)
+
+    def test_edit_entry(self):
+        """Test for editing a entry in the blog"""
+        self.c.login(username='gonecrazy', password='gonecrazy')
+        #edit a post .. the title is changed
+        post = BlogEntry.objects.create(**{'title': 'test post',
+                    'text': 'this is the test post',
+                    'publish_date': datetime.strptime("2011-09-22", "%Y-%m-%d"),
+                    'text_markup_type': "html",
+                    'created_by': self.user})
+        response = self.c.post("/blog/admin/entry/edit/%s/" % post.pk,
+                {'title': 'the new test post', 'text': 'this is the test post',
+                'publish_date_0': '2011-09-22', 'publish_date_1': '17:17:55',
+                'text_markup_type': "html", 'created_by': self.user.pk, 'publish': 'Save and Publish',
+                'tags': 'testing'})
+        self.assertEqual(response.status_code, 302)
+        entry = BlogEntry.objects.get(pk=post.pk)
+        self.assertEqual(entry.title, "the new test post")
 
     def test_change_preferences(self):
         """check if the admin can change the preferences of blog """
