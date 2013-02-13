@@ -83,6 +83,17 @@ class TestViews(TestCase):
         response = self.c.get(reverse('blogango_page', args=[3,]))
         self.assertEqual(response.status_code, 302)
 
+    def test_entries_slug(self):
+        e1 = BlogEntry.objects.create(title="test", text='foo', created_by=self.user,
+                    publish_date=datetime.today(), text_markup_type='plain')
+        e2 = BlogEntry.objects.create(title="test", text='foo', created_by=self.user,
+                    publish_date=datetime.today(), text_markup_type='plain')
+        self.assertNotEqual(e1.slug, e2.slug)
+        e1 = BlogEntry.objects.get(pk=e1.pk)
+        e2 = BlogEntry.objects.get(pk=e2.pk)
+        e1.save()
+        self.assertNotEqual(e1.slug, e2.slug)
+
     def test_admin_page(self):
         response = self.c.get(reverse("blogango_admin_dashboard"))
         self.assertEqual(response.status_code, 200)

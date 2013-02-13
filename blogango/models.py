@@ -104,9 +104,14 @@ class BlogEntry(models.Model):
         if self.slug == None or self.slug == '':
             self.slug = slugify(self.title)
 
-        slug_count = BlogEntry.objects.filter(slug__startswith=self.slug).exclude(pk=self.pk).count()
-        if slug_count:
-            self.slug += '-%s' %(slug_count + 1)
+        i = 1
+        while True:
+            if i>1:
+                self.slug += '-%s' % str(i)
+            slug_count = BlogEntry.objects.filter(slug__exact=self.slug).exclude(pk=self.pk)
+            if not slug_count:
+                break
+            i += 1
 
         if not self.summary:
             self.summary = _generate_summary(self.text.raw)
