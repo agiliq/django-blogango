@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response, get_object_or_404, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -14,7 +14,7 @@ from django.utils.encoding import smart_str
 
 from taggit.models import Tag
 
-from blogango.models import Blog, BlogEntry, Comment, BlogRoll, Reaction, _infer_title_or_slug, _generate_summary
+from blogango.models import Blog, BlogEntry, Comment, BlogRoll, Reaction
 from blogango import forms as bforms
 from blogango.conf.settings import AKISMET_COMMENT, AKISMET_API_KEY
 from blogango.akismet import Akismet, AkismetError

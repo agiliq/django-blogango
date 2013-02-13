@@ -53,6 +53,28 @@ class BlogTestCase(TestCase):
         self.assertEqual(Blog.objects.get().title, 'edited')
 
 
+class TestBlogEntry(TestCase):
+    def setUp(self):
+        self.blog = Blog(title="test", tag_line="new blog", entries_per_page=10,
+                    recents=5, recent_comments=5)
+        self.blog.save()
+        self.c = Client()
+        self.user = User.objects.create_user(username='gonecrazy', email='gonecrazy@gmail.com', password='gonecrazy')
+        self.user.is_staff = True
+        self.user.save()
+
+    def test_blogentry_managers(self):
+        """Test custom manager works as expected"""
+        e1 = BlogEntry.objects.create(title="test", text='foo', created_by=self.user,
+                    publish_date=datetime.today(), text_markup_type='plain',
+                    is_published=False)
+        e2 = BlogEntry.objects.create(title="test", text='foo', created_by=self.user,
+                    publish_date=datetime.today(), text_markup_type='plain',
+                    is_published=True)
+        self.assertEqual(BlogEntry.default.count(), 2)
+        self.assertEqual(BlogEntry.objects.count(), 1)
+
+
 class TestViews(TestCase):
     """Test Views  of the blog"""
 
@@ -76,11 +98,11 @@ class TestViews(TestCase):
             BlogEntry.objects.create(title="test", text='foo', created_by=self.user,
                     publish_date=datetime.today(), text_markup_type='plain')
         self.assertEqual(BlogEntry.objects.count(), 15)
-        response = self.c.get(reverse('blogango_page', args=[1,]))
+        response = self.c.get(reverse('blogango_page', args=[1]))
         self.assertEqual(response.status_code, 200)
-        response = self.c.get(reverse('blogango_page', args=[2,]))
+        response = self.c.get(reverse('blogango_page', args=[2]))
         self.assertEqual(response.status_code, 200)
-        response = self.c.get(reverse('blogango_page', args=[3,]))
+        response = self.c.get(reverse('blogango_page', args=[3]))
         self.assertEqual(response.status_code, 302)
 
     def test_entries_slug(self):
@@ -101,10 +123,10 @@ class TestViews(TestCase):
                     publish_date=datetime.today(), text_markup_type='plain')
         e1.tags.add("test1", "test2")
         e2.tags.add("test1")
-        response = self.c.get(reverse('blogango_tag_details', args=['test1',]))
+        response = self.c.get(reverse('blogango_tag_details', args=['test1']))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['entries']), 2)
-        response = self.c.get(reverse('blogango_tag_details', args=['test2',]))
+        response = self.c.get(reverse('blogango_tag_details', args=['test2']))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['entries']), 1)
 
