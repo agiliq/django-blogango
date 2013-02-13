@@ -244,13 +244,6 @@ def page_details(request, slug):
     return render('blogango/details.html', request, payload)
 
 
-@handle404
-def comment_details(request, comment_id):
-    comment = Comment.objects.get(id=comment_id)
-    payload = locals()
-    return render('blogango/comment.html', request, payload)
-
-
 def tag_details(request, tag_slug):
     from taggit.models import Tag
     tag = get_object_or_404(Tag, slug=tag_slug)
