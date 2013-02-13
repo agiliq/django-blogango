@@ -176,9 +176,13 @@ class TestAdminActions(TestCase):
         create_test_comment(entry)
 
     def test_check_adminpage(self):
-        """Check that the admin page is accessible to everyone"""
+        """Check that the admin page is accessible to only staff members"""
         response = self.c.get(reverse('blogango_admin_dashboard'))
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed("admin/login.html")
+        self.c.login(username='gonecrazy', password='gonecrazy')
+        response = self.c.get(reverse('blogango_admin_dashboard'))
+        self.assertTemplateNotUsed("admin/login.html")
 
     def test_add_entry(self):
         """Test whether a entry can be added to the blog """
