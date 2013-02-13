@@ -130,10 +130,6 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['entries']), 1)
 
-    def test_admin_page(self):
-        response = self.c.get(reverse("blogango_admin_dashboard"))
-        self.assertEqual(response.status_code, 200)
-
     def test_add_entry(self):
         """Test whether a entry can be added to the blog """
         response = self.c.login(username='gonecrazy', password='gonecrazy')
