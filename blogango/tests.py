@@ -94,6 +94,20 @@ class TestViews(TestCase):
         e1.save()
         self.assertNotEqual(e1.slug, e2.slug)
 
+    def test_tags_url(self):
+        e1 = BlogEntry.objects.create(title="test", text='foo', created_by=self.user,
+                    publish_date=datetime.today(), text_markup_type='plain')
+        e2 = BlogEntry.objects.create(title="test", text='foo', created_by=self.user,
+                    publish_date=datetime.today(), text_markup_type='plain')
+        e1.tags.add("test1", "test2")
+        e2.tags.add("test1")
+        response = self.c.get(reverse('blogango_tag_details', args=['test1',]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['entries']), 2)
+        response = self.c.get(reverse('blogango_tag_details', args=['test2',]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['entries']), 1)
+
     def test_admin_page(self):
         response = self.c.get(reverse("blogango_admin_dashboard"))
         self.assertEqual(response.status_code, 200)

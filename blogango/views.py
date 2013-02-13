@@ -253,9 +253,7 @@ def comment_details(request, comment_id):
 
 def tag_details(request, tag_slug):
     from taggit.models import Tag
-    if Tag.objects.filter(slug=tag_slug).count() == 0:
-        raise Http404
-    tag = Tag.objects.get(slug=tag_slug)
+    tag = get_object_or_404(Tag, slug=tag_slug)
     entries = BlogEntry.objects.filter(is_published=True, tags__in=[tag])
     feed_url = getattr(settings, 'FEED_URL', reverse('blogango_feed', args=['tag']) + tag.slug + '/')
     payload = {'tag': tag, 'entries': entries, 'feed_url': feed_url}

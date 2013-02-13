@@ -1,6 +1,5 @@
 from datetime import datetime
 from django.db import models
-from django.db.models import permalink
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.contrib.comments.moderation import CommentModerator, moderator
@@ -107,7 +106,7 @@ class BlogEntry(models.Model):
         i = 1
         while True:
             if i>1:
-                self.slug += '-%s' % str(i)
+                self.slug += '-%s' % (i,)
             slug_count = BlogEntry.objects.filter(slug__exact=self.slug).exclude(pk=self.pk)
             if not slug_count:
                 break
