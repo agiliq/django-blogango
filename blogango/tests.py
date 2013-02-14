@@ -110,11 +110,16 @@ class TestViews(TestCase):
                     publish_date=datetime.today(), text_markup_type='plain')
         e2 = BlogEntry.objects.create(title="test", text='foo', created_by=self.user,
                     publish_date=datetime.today(), text_markup_type='plain')
-        self.assertNotEqual(e1.slug, e2.slug)
+        self.assertEqual(e1.slug, "test")
+        self.assertEqual(e2.slug, "test-2")
         e1 = BlogEntry.objects.get(pk=e1.pk)
         e2 = BlogEntry.objects.get(pk=e2.pk)
         e1.save()
-        self.assertNotEqual(e1.slug, e2.slug)
+        self.assertEqual(e1.slug, "test")
+        self.assertEqual(e2.slug, "test-2")
+        e3 = BlogEntry.objects.create(title="test", text='foo', created_by=self.user,
+                    publish_date=datetime.today(), text_markup_type='plain')
+        self.assertEqual(e3.slug, "test-3")
 
     def test_tags_url(self):
         e1 = BlogEntry.objects.create(title="test", text='foo', created_by=self.user,
