@@ -105,12 +105,12 @@ class BlogEntry(models.Model):
 
         i = 1
         while True:
-            if i>1:
-                self.slug += '-%s' % (i,)
-            slug_count = BlogEntry.objects.filter(slug__exact=self.slug).exclude(pk=self.pk)
+            created_slug = self.create_slug(self.slug, i)
+            slug_count = BlogEntry.objects.filter(slug__exact=created_slug).exclude(pk=self.pk)
             if not slug_count:
                 break
             i += 1
+        self.slug = created_slug
 
         if not self.summary:
             self.summary = _generate_summary(self.text.raw)
@@ -124,6 +124,11 @@ class BlogEntry(models.Model):
             if self.created_on.year == 9999:
                 self.created_on = self.publish_date
         super(BlogEntry, self).save(*args, **kwargs) # Call the "real" save() method.
+
+    def create_slug(self, initial_slug, i=1):
+        if not i==1:
+            initial_slug += "-%s" % (i,)
+        return initial_slug
 
     def get_absolute_url(self):
         return reverse('blogango_details', kwargs={'year': self.created_on.strftime('%Y'),
