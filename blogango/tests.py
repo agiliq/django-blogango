@@ -197,10 +197,12 @@ class TestAdminActions(TestCase):
             'text': 'this is the test post', 'publish_date_0': '2011-09-22',
             'publish_date_1': '17:17:55', 'text_markup_type': "html",
             'created_by': self.user.pk, 'publish': 'Save and Publish',
-            'tags': "testing"})
+            'tags': "testing, testing2"})
         #check for successful posting of entry
         self.assertEqual(response.status_code, 302)
         self.assertEqual(BlogEntry.objects.count(), 2)
+        entry = BlogEntry.objects.latest('pk')
+        self.assertEqual([each.name for each in entry.tags.all()], ["testing", "testing2"])
 
     def test_edit_entry(self):
         """Test for editing a entry in the blog"""
