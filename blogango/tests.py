@@ -199,17 +199,23 @@ class TestAdminActions(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, "entry_form", "text", "This field is required.")
         self.assertFormError(response, "entry_form", "tags", "This field is required.")
-        #post a valid form
-        response = self.c.post(reverse("blogango_admin_entry_new"), {'title': 'test post',
-            'text': 'this is the test post', 'publish_date_0': '2011-09-22',
-            'publish_date_1': '17:17:55', 'text_markup_type': "html",
-            'created_by': self.user.pk, 'publish': 'Save and Publish',
-            'tags': "testing, testing2"})
-        #check for successful posting of entry
+        #post a valid form but don't publish it
+        data['text'] = 'test text'
+        data['publish_date_0'] = '2011-09-22'
+        data['publish_date_1'] = '17:17:55'
+        data['tags'] = 'testing, testing2'
+        data['save'] = 'Save'
+        response = self.c.post(reverse("blogango_admin_entry_new"), data)
         self.assertEqual(response.status_code, 302)
+        self.assertEqual(BlogEntry.default.count(), 2)
+        self.assertEqual(BlogEntry.objects.count(), 1)
+        #post valid data and publish it
+        del data['save']
+        data['publish'] = 'Save and Publish'
+        response = self.c.post(reverse("blogango_admin_entry_new"), data)
         self.assertEqual(BlogEntry.objects.count(), 2)
-        #check proper tags have been set
         entry = BlogEntry.objects.latest('pk')
+        #check proper tags have been set
         self.assertEqual([each.name for each in entry.tags.all()], ["testing", "testing2"])
 
     def test_edit_entry(self):
