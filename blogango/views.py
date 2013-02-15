@@ -11,6 +11,7 @@ from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.encoding import smart_str
+from datetime import datetime
 
 from taggit.models import Tag
 
@@ -29,7 +30,7 @@ def admin_dashboard(request):
 @staff_member_required
 def admin_entry_edit(request, entry_id=None):
     entry = None
-    entry_form = bforms.EntryForm(initial={'created_by': request.user.id})
+    entry_form = bforms.EntryForm(initial={'created_by': request.user.id, 'publish_date':datetime.now()})
     if entry_id:
         entry = get_object_or_404(BlogEntry, pk=entry_id)
         entry_form = bforms.EntryForm(instance=entry, initial={'text': entry.text.raw})
