@@ -227,11 +227,14 @@ class TestAdminActions(TestCase):
                     'publish_date': datetime.strptime("2011-09-22", "%Y-%m-%d"),
                     'text_markup_type': "html",
                     'created_by': self.user})
+        post.tags.add("test", "another test")
+        self.assertEqual([each.name for each in post.tags.all()], ["test", "another test"])
         response = self.c.post("/blog/admin/entry/edit/%s/" % post.pk,
                 {'title': 'the new test post', 'text': 'this is the test post',
                 'publish_date_0': '2011-09-22', 'publish_date_1': '17:17:55',
                 'text_markup_type': "html", 'created_by': self.user.pk, 'publish': 'Save and Publish',
                 'tags': 'testing'})
+        self.assertEqual([each.name for each in post.tags.all()], ["testing"])
         self.assertEqual(response.status_code, 302)
         entry = BlogEntry.objects.get(pk=post.pk)
         self.assertEqual(entry.title, "the new test post")
