@@ -60,7 +60,7 @@ class BlogEntry(models.Model):
     summary = The summary for the text. probably can be derived from text, but we dont want do do that each time main page is displayed.
     created_on = The date this entry was created. Defaults to now.
     Created by: The user who wrote this.
-    is_page: IS this a page or a post? Pages are the more important posts, which might be displayed differently. Defaults to false.
+    is_page: Is this a page or a post? Pages are the more important posts, which might be displayed differently. Defaults to false.
     is_published: Is this page published. If yes then we would display this on site, otherwise no. Defaults to true.
     comments_allowed: Are comments allowed on this post? Defaults to True
     is_rte: Was this post done using a Rich text editor?"""

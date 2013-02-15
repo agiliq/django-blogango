@@ -193,6 +193,13 @@ class TestAdminActions(TestCase):
         """Test whether a entry can be added to the blog """
         self.assertEqual(BlogEntry.objects.count(), 1)
         response = self.c.login(username='gonecrazy', password='gonecrazy')
+        #Test posting invalid form
+        data = {'text_markup_type': 'html', 'created_by':self.user.pk}
+        response = self.c.post(reverse("blogango_admin_entry_new"), data)
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response, "entry_form", "text", "This field is required.")
+        self.assertFormError(response, "entry_form", "tags", "This field is required.")
+        #post a valid form
         response = self.c.post(reverse("blogango_admin_entry_new"), {'title': 'test post',
             'text': 'this is the test post', 'publish_date_0': '2011-09-22',
             'publish_date_1': '17:17:55', 'text_markup_type': "html",
@@ -201,6 +208,7 @@ class TestAdminActions(TestCase):
         #check for successful posting of entry
         self.assertEqual(response.status_code, 302)
         self.assertEqual(BlogEntry.objects.count(), 2)
+        #check proper tags have been set
         entry = BlogEntry.objects.latest('pk')
         self.assertEqual([each.name for each in entry.tags.all()], ["testing", "testing2"])
 
