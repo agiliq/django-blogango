@@ -45,7 +45,7 @@ def admin_entry_edit(request, entry_id=None):
                 new_entry.is_page = True
             new_entry.save()
             tag_list = entry_form.cleaned_data['tags']
-            new_entry.tags.add(*tag_list)
+            new_entry.tags.set(*tag_list)
             if new_entry.is_published:
                 return redirect(new_entry)
             return redirect(reverse('blogango_admin_entry_edit', args=[new_entry.id])+'?done')
