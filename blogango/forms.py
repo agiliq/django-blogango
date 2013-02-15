@@ -28,9 +28,6 @@ class CommentForm(forms.Form):
     url = forms.URLField(required=False, widget=forms.TextInput(attrs={'class': 'textfield'}))
     email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'textfield'}))
 
-class TagForm(forms.Form):
-    tag_txt = forms.CharField(max_length=100, label='Tag as')
-
 class InstallForm(forms.ModelForm):
 
     class Meta:
@@ -41,7 +38,6 @@ class PreferencesForm(forms.ModelForm):
 
     class Meta:
         model = Blog
-        #exclude = ('title', 'tag_line')
 
 class BlogForm(forms.ModelForm):
 

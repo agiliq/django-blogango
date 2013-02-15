@@ -234,10 +234,10 @@ class TestAdminActions(TestCase):
                 'publish_date_0': '2011-09-22', 'publish_date_1': '17:17:55',
                 'text_markup_type': "html", 'created_by': self.user.pk, 'publish': 'Save and Publish',
                 'tags': 'testing'})
-        self.assertEqual([each.name for each in post.tags.all()], ["testing"])
         self.assertEqual(response.status_code, 302)
         entry = BlogEntry.objects.get(pk=post.pk)
         self.assertEqual(entry.title, "the new test post")
+        self.assertEqual([each.name for each in entry.tags.all()], ["testing"])
 
     def test_change_preferences(self):
         """check if the admin can change the preferences of blog """

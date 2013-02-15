@@ -243,7 +243,6 @@ def page_details(request, slug):
 
 
 def tag_details(request, tag_slug):
-    from taggit.models import Tag
     tag = get_object_or_404(Tag, slug=tag_slug)
     entries = BlogEntry.objects.filter(is_published=True, tags__in=[tag])
     feed_url = getattr(settings, 'FEED_URL', reverse('blogango_feed', args=['tag']) + tag.slug + '/')
