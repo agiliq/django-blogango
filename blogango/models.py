@@ -184,6 +184,11 @@ class Comment(BaseComment):
     default = models.Manager()
     objects = CommentManager()
 
+    def save(self, *args, **kwargs):
+        if self.is_spam:
+            self.is_public = False
+        super(Comment, self).save(*args, **kwargs)
+
     def get_absolute_url (self):
         return reverse('blogango_comment_details', args=[self.id,])
 
