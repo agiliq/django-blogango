@@ -1,5 +1,8 @@
 {% extends "blogango/admin/base.html" %}
 {% block title %}{{ _("Manage Comments") }}{% endblock %}
+{% block extra_script %}
+    {% include "blogango/admin/ajaxify.js" %}
+{% endblock %}
 {% block subnavbar %}
     <ul class="ctxnavbar">
       <li{% if 'blocked' not in request.GET %} class="active"{% endif %}>
@@ -24,9 +27,9 @@
 	          <p>{{ comment.created_on }}
 	          [
 	          {% if comment.is_public %}
-	            <a href="{% url blogango_admin_comment_block comment.id %}">{{ _("Block") }}</a> |
+              <a href="#" value="{{comment.id}}" class="block_comment">{{ _("Block") }}</a> |
               {% else %}
-                <a href="{% url blogango_admin_comment_approve comment.id %}">{{ _("Approve") }}</a> |
+              <a href="#" value="{{comment.id}}" class="approve_comment">{{ _("Approve") }}</a> |
 	          {% endif %}
 	            <a href="{{ comment.comment_for.get_edit_url }}">{{ comment.comment_for.title }}</a>
 	          ]

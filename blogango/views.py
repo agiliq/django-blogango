@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response, get_object_or_404, redirect
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -13,6 +13,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.encoding import smart_str
 from django.db.models import Q
 from datetime import datetime
+from django.views.decorators.http import require_POST
 
 from taggit.models import Tag
 
@@ -80,19 +81,23 @@ def admin_edit_preferences(request):
     return render('blogango/admin/edit_preferences.html', request, {'form': form})
 
 @staff_member_required
-def admin_comment_approve(request, comment_id):
+@require_POST
+def admin_comment_approve(request):
+    comment_id = request.POST.get('comment_id', None)
     comment = get_object_or_404(Comment, pk=comment_id)
     comment.is_spam = False
     comment.is_public = True
     comment.save()
-    return redirect('blogango_admin_comments_manage')
+    return HttpResponse(comment.pk)
 
 @staff_member_required
-def admin_comment_block(request, comment_id):
+@require_POST
+def admin_comment_block(request):
+    comment_id = request.POST.get('comment_id', None)
     comment = get_object_or_404(Comment, pk=comment_id)
     comment.is_public = False
     comment.save()
-    return redirect('blogango_admin_comments_manage')
+    return HttpResponse(comment.pk)
 
 
 
