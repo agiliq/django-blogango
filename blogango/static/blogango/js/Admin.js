@@ -159,7 +159,12 @@ $(function() {
 
     // if we have the textarea height in the cookie, update the
     // height for the textareas.
-    var height = document.cookie.match(/ta_height=(\d+)/)[1];
+    var height_cookie = document.cookie.match(/ta_height=(\d+)/);
+    var height;
+    if(height_cookie)
+    {
+        height = height_cookie[1];
+    }
     if (height != null)
       ta.css('height', height + 'px');
   })();
