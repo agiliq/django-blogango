@@ -330,20 +330,9 @@ def _get_sidebar_objects (request):
     except:
         return {}
     recents = BlogEntry.objects.filter(is_page = False, is_published = True).order_by('-created_on')[:blog.recents]
-
-    l = list(BlogEntry.objects.all().order_by('-created_on').values('created_by__first_name', 'created_by__username'))
-    recent_authors = list()
-    for e in l:
-        if e not in recent_authors:
-            recent_authors.append(e)
-    
     blogroll = BlogRoll.objects.filter(is_published=True)
-    # pages = BlogEntry.objects.filter(is_page = True, is_published = True)
-    # recent_comments = Comment.objects.all().order_by('-created_on')[:blog.recent_comments]
-    # date_list = _get_archive_months()
     return {'blog':blog,
             'recents':recents,
-            'recent_authors':recent_authors,
             'blogroll':blogroll,
             'canonical_url': request.build_absolute_uri(),
             'pingback_xmlrpc_url': request.build_absolute_uri(reverse('xmlrpc')),}
