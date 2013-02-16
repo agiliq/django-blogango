@@ -291,11 +291,19 @@ def  create_blogroll(request):
     return render('blogango/blogroll.html', request, payload)
 
 
-def author(request, username):
+def author(request, username, page=1):
+    page = int(page)
+    blog = Blog.objects.get_blog()
     author = get_object_or_404(User, username=username)
     author_posts = author.blogentry_set.filter(is_published=True)
+    paginator = Paginator(author_posts, blog.entries_per_page)
+    if page>paginator.num_pages:
+        return redirect(reverse('blogango_author_page', args=[author.username, paginator.num_pages]))
+    page_ = paginator.page(page)
+    entries = page_.object_list
     return render('blogango/author.html', request, {'author': author,
-                                                    'author_posts': author_posts})
+                                                    'entries': entries,
+                                                    'page_': page_})
 
 def monthly_view(request, year, month):
     queryset = BlogEntry.objects.filter(is_page=False, is_published=True)

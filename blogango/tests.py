@@ -159,8 +159,8 @@ class TestViews(TestCase):
     def test_author_details(self):
         create_test_blog_entry(self.user)
         response = self.c.get("/blog/author/%s/" % self.user.username)
-        author_posts = response.context['author_posts']
-        self.assertEqual(1, author_posts.count())
+        entries = response.context['entries']
+        self.assertEqual(1, entries.count())
 
     def tearDown(self):
         self.blog.delete()

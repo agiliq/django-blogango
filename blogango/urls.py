@@ -21,6 +21,7 @@ urlpatterns = patterns('blogango.views',
     url(r'^blogroll/$', 'create_blogroll', name='blogango_blogroll'),
     url(r'^tag/(?P<tag_slug>[-\w]+)/$','tag_details', name='blogango_tag_details'),
     url(r'^author/(?P<username>[\w.@+-]+)/$', 'author', name='blogango_author'),
+    url(r'^author/(?P<username>[\w.@+-]+)/(?P<page>\d+)$', 'author', name='blogango_author_page'),
 
     url(r'^admin/$', 'admin_dashboard', name='blogango_admin_dashboard'),
     url(r'^admin/entry/new/$', 'admin_entry_edit', name='blogango_admin_entry_new'),
