@@ -20,6 +20,17 @@
     window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";
 </script>
 {% endblock %}
+{% block extra_script %}
+    <script>
+        $(document).ready(function(){
+            var tags_json = '{{tags_json|safe}}';
+            var tag_list = JSON.parse(tags_json);
+            $("#id_tags").autocomplete(tag_list, {
+                multiple: true
+            });
+        });
+    </script>
+{% endblock %}
 {% block subnavbar %}
     <ul class="ctxnavbar">
       <li{% if 'page' not in request.GET %} class="active"{% endif %}>

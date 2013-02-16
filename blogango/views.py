@@ -14,6 +14,7 @@ from django.utils.encoding import smart_str
 from django.db.models import Q
 from datetime import datetime
 from django.views.decorators.http import require_POST
+from django.utils import simplejson as json
 
 from taggit.models import Tag
 
@@ -51,8 +52,10 @@ def admin_entry_edit(request, entry_id=None):
             if new_entry.is_published:
                 return redirect(new_entry)
             return redirect(reverse('blogango_admin_entry_edit', args=[new_entry.id])+'?done')
+    tags_json = json.dumps([each.name for each in Tag.objects.all()])
     return render('blogango/admin/edit_entry.html', request, {'entry_form': entry_form,
-                                                              'entry': entry})
+                                                              'entry': entry,
+                                                              'tags_json': tags_json})
 
 @staff_member_required
 def admin_manage_entries(request):
