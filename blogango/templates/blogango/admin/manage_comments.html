@@ -1,5 +1,15 @@
 {% extends "blogango/admin/base.html" %}
 {% block title %}{{ _("Manage Comments") }}{% endblock %}
+{% block subnavbar %}
+    <ul class="ctxnavbar">
+      <li{% if 'blocked' not in request.GET %} class="active"{% endif %}>
+          <a href="{{ request.path }}">Approved</a>
+      </li>
+      <li{% if 'blocked' in request.GET %} class="active"{% endif %}>
+          <a href="{{ request.path }}?blocked">Blocked</a>
+      </li>
+    </ul>
+{% endblock %}
 {% block contents %}
   <h1>{{ _("Manage Comments") }}</h1>
     <ul class="comments">

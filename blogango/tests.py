@@ -241,9 +241,9 @@ class TestAdminActions(TestCase):
 
     def test_change_preferences(self):
         """check if the admin can change the preferences of blog """
-        response = self.c.post(reverse('blogango_admin_edit_preferences'), {'title': 'new Blog', 'tag_line': 'my new blog',
+        self.c.post(reverse('blogango_admin_edit_preferences'), {'title': 'new Blog', 'tag_line': 'my new blog',
                                                                            'entries_per_page': 10, 'recents': 5, 'recent_comments': 5})
-        blog = Blog.objects.all()[0]
+        blog = Blog.objects.get_blog()
         self.assertEqual(blog.title, 'new Blog')
 
     def test_admin_entrymanage(self):
@@ -282,4 +282,4 @@ def create_test_blog_entry(user):
 
 
 def create_test_comment(entry):
-    Comment.objects.create(text="foo", comment_for=entry)
+    Comment.objects.create(text="foo", comment_for=entry, is_public=True)

@@ -11,6 +11,7 @@ from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.encoding import smart_str
+from django.db.models import Q
 from datetime import datetime
 
 from taggit.models import Tag
@@ -60,7 +61,10 @@ def admin_manage_entries(request):
 @staff_member_required
 def admin_manage_comments(request):
     # fetch all comments, objects gets you only public ones
-    comments = Comment.default.filter(is_spam=False).order_by('-created_on')
+    if 'blocked' in request.GET:
+        comments = Comment.default.filter(Q(is_spam=True)|Q(is_public=False))
+    else:
+        comments = Comment.objects.all()
     return render('blogango/admin/manage_comments.html', request, {'comments': comments})
 
 @staff_member_required
