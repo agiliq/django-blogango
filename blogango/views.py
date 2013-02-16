@@ -82,6 +82,7 @@ def admin_edit_preferences(request):
 @staff_member_required
 def admin_comment_approve(request, comment_id):
     comment = get_object_or_404(Comment, pk=comment_id)
+    comment.is_spam = False
     comment.is_public = True
     comment.save()
     return redirect('blogango_admin_comments_manage')
