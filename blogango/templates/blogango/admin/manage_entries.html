@@ -12,37 +12,7 @@
 		      <th class="date">Date</th>
 		    </tr>
 		    {% for entry in entries %}
-		    <tr {% if not entry.is_published %}class="draft"{% endif %}>
-		      <td class="title">
-		          <a href="{{ entry.get_edit_url }}">
-					{% if not entry.is_published %}
-		            <em>{{ entry.title }}</em>
-		            {% else %}
-		            {{ entry.title }}
-				    {% endif %}
-		          </a>
-				<span class="meta">[<a href="{{ entry.get_edit_url }}">edit</a>]</span>
-				{% if entry.is_published %}
-		        <span class="meta">[<a href="{{ entry.get_absolute_url }}">show</a>]</span>
-		        {% else %}
-		        <span class="meta">[<a href="{{ entry.get_absolute_url }}?preview">preview</a>]</span>
-		        {% endif %}
-		      </td>
-		      <td class="author"><a href="{{ entry.created_by.get_absolute_url }}">{{ entry.created_by }}</a></td>
-		      <td class="categories">
-		      {% for tag in entry.tags.all %}
-		          <a href="{% url blogango_tag_details tag.slug %}">{{ tag.name }}</a>
-		      {% endfor %}
-		      </td>
-		      <td class="comments"><a href="{{ entry.get_absolute_url }}#comments">{{ entry.get_num_comments }}</a></td>
-              <td class="date">
-                  {% ifequal entry.created_on.year 9999 %}
-                      Not published yet.
-                  {% else %}
-                      {{ entry.created_on }}
-                  {% endifequal %}
-              </td>
-		    </tr>
+		        {% include "blogango/admin/entry_snippet.html" %}
 		    {% endfor %}
         </tbody>
     </table>
