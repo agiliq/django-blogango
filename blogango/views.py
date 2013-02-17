@@ -124,9 +124,7 @@ def index(request, page = 1):
         return redirect(reverse('blogango_page', args=[paginator.num_pages]))
     page_ = paginator.page(page)
     entries = page_.object_list
-    has_next = page_.has_next()
-    has_prev = page_.has_previous()
-    payload = locals()
+    payload = {'entries': entries, 'page_': page_}
     return render('blogango/mainpage.html', request, payload)
 
 
