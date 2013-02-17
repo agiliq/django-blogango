@@ -1,6 +1,5 @@
 from datetime import datetime
 from django.conf.urls.defaults import *
-from django.contrib.auth.views import login, logout, password_change, password_reset
 from django.contrib.sitemaps import GenericSitemap
 from blogango import feeds
 from blogango.models import BlogEntry
