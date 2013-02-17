@@ -302,6 +302,23 @@ class TestStaticFiles(TestCase):
         abs_path = finders.find('blogango/css/prettify.css')
 
 
+class TestFeedUrl(TestCase):
+    """Check different feed urls and if they are being set in the page"""
+    def setUp(self):
+        self.blog = Blog(title="test", tag_line="new blog", entries_per_page=10,
+                    recents=5, recent_comments=5)
+        self.blog.save()
+        self.c = Client()
+        self.user = User.objects.create_user(username='gonecrazy', email='gonecrazy@gmail.com', password='gonecrazy')
+
+    def test_blog_feed(self):
+        response = self.c.get(reverse("blogango_feed"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_feed_url_on_index(self):
+        response = self.c.get(reverse("blogango_index"))
+        self.assertGreater(response.content.find('/blog/rss/latest/'), 1)
+
 def create_test_blog_entry(user):
     return BlogEntry.objects.create(**{'title': 'example post',
             'text': 'this is the test post',
