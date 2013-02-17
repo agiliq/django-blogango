@@ -258,13 +258,12 @@ def tag_details(request, tag_slug, page=1):
     page = int(page)
     blog = Blog.objects.get_blog()
     tagged_entries = BlogEntry.objects.filter(is_published=True, tags__in=[tag])
-    feed_url = getattr(settings, 'FEED_URL', reverse('blogango_feed', args=['tag']) + tag.slug + '/')
     paginator = Paginator(tagged_entries, blog.entries_per_page)
     if page>paginator.num_pages:
         return redirect(reverse('blogango_tag_details_page', args=[tag.slug, paginator.num_pages]))
     page_ = paginator.page(page)
     entries = page_.object_list
-    payload = {'tag': tag, 'entries': entries, 'feed_url': feed_url}
+    payload = {'tag': tag, 'entries': entries}
     payload['page_'] = page_
     return render('blogango/tag_details.html', request, payload)
 

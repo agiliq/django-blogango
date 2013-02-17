@@ -20,7 +20,7 @@ class BlogangoContext(template.Node):
         blog = Blog.objects.get_blog()
         tags = Tag.objects.all()
         tags = [tag for tag in tags if tag.taggit_taggeditem_items.all().count()>2]
-        feed_url = getattr(settings, 'FEED_URL', reverse('blogango_feed', args=['latest']))
+        feed_url = reverse('blogango_feed')
         archive_months = _get_archive_months()
         site = Site.objects.get_current()
 

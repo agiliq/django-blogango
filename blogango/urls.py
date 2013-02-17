@@ -52,10 +52,8 @@ urlpatterns += patterns('django_xmlrpc.views',
     url(r'^xmlrpc/$', 'handle_xmlrpc', {}, name='xmlrpc'),
 )
 
-feeds = {'latest': feeds.main_feed, 'tag':feeds.CatFeed}
-# feeds = {'latest': feeds.main_feed}
 urlpatterns += patterns('',
-    url(r'^rss/(?P<url>.*)/$', 'django.contrib.syndication.views.Feed', {'feed_dict': feeds}, name='blogango_feed')
+    url(r'^rss/latest/$', feeds.main_feed(), name='blogango_feed')
 )
 
 urlpatterns += patterns('blogango.views',
