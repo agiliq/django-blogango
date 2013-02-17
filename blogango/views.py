@@ -58,9 +58,14 @@ def admin_entry_edit(request, entry_id=None):
                                                               'tags_json': tags_json})
 
 @staff_member_required
-def admin_manage_entries(request):
-    entries = BlogEntry.default.all()
-    return render('blogango/admin/manage_entries.html', request, {'entries': entries})
+def admin_manage_entries(request, username=None):
+    author = None
+    if username:
+        author = get_object_or_404(User, username=username)
+        entries = BlogEntry.default.filter(created_by=author) 
+    else:
+        entries = BlogEntry.default.all()
+    return render('blogango/admin/manage_entries.html', request, {'entries': entries, 'author': author})
 
 @staff_member_required
 def admin_manage_comments(request):

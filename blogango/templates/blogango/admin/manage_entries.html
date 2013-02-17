@@ -1,7 +1,7 @@
 {% extends "blogango/admin/base.html" %}
 {% block title %}{{ _("Manage Entries") }}{% endblock %}
 {% block contents %}
-  <h1>{{ _("Manage Entries") }}</h1>
+<h1>{{ _("Manage Entries") }}{% if author %} by {{author}}{% endif %}</h1>
 	<table class="postlist">
 	    <tbody>
 		    <tr>

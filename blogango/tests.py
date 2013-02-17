@@ -281,6 +281,15 @@ class TestAdminActions(TestCase):
         entries = response.context['entries']
         self.assertEqual(1, entries.count())
 
+    def test_admin_author_entry_manage(self):
+        """Check if we can manage entries by a specific author"""
+        user = User.objects.create_superuser("test", "test@agiliq.com", "test")
+        create_test_blog_entry(user)
+        response = self.c.get(reverse('blogango_admin_author_entry_manage', args=["test"]))
+        entries = response.context['entries']
+        self.assertEqual(entries.count(), 1)
+        self.assertEqual(BlogEntry.default.count(), 2)
+
     def test_admin_commentmanage(self):
         """check if all the comments are retrieved to manage"""
         response = self.c.get(reverse('blogango_admin_comments_manage'))
