@@ -20,6 +20,7 @@ urlpatterns = patterns('blogango.views',
     url(r'^(?P<year>\d{4})/(?P<month>\d{2})/(?P<slug>[-\w]+)/$', 'details', name='blogango_details'),
     url(r'^blogroll/$', 'create_blogroll', name='blogango_blogroll'),
     url(r'^tag/(?P<tag_slug>[-\w]+)/$','tag_details', name='blogango_tag_details'),
+    url(r'^tag/(?P<tag_slug>[-\w]+)/(?P<page>\d+)$','tag_details', name='blogango_tag_details_page'),
     url(r'^author/(?P<username>[\w.@+-]+)/$', 'author', name='blogango_author'),
     url(r'^author/(?P<username>[\w.@+-]+)/(?P<page>\d+)$', 'author', name='blogango_author_page'),
 

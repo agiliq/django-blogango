@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.staticfiles import finders
 from django.contrib.staticfiles.storage import staticfiles_storage
 
+from taggit.models import Tag
 from models import Blog, BlogEntry, Comment
 
 
@@ -161,6 +162,34 @@ class TestViews(TestCase):
         response = self.c.get("/blog/author/%s/" % self.user.username)
         entries = response.context['entries']
         self.assertEqual(1, entries.count())
+
+    def test_author_entries_pagination(self):
+        num_entries = 15
+        for each in range(num_entries):
+            BlogEntry.objects.create(title="test", text='foo', created_by=self.user,
+                    publish_date=datetime.today(), text_markup_type='plain')
+        self.assertEqual(BlogEntry.objects.count(), 15)
+        response = self.c.get(reverse('blogango_author_page', args=[self.user.username, 1]))
+        self.assertEqual(response.status_code, 200)
+        response = self.c.get(reverse('blogango_author_page', args=[self.user.username, 2]))
+        self.assertEqual(response.status_code, 200)
+        response = self.c.get(reverse('blogango_author_page', args=[self.user.username, 3]))
+        self.assertEqual(response.status_code, 302)
+
+    def test_tagged_entries_pagination(self):
+        num_entries = 15
+        for each in range(num_entries):
+            entry = BlogEntry.objects.create(title="test", text='foo', created_by=self.user,
+                        publish_date=datetime.today(), text_markup_type='plain')
+            entry.tags.add("taggit")
+        tag = Tag.objects.get(name='taggit')
+        self.assertEqual(BlogEntry.objects.count(), 15)
+        response = self.c.get(reverse('blogango_tag_details_page', args=[tag.slug, 1]))
+        self.assertEqual(response.status_code, 200)
+        response = self.c.get(reverse('blogango_tag_details_page', args=[tag.slug, 2]))
+        self.assertEqual(response.status_code, 200)
+        response = self.c.get(reverse('blogango_tag_details_page', args=[tag.slug, 3]))
+        self.assertEqual(response.status_code, 302)
 
     def tearDown(self):
         self.blog.delete()
