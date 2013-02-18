@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name="django-blogango",
-    version="0.4e",
+    version="0.5",
     packages=['blogango',
               'blogango/conf',
               'blogango/management',
@@ -13,6 +13,13 @@ setup(
     package_data={'blogango': ['templates/*.html',
                                'templates/blogango/*.html',
                                'templates/blogango/admin/*.html',
+                               'static/blogango/admin/*.css',
+                               'static/blogango/admin/img/*.png',
+                               'static/blogango/css/*.css',
+                               'static/blogango/images/*.png',
+                               'static/blogango/images/*.jpg',
+                               'static/blogango/images/*.gif',
+                               'static/blogango/js/*.js',
                                ]
     },
     author="Agiliq Solutions",
@@ -26,7 +33,7 @@ setup(
         backtype and pingback support, rich text using django-markupfield,
         month based archiving, tagging using django-tagging and categorization
     """,
-    classifiers = ['Development Status :: 4 - Beta',
+    classifiers = ['Development Status :: 5 - Production/Stable',
                    'Environment :: Web Environment',
                    'Framework :: Django',
                    'Intended Audience :: Developers',
