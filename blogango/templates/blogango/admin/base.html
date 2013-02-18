@@ -39,7 +39,10 @@
           <a href="{{ write_url }}">{{ _("Write") }}</a>
       </li>
       {% url blogango_admin_entry_manage as manage_entry_url %}
-      <li {% if request.path == manage_entry_url %}class="active"{% endif %}>
+      {% if author %}
+          {% url blogango_admin_author_entry_manage author.username as manage_author_entry_url %}
+      {% endif %}
+      <li {% if request.path == manage_entry_url or request.path == manage_author_entry_url %}class="active"{% endif %}>
           <a href="{{ manage_entry_url }}">{{ _("Manage") }}</a>
       </li>
       {% url blogango_admin_comments_manage as manage_comments_url %}
