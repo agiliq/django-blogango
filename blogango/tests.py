@@ -296,6 +296,15 @@ class TestAdminActions(TestCase):
         comments = response.context['comments']
         self.assertEqual(1, comments.count())
 
+    def test_manage_entry_comments(self):
+        """Check if there is a page to see comments for a particulat entry"""
+        user = User.objects.create_superuser("test", "test@agiliq.com", "test")
+        entry = create_test_blog_entry(user)
+        create_test_comment(entry)
+        response = self.c.get(reverse('blogango_admin_entry_comments_manage', args=[entry.pk]))
+        comments = response.context['comments']
+        self.assertEqual(1, comments.count())
+
 
 class TestStaticFiles(TestCase):
     """Check if app contains required static files"""

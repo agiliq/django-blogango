@@ -14,7 +14,7 @@
     </ul>
 {% endblock %}
 {% block contents %}
-  <h1>{{ _("Manage Comments") }}</h1>
+<h1>{{ _("Manage Comments") }} {% if blog_entry %} for {{blog_entry.title}}{% endif %}</h1>
     <ul class="comments">
     {% if comments %}
 	    {% for comment in comments %}

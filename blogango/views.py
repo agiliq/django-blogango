@@ -68,13 +68,18 @@ def admin_manage_entries(request, username=None):
     return render('blogango/admin/manage_entries.html', request, {'entries': entries, 'author': author})
 
 @staff_member_required
-def admin_manage_comments(request):
+def admin_manage_comments(request, entry_id=None):
     # fetch all comments, objects gets you only public ones
+    blog_entry = None
+    if entry_id:
+        blog_entry = get_object_or_404(BlogEntry, pk=entry_id)
     if 'blocked' in request.GET:
         comments = Comment.default.filter(Q(is_spam=True)|Q(is_public=False))
     else:
         comments = Comment.objects.all()
-    return render('blogango/admin/manage_comments.html', request, {'comments': comments})
+    if blog_entry:
+        comments = comments.filter(comment_for=blog_entry)
+    return render('blogango/admin/manage_comments.html', request, {'comments': comments, 'blog_entry': blog_entry})
 
 @staff_member_required
 def admin_edit_preferences(request):

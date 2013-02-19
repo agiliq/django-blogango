@@ -46,7 +46,10 @@
           <a href="{{ manage_entry_url }}">{{ _("Manage") }}</a>
       </li>
       {% url blogango_admin_comments_manage as manage_comments_url %}
-      <li {% if request.path == manage_comments_url %}class="active"{% endif %}>
+      {% if blog_entry %}
+          {% url blogango_admin_entry_comments_manage blog_entry.pk as manage_entry_comments_url %}
+      {% endif %}
+      <li {% if request.path == manage_comments_url or request.path == manage_entry_comments_url %}class="active"{% endif %}>
           <a href="{{ manage_comments_url }}">{{ _("Comments") }}</a>
       </li>
       {% url blogango_admin_edit_preferences as edit_preferences_url %}

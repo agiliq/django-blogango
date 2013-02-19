@@ -20,7 +20,7 @@
       <a href="{% url blogango_tag_details tag.slug %}">{{ tag.name }}</a>
   {% endfor %}
   </td>
-  <td class="comments"><a href="{{ entry.get_absolute_url }}#comments">{{ entry.get_num_comments }}</a></td>
+  <td class="comments"><a href="{% url blogango_admin_entry_comments_manage entry.pk %}">{{ entry.get_num_comments }}</a></td>
   <td class="date">
       {% ifequal entry.created_on.year 9999 %}
           Not published yet.
