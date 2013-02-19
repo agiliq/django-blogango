@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name="django-blogango",
-    version="0.5",
+    version="0.5a",
     packages=['blogango',
               'blogango/conf',
               'blogango/management',
@@ -13,6 +13,7 @@ setup(
     package_data={'blogango': ['templates/*.html',
                                'templates/blogango/*.html',
                                'templates/blogango/admin/*.html',
+                               'templates/blogango/admin/*.js',
                                'static/blogango/admin/*.css',
                                'static/blogango/admin/img/*.png',
                                'static/blogango/css/*.css',
