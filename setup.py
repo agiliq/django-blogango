@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name="django-blogango",
-    version="0.5a",
+    version="0.5.1",
     packages=['blogango',
               'blogango/conf',
               'blogango/management',
