@@ -1,4 +1,3 @@
-
 from django.conf import settings
 
 AKISMET_API_KEY = getattr(settings, 'AKISMET_API_KEY', '')
