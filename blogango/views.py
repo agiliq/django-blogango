@@ -79,7 +79,12 @@ def admin_manage_comments(request, entry_id=None):
         comments = Comment.objects.all()
     if blog_entry:
         comments = comments.filter(comment_for=blog_entry)
-    return render('blogango/admin/manage_comments.html', request, {'comments': comments, 'blog_entry': blog_entry})
+    page = request.GET.get('page', 1)
+    comments_per_page = getattr(settings, 'COMMENTS_PER_PAGE', 20)
+    paginator = Paginator(comments, comments_per_page)
+    page_ = paginator.page(page)
+    comments = page_.object_list
+    return render('blogango/admin/manage_comments.html', request, {'comments': comments, 'blog_entry': blog_entry, 'page_': page_})
 
 @staff_member_required
 def admin_edit_preferences(request):
