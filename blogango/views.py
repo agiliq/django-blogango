@@ -74,9 +74,9 @@ def admin_manage_comments(request, entry_id=None):
     if entry_id:
         blog_entry = get_object_or_404(BlogEntry, pk=entry_id)
     if 'blocked' in request.GET:
-        comments = Comment.default.filter(Q(is_spam=True)|Q(is_public=False))
+        comments = Comment.default.filter(Q(is_spam=True)|Q(is_public=False)).order_by('-created_on')
     else:
-        comments = Comment.objects.all()
+        comments = Comment.objects.order_by('-created_on')
     if blog_entry:
         comments = comments.filter(comment_for=blog_entry)
     page = request.GET.get('page', 1)
