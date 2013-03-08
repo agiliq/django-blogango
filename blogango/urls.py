@@ -58,6 +58,10 @@ urlpatterns += patterns('',
     url(r'^rss/latest/$', feeds.main_feed(), name='blogango_feed')
 )
 
+urlpatterns += patterns('',
+    url(r'^rss/latest/(?P<tag>[-\w]+)/$', feeds.CatFeed(), name='blogango_tag_feed')
+)
+
 urlpatterns += patterns('blogango.views',
     url(r'^(?P<slug>[-\w]+)/$', 'page_details', name='blogango_page_details'),
 )
