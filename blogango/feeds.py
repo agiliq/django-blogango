@@ -24,7 +24,7 @@ class main_feed(Feed):
         return BlogEntry.objects.filter(is_published=True, is_page=False)[:10]
 
     def item_description(self, item):
-        return item.text.raw
+        return item.text
     
 class CatFeed(Feed):
     def get_object(self, request, tag):
@@ -43,3 +43,6 @@ class CatFeed(Feed):
     
     def items(self, obj):
         return BlogEntry.objects.filter(tags__in=[obj], is_page=False)
+
+    def item_description(self, obj):
+        return obj.text
