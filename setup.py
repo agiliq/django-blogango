@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name="django-blogango",
-    version="0.5.2",
+    version="0.5.3",
     packages=['blogango',
               'blogango/conf',
               'blogango/management',
@@ -32,7 +32,7 @@ setup(
 
         Some of the features include comments using contrib.comments framework,
         backtype and pingback support, rich text using django-markupfield,
-        month based archiving, tagging using django-tagging and categorization
+        month based archiving, tagging using django-taggit and categorization
     """,
     classifiers = ['Development Status :: 5 - Production/Stable',
                    'Environment :: Web Environment',
