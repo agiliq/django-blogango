@@ -5,7 +5,7 @@
             $.ajax({
                 type: "POST",
                 url: '{% url blogango_admin_comment_block %}',
-                data: {'csrfmiddlewartoken': '{{csrf_token}}', 'comment_id':pk},
+                data: {'csrfmiddlewaretoken': '{{csrf_token}}', 'comment_id':pk},
                 success: function(data, textStatus){
                     $('a[value='+ data + ']').parents("li").remove();
                 },
@@ -16,7 +16,7 @@
             $.ajax({
                 type: "POST",
                 url: '{% url blogango_admin_comment_approve %}',
-                data: {'csrfmiddlewartoken': '{{csrf_token}}', 'comment_id':pk},
+                data: {'csrfmiddlewaretoken': '{{csrf_token}}', 'comment_id':pk},
                 success: function(data, textStatus){
                     $('a[value='+ data + ']').parents("li").remove();
                 },
