@@ -2,7 +2,7 @@ django==1.4
 django-taggit
 django-xmlrpc
 BeautifulSoup
-django-markupfield
+django-markupfield==1.0.2
 django-pingback
 south
 haystack
