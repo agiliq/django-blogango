@@ -3,6 +3,10 @@ python:
   - "2.6"
   - "2.7"
 # command to install dependencies
-install: "pip install -r requirements.txt --use-mirrors"
+install: 
+  -  pip install -r requirements.txt --use-mirrors
+  -  pip install coveralls --use-mirrors
 # command to run tests
-script: python example/manage.py test blogango
+script: 
+  -  python example/manage.py test blogango
+  -  coverage run --source="." example/manage.py test blogango
