@@ -1,6 +1,6 @@
 django==1.4
 django-taggit
-django-xmlrpc
+django-xmlrpc==0.1.4
 BeautifulSoup
 django-markupfield==1.0.2
 django-pingback
