@@ -35,3 +35,11 @@ project.
 * Removed permalink decorator form various places as it's no longer
 recommended.
 * Add markup types to requirements.
+
+#Changes for Django 1.5
+
+* We have a view to show month archive which was earlier using a generic view
+from module `date_based`. This module has been removed in Django 1.5 and a class
+based view `MonthArchiveView` needs to be used for the same purpose. Made a
+change for the same.
+* Latest version of blogango which is 0.6 needs to be used with Django 1.5.
