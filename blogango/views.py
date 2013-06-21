@@ -347,6 +347,7 @@ class BlogEntryMonthArchiveView(MonthArchiveView):
     def get_context_data(self, **kwargs):
         context = super(BlogEntryMonthArchiveView, self).get_context_data(**kwargs)
         context.update(_get_sidebar_objects(self.request))
+        return context
 
 monthly_view = BlogEntryMonthArchiveView.as_view()
     
