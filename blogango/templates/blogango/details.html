@@ -8,8 +8,8 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <li><a href="{% url blogango_index %}" rel="nofollow">Blog</a></li>
-    <li><a href="{% url blogango_archives entry.created_on.year entry.created_on|date:'b' %}" rel="nofollow"> {{ entry.created_on|date:'N Y' }}</a></li>
+    <li><a href="{% url "blogango_index" %}" rel="nofollow">Blog</a></li>
+    <li><a href="{% url "blogango_archives" entry.created_on.year entry.created_on|date:'b' %}" rel="nofollow"> {{ entry.created_on|date:'N Y' }}</a></li>
 	<li>{{ entry.title }}</li>
 {% endblock %}
 
@@ -31,12 +31,12 @@
   </div>
   <div class="right_panel">
     <a href="{{ entry.get_absolute_url }}" class='noline'><h1 class="post_title">{{ entry.title }}</h1></a>
-    <h6 class="posted_by">By : <a href="{% url blogango_author entry.created_by %}">{{ entry.created_by }}</a>{# - Django Geek #}</h6>
+    <h6 class="posted_by">By : <a href="{% url "blogango_author" entry.created_by %}">{{ entry.created_by }}</a>{# - Django Geek #}</h6>
     <p>{{ entry.text|safe }} </p>
     <a href="{{ entry.get_absolute_url }}" class="moreinfo">more info..</a>
     <div class="topics">Topics :
 	{% for tag in entry.tags.all %}
-		<a href="{% url blogango_tag_details tag.slug %}">{{ tag.name }}</a>
+		<a href="{% url "blogango_tag_details" tag.slug %}">{{ tag.name }}</a>
 	{% endfor %}
 	</div>
   </div>

@@ -4,7 +4,7 @@
             var pk = $(this).attr("value");
             $.ajax({
                 type: "POST",
-                url: '{% url blogango_admin_comment_block %}',
+                url: '{% url "blogango_admin_comment_block" %}',
                 data: {'csrfmiddlewaretoken': '{{csrf_token}}', 'comment_id':pk},
                 success: function(data, textStatus){
                     $('a[value='+ data + ']').parents("li").remove();
@@ -15,7 +15,7 @@
             var pk = $(this).attr("value");
             $.ajax({
                 type: "POST",
-                url: '{% url blogango_admin_comment_approve %}',
+                url: '{% url "blogango_admin_comment_approve" %}',
                 data: {'csrfmiddlewaretoken': '{{csrf_token}}', 'comment_id':pk},
                 success: function(data, textStatus){
                     $('a[value='+ data + ']').parents("li").remove();

@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <li><a href="{% url blogango_index %}" rel="nofollow">Blog</a></li>
+    <li><a href="{% url "blogango_index" %}" rel="nofollow">Blog</a></li>
     <li>Category: {{ tag.name }}</li>
 {% endblock %}
 
@@ -28,11 +28,11 @@
     <div class="pagination"> 
         <div class="moreinfo">
             {% if page_.has_next %}
-                <a href='{% url blogango_tag_details_page tag.slug page_.next_page_number %}'>&laquo; Previous Entries</a>
+                <a href='{% url "blogango_tag_details_page" tag.slug page_.next_page_number %}'>&laquo; Previous Entries</a>
             {% endif %}
             
             {% if page_.has_previous %}
-                <span class='right'><a href='{% url blogango_tag_details_page tag.slug page_.previous_page_number %}'>Next Entries &raquo;</a></span>
+                <span class='right'><a href='{% url "blogango_tag_details_page" tag.slug page_.previous_page_number %}'>Next Entries &raquo;</a></span>
             {% endif %}
         </div> 
     </div>

@@ -16,7 +16,7 @@
 		    {% endfor %}
         </tbody>
     </table>
-  <form action="{% url blogango_admin_entry_new %}" method="get">
+  <form action="{% url "blogango_admin_entry_new" %}" method="get">
     <div class="actions">
       <input type="submit" value="{{ _('New Entry') }}">
     </div>
