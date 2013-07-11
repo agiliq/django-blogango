@@ -310,14 +310,19 @@ class TestStaticFiles(TestCase):
     """Check if app contains required static files"""
     def test_images(self):
         abs_path = finders.find('blogango/images/agiliq_blog_logo.png')
-        self.assertTrue(staticfiles_storage.exists(abs_path))
+        self.assertIsNotNone(abs_path)
         abs_path = finders.find('blogango/images/person_default.jpg')
-        self.assertTrue(staticfiles_storage.exists(abs_path))
+        self.assertIsNotNone(abs_path)
+        abs_path = finders.find('logango/images/person_default.jpg')
+        self.assertIsNone(abs_path)
 
     def test_css(self):
         abs_path = finders.find('blogango/css/as_blog_styles.css')
-        self.assertTrue(staticfiles_storage.exists(abs_path))
+        self.assertIsNotNone(abs_path)
         abs_path = finders.find('blogango/css/prettify.css')
+        self.assertIsNotNone(abs_path)
+        abs_path = finders.find('logango/css/prettify.css')
+        self.assertIsNone(abs_path)
 
 
 class TestFeedUrl(TestCase):
