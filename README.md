@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/agiliq/django-blogango.png?branch=master)](https://travis-ci.org/agiliq/django-blogango)
 
+[![Coverage Status](https://coveralls.io/repos/agiliq/django-blogango/badge.png?branch=master)](https://coveralls.io/r/agiliq/django-blogango?branch=master)
+
 Checkout the application live in use at [http://agiliq.com/blog](http://agiliq.com/blog)
 
 ### To quickly try it locally
