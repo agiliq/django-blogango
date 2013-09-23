@@ -10,3 +10,6 @@ install:
 script: 
   -  python example/manage.py test blogango
   -  coverage run --source="." example/manage.py test blogango
+  
+after_success:
+  - coveralls  
