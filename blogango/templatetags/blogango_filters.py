@@ -4,6 +4,7 @@ from django import template
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
+from django.db.models import Count
 
 from taggit.models import Tag, TaggedItem
 from blogango.views import _get_archive_months
@@ -18,8 +19,7 @@ class BlogangoContext(template.Node):
     def render(self, context):
         #only one blog must be present
         blog = Blog.objects.get_blog()
-        tags = Tag.objects.all()
-        tags = [tag for tag in tags if tag.taggit_taggeditem_items.all().count()>2]
+        tags = Tag.objects.annotate(num_tagged_entries=Count('taggit_taggeditem_items')).filter(num_tagged_entries__gt=2)
         feed_url = reverse('blogango_feed')
         archive_months = _get_archive_months()
         site = Site.objects.get_current()
