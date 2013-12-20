@@ -1,7 +1,6 @@
 import re
 
 from django import template
-from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
 from django.db.models import Count
