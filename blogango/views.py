@@ -364,11 +364,10 @@ def render(template, request, payload):
     return render_to_response(template, payload, context_instance=RequestContext(request),)
 
 
-def _get_sidebar_objects (request):
+def _get_sidebar_objects(request):
     """Gets the objects which are always displayed in the sidebar"""
-    try:
-        blog = Blog.objects.all()[0]
-    except:
+    blog = Blog.objects.get_blog()
+    if not blog:
         return {}
     recents = BlogEntry.objects.filter(is_page = False, is_published = True).order_by('-created_on')[:blog.recents]
     blogroll = BlogRoll.objects.filter(is_published=True)
