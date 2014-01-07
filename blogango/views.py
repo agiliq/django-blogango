@@ -130,10 +130,10 @@ def handle404(view_function):
 
 
 def index(request, page = 1):
-    if not _is_blog_installed():
+    blog = Blog.objects.get_blog()
+    if not blog:
         return HttpResponseRedirect(reverse('blogango_install'))
     page = int(page)
-    blog = Blog.objects.get_blog()
     entries = BlogEntry.objects.filter(is_page=False).order_by('-created_on')
     paginator = Paginator(entries, blog.entries_per_page)
     if paginator.num_pages < page:
