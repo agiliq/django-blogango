@@ -134,7 +134,7 @@ def index(request, page = 1):
     if not blog:
         return HttpResponseRedirect(reverse('blogango_install'))
     page = int(page)
-    entries = BlogEntry.objects.filter(is_page=False).order_by('-created_on')
+    entries = BlogEntry.objects.filter(is_page=False)
     paginator = Paginator(entries, blog.entries_per_page)
     if paginator.num_pages < page:
         return redirect(reverse('blogango_page', args=[paginator.num_pages]))
