@@ -354,9 +354,7 @@ monthly_view = BlogEntryMonthArchiveView.as_view()
 
 #Helper methods.
 def _is_blog_installed():
-    if Blog.objects.count() == 0:
-        return False
-    return True
+    return Blog.objects.get_blog()
 
 
 def render (template, request, payload):
