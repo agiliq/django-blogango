@@ -357,7 +357,7 @@ def _is_blog_installed():
     return Blog.objects.get_blog()
 
 
-def render (template, request, payload):
+def render(template, request, payload):
     """Wrapper on render_to_response.
     Adds sidebar objects. Adds RequestContext"""
     payload.update(_get_sidebar_objects(request))
