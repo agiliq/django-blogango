@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
-#from django.views.generic.date_based import archive_month
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.admin.views.decorators import staff_member_required
@@ -326,17 +325,6 @@ def author(request, username, page=1):
                                                     'entries': entries,
                                                     'page_': page_})
 
-#def monthly_view(request, year, month):
-    #queryset = BlogEntry.objects.filter(is_page=False, is_published=True)
-    #return archive_month(request=request,
-                         #template_name='blogango/archive_view.html',
-                         #year=year,
-                         #month=month,
-                         #queryset=queryset,
-                         #date_field='created_on',
-                         #allow_empty=True,
-                         #extra_context=_get_sidebar_objects(request))
-
 
 class BlogEntryMonthArchiveView(MonthArchiveView):
     queryset = BlogEntry.objects.filter(is_page=False, is_published=True)
@@ -401,4 +389,3 @@ def generic(request): # A generic form processor.
         pass
     if request.method == 'POST':
         pass
-
