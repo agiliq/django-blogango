@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
-#from django.views.generic.date_based import archive_month
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.admin.views.decorators import staff_member_required
@@ -130,11 +129,11 @@ def handle404(view_function):
 
 
 def index(request, page = 1):
-    if not _is_blog_installed():
+    blog = Blog.objects.get_blog()
+    if not blog:
         return HttpResponseRedirect(reverse('blogango_install'))
     page = int(page)
-    blog = Blog.objects.all()[0]
-    entries = BlogEntry.objects.filter(is_page=False).order_by('-created_on')
+    entries = BlogEntry.objects.filter(is_page=False)
     paginator = Paginator(entries, blog.entries_per_page)
     if paginator.num_pages < page:
         return redirect(reverse('blogango_page', args=[paginator.num_pages]))
@@ -326,17 +325,6 @@ def author(request, username, page=1):
                                                     'entries': entries,
                                                     'page_': page_})
 
-#def monthly_view(request, year, month):
-    #queryset = BlogEntry.objects.filter(is_page=False, is_published=True)
-    #return archive_month(request=request,
-                         #template_name='blogango/archive_view.html',
-                         #year=year,
-                         #month=month,
-                         #queryset=queryset,
-                         #date_field='created_on',
-                         #allow_empty=True,
-                         #extra_context=_get_sidebar_objects(request))
-
 
 class BlogEntryMonthArchiveView(MonthArchiveView):
     queryset = BlogEntry.objects.filter(is_page=False, is_published=True)
@@ -354,23 +342,20 @@ monthly_view = BlogEntryMonthArchiveView.as_view()
 
 #Helper methods.
 def _is_blog_installed():
-    if Blog.objects.count() == 0:
-        return False
-    return True
+    return Blog.objects.get_blog()
 
 
-def render (template, request, payload):
+def render(template, request, payload):
     """Wrapper on render_to_response.
     Adds sidebar objects. Adds RequestContext"""
     payload.update(_get_sidebar_objects(request))
     return render_to_response(template, payload, context_instance=RequestContext(request),)
 
 
-def _get_sidebar_objects (request):
+def _get_sidebar_objects(request):
     """Gets the objects which are always displayed in the sidebar"""
-    try:
-        blog = Blog.objects.all()[0]
-    except:
+    blog = Blog.objects.get_blog()
+    if not blog:
         return {}
     recents = BlogEntry.objects.filter(is_page = False, is_published = True).order_by('-created_on')[:blog.recents]
     blogroll = BlogRoll.objects.filter(is_published=True)
@@ -404,4 +389,3 @@ def generic(request): # A generic form processor.
         pass
     if request.method == 'POST':
         pass
-
