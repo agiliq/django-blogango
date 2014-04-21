@@ -108,10 +108,10 @@ class BlogEntry(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        if self.title == None  or self.title == '':
+        if self.title is None or self.title == '':
             self.title = _infer_title_or_slug(self.text.raw)
 
-        if self.slug == None or self.slug == '':
+        if self.slug is None or self.slug == '':
             self.slug = slugify(self.title)
 
         i = 1
