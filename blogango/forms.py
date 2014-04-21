@@ -57,4 +57,3 @@ class BlogForm(forms.ModelForm):
     class Meta:
         model = BlogRoll
         exclude = ('is_published',)
-
