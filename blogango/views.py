@@ -23,20 +23,28 @@ from blogango import forms as bforms
 from blogango.conf.settings import AKISMET_COMMENT, AKISMET_API_KEY
 from blogango.akismet import Akismet, AkismetError
 
+
 @staff_member_required
 def admin_dashboard(request):
-    recent_drafts = BlogEntry.default.filter(is_published=False).order_by('-created_on')[:5]
+    recent_drafts = \
+        BlogEntry.default.filter(
+            is_published=False).order_by('-created_on')[:5]
     recent_entries = BlogEntry.objects.order_by('-created_on')[:5]
-    return render('blogango/admin/index.html', request, {'recent_drafts': recent_drafts,
-                                                         'recent_entries': recent_entries})
+    return render('blogango/admin/index.html', request, {'recent_drafts':
+                                                         recent_drafts,
+                                                         'recent_entries':
+                                                         recent_entries})
+
 
 @staff_member_required
 def admin_entry_edit(request, entry_id=None):
     entry = None
-    entry_form = bforms.EntryForm(initial={'created_by': request.user.id, 'publish_date':datetime.now()})
+    entry_form = bforms.EntryForm(initial={'created_by': request.user.id,
+                                           'publish_date': datetime.now()})
     if entry_id:
         entry = get_object_or_404(BlogEntry, pk=entry_id)
-        entry_form = bforms.EntryForm(instance=entry, initial={'text': entry.text.raw})
+        entry_form = bforms.EntryForm(instance=entry,
+                                      initial={'text': entry.text.raw})
     if request.POST:
         entry_form = bforms.EntryForm(request.POST, instance=entry)
 
@@ -51,21 +59,27 @@ def admin_entry_edit(request, entry_id=None):
             new_entry.tags.set(*tag_list)
             if new_entry.is_published:
                 return redirect(new_entry)
-            return redirect(reverse('blogango_admin_entry_edit', args=[new_entry.id])+'?done')
+            return redirect(reverse('blogango_admin_entry_edit',
+                                    args=[new_entry.id])+'?done')
     tags_json = json.dumps([each.name for each in Tag.objects.all()])
-    return render('blogango/admin/edit_entry.html', request, {'entry_form': entry_form,
+    return render('blogango/admin/edit_entry.html', request, {'entry_form':
+                                                              entry_form,
                                                               'entry': entry,
-                                                              'tags_json': tags_json})
+                                                              'tags_json':
+                                                              tags_json})
+
 
 @staff_member_required
 def admin_manage_entries(request, username=None):
     author = None
     if username:
         author = get_object_or_404(User, username=username)
-        entries = BlogEntry.default.filter(created_by=author) 
+        entries = BlogEntry.default.filter(created_by=author)
     else:
         entries = BlogEntry.default.all()
-    return render('blogango/admin/manage_entries.html', request, {'entries': entries, 'author': author})
+    return render('blogango/admin/manage_entries.html',
+                  request, {'entries': entries, 'author': author})
+
 
 @staff_member_required
 def admin_manage_comments(request, entry_id=None):
@@ -74,7 +88,8 @@ def admin_manage_comments(request, entry_id=None):
     if entry_id:
         blog_entry = get_object_or_404(BlogEntry, pk=entry_id)
     if 'blocked' in request.GET:
-        comments = Comment.default.filter(Q(is_spam=True)|Q(is_public=False)).order_by('-created_on')
+        comments = \
+            Comment.default.filter(Q(is_spam=True) | Q(is_public=False)).order_by('-created_on')
     else:
         comments = Comment.objects.order_by('-created_on')
     if blog_entry:
@@ -84,7 +99,11 @@ def admin_manage_comments(request, entry_id=None):
     paginator = Paginator(comments, comments_per_page)
     page_ = paginator.page(page)
     comments = page_.object_list
-    return render('blogango/admin/manage_comments.html', request, {'comments': comments, 'blog_entry': blog_entry, 'page_': page_})
+    return render('blogango/admin/manage_comments.html',
+                  request, {'comments': comments,
+                            'blog_entry': blog_entry,
+                            'page_': page_})
+
 
 @staff_member_required
 def admin_edit_preferences(request):
@@ -98,6 +117,7 @@ def admin_edit_preferences(request):
             return redirect(request.path+"?done")
     return render('blogango/admin/edit_preferences.html', request, {'form': form})
 
+
 @staff_member_required
 @require_POST
 def admin_comment_approve(request):
@@ -107,6 +127,7 @@ def admin_comment_approve(request):
     comment.is_public = True
     comment.save()
     return HttpResponse(comment.pk)
+
 
 @staff_member_required
 @require_POST
@@ -118,7 +139,6 @@ def admin_comment_block(request):
     return HttpResponse(comment.pk)
 
 
-
 def handle404(view_function):
     def wrapper(*args, **kwargs):
         try:
@@ -128,7 +148,7 @@ def handle404(view_function):
     return wrapper
 
 
-def index(request, page = 1):
+def index(request, page=1):
     blog = Blog.objects.get_blog()
     if not blog:
         return HttpResponseRedirect(reverse('blogango_install'))
@@ -144,7 +164,9 @@ def index(request, page = 1):
 
 
 def check_comment_spam(request, comment):
-    api = Akismet(AKISMET_API_KEY, 'http://%s' % (request.get_host()), request.META.get('HTTP_USER_AGENT', ''))
+    api = Akismet(AKISMET_API_KEY,
+                  'http://%s' % (request.get_host()),
+                  request.META.get('HTTP_USER_AGENT', ''))
 
     message = "Akismet API key is invalid."
     try:
@@ -161,7 +183,6 @@ def check_comment_spam(request, comment):
 
         return api.comment_check(smart_str(comment.text), akismet_data)
     raise AkismetError(message)
-
 
 
 @handle404
@@ -190,7 +211,8 @@ def details(request, year, month, slug):
                               user_name=comment_f.cleaned_data['name'],
                               user_url=comment_f.cleaned_data['url'],
                               email_id=comment_f.cleaned_data['email'])
-            comment.is_public = getattr(settings, 'AUTO_APPROVE_COMMENTS', True)
+            comment.is_public = getattr(settings, 'AUTO_APPROVE_COMMENTS',
+                                        True)
             if AKISMET_COMMENT:
                 try:
                     comment.is_spam = check_comment_spam(request, comment)
@@ -217,7 +239,8 @@ def details(request, year, month, slug):
     comments = Comment.objects.filter(comment_for=entry, is_spam=False)
     reactions = Reaction.objects.filter(comment_for=entry)
     # tags = Tag.objects.filter(tag_for=entry)
-    payload = {'entry': entry, 'comments': comments, 'reactions': reactions, 'comment_form': comment_f}
+    payload = {'entry': entry, 'comments': comments,
+               'reactions': reactions, 'comment_form': comment_f}
     return render('blogango/details.html', request, payload)
 
 
@@ -246,7 +269,8 @@ def page_details(request, slug):
                               user_name=comment_f.cleaned_data['name'],
                               user_url=comment_f.cleaned_data['url'],
                               email_id=comment_f.cleaned_data['email'])
-            comment.is_public = getattr(settings, 'AUTO_APPROVE_COMMENTS', True)
+            comment.is_public = getattr(settings, 'AUTO_APPROVE_COMMENTS',
+                                        True)
             if AKISMET_COMMENT:
                 try:
                     comment.is_spam = check_comment_spam(request, comment)
@@ -264,7 +288,8 @@ def page_details(request, slug):
     comments = Comment.objects.filter(comment_for=entry, is_spam=False)
     reactions = Reaction.objects.filter(comment_for=entry)
     # tags = Tag.objects.filter(tag_for=entry)
-    payload = {'entry': entry, 'comments': comments, 'reactions': reactions, 'comment_form': comment_f}
+    payload = {'entry': entry, 'comments': comments,
+               'reactions': reactions, 'comment_form': comment_f}
     return render('blogango/details.html', request, payload)
 
 
@@ -274,13 +299,15 @@ def tag_details(request, tag_slug, page=1):
     blog = Blog.objects.get_blog()
     tagged_entries = BlogEntry.objects.filter(is_published=True, tags__in=[tag])
     paginator = Paginator(tagged_entries, blog.entries_per_page)
-    if page>paginator.num_pages:
-        return redirect(reverse('blogango_tag_details_page', args=[tag.slug, paginator.num_pages]))
+    if page > paginator.num_pages:
+        return redirect(reverse('blogango_tag_details_page',
+                                args=[tag.slug, paginator.num_pages]))
     page_ = paginator.page(page)
     entries = page_.object_list
     payload = {'tag': tag, 'entries': entries}
     payload['page_'] = page_
     return render('blogango/tag_details.html', request, payload)
+
 
 @login_required
 def install_blog(request):
@@ -299,7 +326,7 @@ def install_blog(request):
 
 
 @login_required
-def  create_blogroll(request):
+def create_blogroll(request):
     if request.method == 'GET':
         blogroll_form = bforms.BlogForm()
     if request.method == 'POST':
@@ -317,8 +344,9 @@ def author(request, username, page=1):
     author = get_object_or_404(User, username=username)
     author_posts = author.blogentry_set.filter(is_published=True)
     paginator = Paginator(author_posts, blog.entries_per_page)
-    if page>paginator.num_pages:
-        return redirect(reverse('blogango_author_page', args=[author.username, paginator.num_pages]))
+    if page > paginator.num_pages:
+        return redirect(reverse('blogango_author_page',
+                                args=[author.username, paginator.num_pages]))
     page_ = paginator.page(page)
     entries = page_.object_list
     return render('blogango/author.html', request, {'author': author,
@@ -338,7 +366,7 @@ class BlogEntryMonthArchiveView(MonthArchiveView):
         return context
 
 monthly_view = BlogEntryMonthArchiveView.as_view()
-    
+
 
 #Helper methods.
 def _is_blog_installed():
@@ -349,7 +377,8 @@ def render(template, request, payload):
     """Wrapper on render_to_response.
     Adds sidebar objects. Adds RequestContext"""
     payload.update(_get_sidebar_objects(request))
-    return render_to_response(template, payload, context_instance=RequestContext(request),)
+    return render_to_response(template, payload,
+                              context_instance=RequestContext(request),)
 
 
 def _get_sidebar_objects(request):
@@ -357,18 +386,24 @@ def _get_sidebar_objects(request):
     blog = Blog.objects.get_blog()
     if not blog:
         return {}
-    recents = BlogEntry.objects.filter(is_page = False, is_published = True).order_by('-created_on')[:blog.recents]
+    recents = \
+        BlogEntry.objects.filter(is_page=False,
+                                 is_published=True).order_by('-created_on')[:blog.recents]
     blogroll = BlogRoll.objects.filter(is_published=True)
-    return {'blog':blog,
-            'recents':recents,
-            'blogroll':blogroll,
+    return {'blog': blog,
+            'recents': recents,
+            'blogroll': blogroll,
             'canonical_url': request.build_absolute_uri(),
-            'pingback_xmlrpc_url': request.build_absolute_uri(reverse('xmlrpc')),}
+            'pingback_xmlrpc_url':
+            request.build_absolute_uri(reverse('xmlrpc')), }
 
 
 def _get_archive_months():
     """Get the months for which at least one entry exists"""
-    dates = BlogEntry.objects.filter(is_page=False, is_published=True).dates('created_on', 'month', order='DESC')
+    dates = BlogEntry.objects.filter(is_page=False,
+                                     is_published=True).dates('created_on',
+                                                              'month',
+                                                              order='DESC')
     return dates
 
 
@@ -384,7 +419,8 @@ def _generic_form_display(request, form_class):
     return render('blogango/install.html', request, payload)
 
 
-def generic(request): # A generic form processor.
+# A generic form processor.
+def generic(request):
     if request.method == 'GET':
         pass
     if request.method == 'POST':

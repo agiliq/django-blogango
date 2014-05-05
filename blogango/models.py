@@ -10,6 +10,7 @@ from taggit.managers import TaggableManager
 from markupfield.fields import MarkupField
 from markupfield.markup import DEFAULT_MARKUP_TYPES
 
+
 class BlogManager(models.Manager):
     def get_blog(self):
         blogs = self.all()
@@ -17,10 +18,12 @@ class BlogManager(models.Manager):
             return blogs[0]
         return None
 
+
 class Blog(models.Model):
     """Blog wide settings.
      title:title of the Blog.
-     tag_line: Tagline/subtitle of the blog. This two are genearlly displayed on each page's header.
+     tag_line: Tagline/subtitle of the blog.
+               This two are genearlly displayed on each page's header.
      entries_per_page=Number of entries to display on each page.
      recents: Number of recent entries to display in the sidebar.
      recent_comments: Number of recent comments to display in the sidebar.
@@ -42,26 +45,34 @@ class Blog(models.Model):
         """There should not be more than one Blog object"""
         if Blog.objects.count() == 1 and not self.id:
             raise Exception("Only one blog object allowed.")
-        super(Blog, self).save(*args, **kwargs) # Call the "real" save() method.
+        # Call the "real" save() method.
+        super(Blog, self).save(*args, **kwargs)
 
 
 class BlogPublishedManager(models.Manager):
     use_for_related_fields = True
 
     def get_query_set(self):
-        return super(BlogPublishedManager, self).get_query_set().filter(is_published=True,
-                publish_date__lte=datetime.now())
+        return super(BlogPublishedManager, self).get_query_set().filter(
+            is_published=True,
+            publish_date__lte=datetime.now())
+
 
 class BlogEntry(models.Model):
     """Each blog entry.
     Title: Post title.
-    Slug: Post slug. These two if not given are inferred directly from entry text.
+    Slug: Post slug.
+          These two if not given are inferred directly from entry text.
     text = The main data for the post.
-    summary = The summary for the text. probably can be derived from text, but we dont want do do that each time main page is displayed.
+    summary = The summary for the text. probably can be derived from text,
+              but we dont want do do that each time main page is displayed.
     created_on = The date this entry was created. Defaults to now.
     Created by: The user who wrote this.
-    is_page: Is this a page or a post? Pages are the more important posts, which might be displayed differently. Defaults to false.
-    is_published: Is this page published. If yes then we would display this on site, otherwise no. Defaults to true.
+    is_page: Is this a page or a post? Pages are the more important posts,
+             which might be displayed differently. Defaults to false.
+    is_published: Is this page published.
+                  If yes then we would display this on site, otherwise no.
+                  Defaults to true.
     comments_allowed: Are comments allowed on this post? Defaults to True
     is_rte: Was this post done using a Rich text editor?"""
 
@@ -97,10 +108,10 @@ class BlogEntry(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        if self.title == None  or self.title == '':
+        if self.title is None or self.title == '':
             self.title = _infer_title_or_slug(self.text.raw)
 
-        if self.slug == None or self.slug == '':
+        if self.slug is None or self.slug == '':
             self.slug = slugify(self.title)
 
         i = 1
@@ -123,17 +134,19 @@ class BlogEntry(models.Model):
             #default value for created_on is datetime.max whose year is 9999
             if self.created_on.year == 9999:
                 self.created_on = self.publish_date
-        super(BlogEntry, self).save(*args, **kwargs) # Call the "real" save() method.
+        # Call the "real" save() method.
+        super(BlogEntry, self).save(*args, **kwargs)
 
     def create_slug(self, initial_slug, i=1):
-        if not i==1:
+        if not i == 1:
             initial_slug += "-%s" % (i,)
         return initial_slug
 
     def get_absolute_url(self):
-        return reverse('blogango_details', kwargs={'year': self.created_on.strftime('%Y'),
-                                         'month': self.created_on.strftime('%m'),
-                                         'slug': self.slug})
+        return reverse('blogango_details',
+                       kwargs={'year': self.created_on.strftime('%Y'),
+                               'month': self.created_on.strftime('%m'),
+                               'slug': self.slug})
 
     def get_edit_url(self):
         return reverse('blogango_admin_entry_edit', args=[self.id])
@@ -146,9 +159,11 @@ class BlogEntry(models.Model):
         reaction_count = Reaction.objects.filter(comment_for=self).count()
         return reaction_count
 
+
 class CommentManager(models.Manager):
     def get_query_set(self):
         return super(CommentManager, self).get_query_set().filter(is_public=True)
+
 
 class BaseComment(models.Model):
     text = models.TextField()
@@ -164,16 +179,20 @@ class BaseComment(models.Model):
     def __unicode__(self):
         return self.text
 
+
 class Comment(BaseComment):
     """Comments for each blog.
     text: The comment text.
     comment_for: the Post/Page this comment is created for.
     created_on: The date this comment was written on.
     created_by: THe user who wrote this comment.
-    user_name = If created_by is null, this comment was by anonymous user. Name in that case.
+    user_name = If created_by is null, this comment was by anonymous user.
+                Name in that case.
     email_id: Email-id, as in user_name.
-    is_spam: Is comment marked as spam? We do not display the comment in those cases.
-    is_public: null for comments waiting to be approved, True if approved, False if rejected
+    is_spam: Is comment marked as spam?
+             We do not display the comment in those cases.
+    is_public: null for comments waiting to be approved, True if approved,
+               False if rejected
     """
 
     created_by = models.ForeignKey(User, unique=False, blank=True, null=True)
@@ -189,8 +208,9 @@ class Comment(BaseComment):
             self.is_public = False
         super(Comment, self).save(*args, **kwargs)
 
-    def get_absolute_url (self):
-        return reverse('blogango_comment_details', args=[self.id,])
+    def get_absolute_url(self):
+        return reverse('blogango_comment_details', args=[self.id, ])
+
 
 class Reaction(BaseComment):
     """
@@ -199,6 +219,7 @@ class Reaction(BaseComment):
     reaction_id = models.CharField(max_length=200, primary_key=True)
     source = models.CharField(max_length=200)
     profile_image = models.URLField(blank=True, null=True)
+
 
 class BlogRoll(models.Model):
     url = models.URLField(unique=True)
@@ -211,13 +232,16 @@ class BlogRoll(models.Model):
     def get_absolute_url(self):
         return self.url
 
+
 class CommentModerator(CommentModerator):
     email_notification = True
     enable_field = 'is_public'
 
+
 #Helper methods
 def _infer_title_or_slug(text):
     return '-'.join(text.split()[:5])
+
 
 def _generate_summary(text):
     return ' '.join(text.split()[:100])
