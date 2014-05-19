@@ -9,7 +9,7 @@ install:
 # command to run tests
 script: 
   -  python example/manage.py test blogango
-  -  coverage run --source="." example/manage.py test blogango
+  -  coverage run --omit='*migrations*' --source="." example/manage.py test blogango
   
 after_success:
   - coveralls  
