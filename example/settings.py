@@ -105,3 +105,12 @@ except ImportError:
 }
 
 STATIC_URL = "/static/"
+
+
+# details to send mail
+# EMAIL_HOST = ''
+# EMAIL_BACKEND = ''
+# EMAIL_PORT
+# EMAIL_HOST_USER = ""
+# EMAIL_HOST_PASSWORD = ''
+# EMAIL_USE_TLS = True

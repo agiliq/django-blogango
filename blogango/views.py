@@ -15,6 +15,8 @@ from datetime import datetime
 from django.views.decorators.http import require_POST
 from django.utils import simplejson as json
 from django.views.generic.dates import MonthArchiveView
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
 
 from taggit.models import Tag
 
@@ -223,6 +225,19 @@ def details(request, year, month, slug):
                 request.session["name"] = comment_f.cleaned_data['name']
                 request.session["email"] = comment_f.cleaned_data['email']
                 request.session["url"] = comment_f.cleaned_data['url']
+                # send email notification to blog author
+                if entry.created_by.email:
+                    email_data = {}
+                    email_data['author_name'] = entry.created_by.get_full_name()
+                    email_data['author_email'] = entry.created_by.email
+                    email_data['blog_name'] = entry
+                    email_data['blog_url'] = request.build_absolute_uri()
+                    email_data['comment_author'] = comment_f.cleaned_data['name']
+                    email_data['comment_text'] = comment_f.cleaned_data['text']
+                    try:
+                        notify_author(email_data)
+                    except:
+                        pass
             comment.save()
             return HttpResponseRedirect('#comment-%s' % comment.pk)
     else:
@@ -425,3 +440,18 @@ def generic(request):
         pass
     if request.method == 'POST':
         pass
+
+
+def notify_author(email_data):
+    author_mail_template_name = 'blogango/email/comment_notification.html'
+    author_mail_subject = 'There is a new comment to {0}'.format(email_data['blog_name'])
+    message = render_to_string(author_mail_template_name, email_data)
+    email = email_data['author_email']
+    mail = EmailMessage(
+        subject=author_mail_subject,
+        body=message,
+        from_email=settings.SERVER_EMAIL,
+        to=[email],
+    )
+    mail.content_subtype = "html"
+    mail.send()
