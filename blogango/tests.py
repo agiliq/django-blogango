@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.contrib.staticfiles import finders
 from django.contrib.staticfiles.storage import staticfiles_storage
+from django.core.management import call_command
+from django.core import mail
+
 
 from taggit.models import Tag
 from models import Blog, BlogEntry, Comment
@@ -352,3 +355,43 @@ def create_test_blog_entry(user):
 
 def create_test_comment(entry):
     Comment.objects.create(text="foo", comment_for=entry, is_public=True)
+
+
+
+
+class TestCommentNotificationCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='gonecrazy', email='gonecrazy@gmail.com', password='gonecrazy')
+        self.user.is_staff = True
+        self.user.save()
+        self.blog_entry = create_test_blog_entry(self.user)
+
+
+    def test_comment_notify_sends_email(self):
+        """Test if management command sends mail"""
+        create_test_comment(self.blog_entry)
+        self.assertEqual(len(mail.outbox), 0)
+        call_command('comment_notify')
+        self.assertEqual(len(mail.outbox), 1)
+
+    def test_single_email_send_for_multiple_comments(self):
+        """Test if a single mail send for multiple comments on a blong entry"""
+        for each in range(5):
+            create_test_comment(self.blog_entry)
+        comments = Comment.objects.filter(comment_for=self.blog_entry)
+        self.assertEqual(comments.count(), 5)
+        self.assertEqual(len(mail.outbox), 0)
+        call_command('comment_notify')
+        self.assertEqual(len(mail.outbox), 1)
+
+    def test_notification_for_muliple_posts(self):
+        """Test if multiple mails are send for mulitiple blogs"""
+        user2 = User.objects.create_user(username='testuser', email='testuser@gmail.com', password='testuser')
+        user2.is_staff = True
+        user2.save()
+        blog_entry2 = create_test_blog_entry(user2)
+        create_test_comment(self.blog_entry)
+        create_test_comment(blog_entry2)
+        self.assertEqual(len(mail.outbox), 0)
+        call_command('comment_notify')
+        self.assertEqual(len(mail.outbox), 2)
