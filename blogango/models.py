@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -158,6 +158,21 @@ class BlogEntry(models.Model):
     def get_num_reactions(self):
         reaction_count = Reaction.objects.filter(comment_for=self).count()
         return reaction_count
+
+    # check if the blog have any comments in the last 24 hrs.
+    def has_recent_comments(self):
+        yesterday = datetime.now()-timedelta(days=1)
+        return Comment.objects.filter(
+            comment_for=self, is_spam=False, created_on__gt=yesterday
+        ).exists()
+
+    # return comments in the last 24 hrs
+    def get_recent_comments(self):
+        yesterday = datetime.now()-timedelta(days=1)
+        cmnts = Comment.objects.filter(
+            comment_for=self, is_spam=False, created_on__gt=yesterday
+        ).order_by('-created_on')
+        return cmnts
 
 
 class CommentManager(models.Manager):
