@@ -1,0 +1,16 @@
+<div>
+    <p><strong>Hi {{ user.get_full_name }},</strong></p>
+    {% for blog in blogs %}
+        <p><strong>Blog:</strong> {{ blog.title }}</p>
+        <p><strong>Link:</strong> {{ current_site }}{{ blog.get_absolute_url }}</p>
+        {% for comment in blog.get_recent_comments %}
+        <div>
+            <p><strong>Author:</strong> {{ comment.created_by }}</p>
+            <p><strong>Created On:</strong> {{ comment.created_on|date:'d M Y H:i' }}</p>
+            <p><strong>Comment:</strong> <br/> {{ comment.text }}</p>
+        </div>
+        <br />
+        {% endfor %}
+    {% endfor %}
+</div>
+
