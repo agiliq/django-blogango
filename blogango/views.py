@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.conf import settings
@@ -11,7 +13,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.encoding import smart_str
 from django.db.models import Q
-from datetime import datetime
 from django.views.decorators.http import require_POST
 from django.utils import simplejson as json
 from django.views.generic.dates import MonthArchiveView
