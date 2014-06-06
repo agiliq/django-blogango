@@ -12,3 +12,4 @@ localsettings.py
 *.kpf
 MANIFEST
 dist/*
+example/dev.db
