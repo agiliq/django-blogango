@@ -41,4 +41,3 @@ class Command(NoArgsCommand):
         )
         mail.content_subtype = "html"
         mail.send()
-        print "email send to {0}".format(data['user'].email)
