@@ -14,7 +14,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.encoding import smart_str
 from django.db.models import Q
 from django.views.decorators.http import require_POST
-from django.utils import simplejson as json
+import json
 from django.views.generic.dates import MonthArchiveView
 
 from taggit.models import Tag

@@ -1,5 +1,5 @@
 from datetime import datetime
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 from django.contrib.sitemaps import GenericSitemap
 from blogango import feeds
 from blogango.models import BlogEntry
