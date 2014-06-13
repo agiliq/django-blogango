@@ -11,7 +11,7 @@ notifications:
 # command to run tests
 script: 
   -  python example/manage.py test blogango.tests
-  -  coverage run --omit='*migrations*' --source="." example/manage.py test blogango
+  -  coverage run --omit='*migrations*' --source="." example/manage.py test blogango.tests
   
 after_success:
   - coveralls  
