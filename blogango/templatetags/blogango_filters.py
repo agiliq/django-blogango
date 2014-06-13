@@ -7,7 +7,7 @@ from django.db.models import Count
 
 from taggit.models import Tag, TaggedItem
 from blogango.views import _get_archive_months
-from blogango.models import Blog
+from blogango.models import Blog, BlogEntry
 
 register = template.Library()
 
@@ -40,10 +40,10 @@ def blogango_extra_context(parser, token):
 @register.assignment_tag
 def related_posts(post):
     tags = post.tags.all()
-    related_posts = TaggedItem.objects.filter(tag__in=tags).filter(
-        blogentry__is_published=True).exclude(blogentry=post
-        ).distinct().order_by("-blogentry__created_on")[:5]
-    return set([el.content_object for el in related_posts])
+    blog_entry_ids = [each.content_object.id for each in TaggedItem.objects.filter(tag__in=tags)]
+    related_posts = BlogEntry.objects.filter(id__in=blog_entry_ids,
+                                             is_published=True).exclude(id=post.id).order_by('created_on')[:5]
+    return set([el for el in related_posts])
 
 #django snippets #2107
 @register.filter(name='twitterize')
