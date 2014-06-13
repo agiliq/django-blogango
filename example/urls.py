@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 from django.contrib import admin
 from django.conf import settings
 
@@ -9,7 +9,7 @@ urlpatterns = patterns('',
     (r'^blog/', include('blogango.urls')),
 )
 
-if settings.DEBUG:    
+if settings.DEBUG:
     urlpatterns += patterns('',
         url(r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     )
