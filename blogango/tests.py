@@ -342,7 +342,7 @@ class TestFeedUrl(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_feed_url_on_index(self):
-        response = self.c.get(reverse("blogango_index"))
+        response = self.c.get(reverse("blogango_feed"))
         self.assertGreater(response.content.find('/blog/rss/latest/'), 1)
 
 def create_test_blog_entry(user):
