@@ -16,7 +16,7 @@ from django.db.models import Q
 from django.views.decorators.http import require_POST
 import json
 from django.views.generic.dates import MonthArchiveView
-
+from django.views import generic
 from taggit.models import Tag
 
 from blogango.models import Blog, BlogEntry, Comment, BlogRoll, Reaction
@@ -140,15 +140,6 @@ def admin_comment_block(request):
     return HttpResponse(comment.pk)
 
 
-def handle404(view_function):
-    def wrapper(*args, **kwargs):
-        try:
-            return view_function(*args, **kwargs)
-        except ObjectDoesNotExist:
-            raise Http404
-    return wrapper
-
-
 def index(request, page=1):
     blog = Blog.objects.get_blog()
     if not blog:
@@ -162,6 +153,7 @@ def index(request, page=1):
     entries = page_.object_list
     payload = {'entries': entries, 'page_': page_}
     return render('blogango/mainpage.html', request, payload)
+
 
 
 def check_comment_spam(request, comment):
@@ -185,27 +177,46 @@ def check_comment_spam(request, comment):
         return api.comment_check(smart_str(comment.text), akismet_data)
     raise AkismetError(message)
 
+class DetailsView(generic.DetailView):
+    template_name = 'blogango/details.html'
+    model = BlogEntry
 
-@handle404
-def details(request, year, month, slug):
-    if not _is_blog_installed():
-        return HttpResponseRedirect(reverse('blogango_install'))
-
-    entry = BlogEntry.default.get(created_on__year=year,
-                                  created_on__month=month,
-                                  slug=slug)
-
-    # published check needs to be handled here to allow previews
-    if not entry.is_published:
-        if request.user.is_staff and 'preview' in request.GET:
-            pass
+    def get_context_data(self, *args, **kwargs):
+        context = super(DetailsView, self).get_context_data(**kwargs)
+        if not _is_blog_installed():
+            template_name = 'blogango/install'
+        entry = BlogEntry.default.get(created_on__year=self.kwargs['year'],
+                                      created_on__month=self.kwargs['month'],
+                                      slug=self.kwargs['slug'])
+        # published check needs to be handled here to allow previews
+        if not entry.is_published:
+            if self.request.user.is_staff and 'preview' in self.request.GET:
+                pass
+            else:
+                raise Http404
+        init_data = {}
+        if self.request.user.is_authenticated():
+            init_data['name'] = self.request.user.get_full_name() or self.request.user.username
+            init_data['email'] =self.request.user.email
         else:
-            raise Http404
+            init_data['name'] = self.request.session.get("name", "")
+            init_data['email'] = self.request.session.get("email", "")
+            init_data['url'] = self.request.session.get("url", "")
+        comment_f = bforms.CommentForm(initial=init_data)
+        comments = Comment.objects.filter(comment_for=entry, is_spam=False)
+        reactions = Reaction.objects.filter(comment_for=entry)
+        payload = {'entry': entry, 'comments': comments,
+               'reactions': reactions, 'comment_form': comment_f}
+        for k,v in payload.items():
+            context[k] = v
+        return context
 
-    if request.method == 'POST':
-        comment_f = bforms.CommentForm(request.POST)
+    def post(self, *args, **kwargs):
+        comment_f = bforms.CommentForm(self.request.POST)
         if comment_f.is_valid():
-            comment_by = request.user if request.user.is_authenticated() else None
+            entry = self.get_object()
+            print "absolute url is ", entry.get_absolute_url()
+            comment_by = self.request.user if self.request.user.is_authenticated() else None
             comment = Comment(text=comment_f.cleaned_data['text'],
                               created_by=comment_by,
                               comment_for=entry,
@@ -216,36 +227,20 @@ def details(request, year, month, slug):
                                         True)
             if AKISMET_COMMENT:
                 try:
-                    comment.is_spam = check_comment_spam(request, comment)
+                    comment.is_spam = check_comment_spam(self.request, comment)
                 except AkismetError:
                     # Most likely could be a timeout to a spam message
                     comment.is_spam = True
             if not comment.is_spam:
-                request.session["name"] = comment_f.cleaned_data['name']
-                request.session["email"] = comment_f.cleaned_data['email']
-                request.session["url"] = comment_f.cleaned_data['url']
+                print "comment is not spam"
+                self.request.session["name"] = comment_f.cleaned_data['name']
+                self.request.session["email"] = comment_f.cleaned_data['email']
+                self.request.session["url"] = comment_f.cleaned_data['url']
             comment.save()
             return HttpResponseRedirect('#comment-%s' % comment.pk)
-    else:
-        init_data = {}
-        if request.user.is_authenticated():
-            init_data['name'] = request.user.get_full_name() or request.user.username
-            init_data['email'] = request.user.email
-        else:
-            init_data['name'] = request.session.get("name", "")
-            init_data['email'] = request.session.get("email", "")
-            init_data['url'] = request.session.get("url", "")
-        comment_f = bforms.CommentForm(initial=init_data)
+details = DetailsView.as_view()
 
-    comments = Comment.objects.filter(comment_for=entry, is_spam=False)
-    reactions = Reaction.objects.filter(comment_for=entry)
-    # tags = Tag.objects.filter(tag_for=entry)
-    payload = {'entry': entry, 'comments': comments,
-               'reactions': reactions, 'comment_form': comment_f}
-    return render('blogango/details.html', request, payload)
-
-
-@handle404
+#@handle404
 def page_details(request, slug):
     if not _is_blog_installed():
         return HttpResponseRedirect(reverse('blogango_install'))
@@ -308,7 +303,6 @@ def tag_details(request, tag_slug, page=1):
     payload = {'tag': tag, 'entries': entries}
     payload['page_'] = page_
     return render('blogango/tag_details.html', request, payload)
-
 
 @login_required
 def install_blog(request):
@@ -426,4 +420,5 @@ def generic(request):
         pass
     if request.method == 'POST':
         pass
+
 
