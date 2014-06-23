@@ -4,6 +4,7 @@ from django.contrib.sitemaps import GenericSitemap
 from blogango import feeds
 from blogango.models import BlogEntry
 from blogango import views
+from django.contrib.auth.decorators import login_required, permission_required
 
 blog_info_dict = {
     'queryset': BlogEntry.objects.filter(is_published=True, publish_date__lte=datetime.now),
@@ -15,7 +16,7 @@ sitemaps = {
 
 urlpatterns = patterns('blogango.views',
     url(r'^$', 'index', name="blogango_index"),
-    url(r'^install/$', 'install_blog', name='blogango_install'),
+    url(r'^install/$', login_required(views.install_blog), name='blogango_install'),
     url(r'^page/(?P<page>\d+)/$', 'index',  name='blogango_page'),
     url(r'^(?P<year>\d{4})/(?P<month>\d{2})/(?P<slug>[-\w]+)/$', 'details',
         name='blogango_details'),

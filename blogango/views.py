@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.core.paginator import Paginator
@@ -313,20 +314,27 @@ def tag_details(request, tag_slug, page=1):
     payload['page_'] = page_
     return render('blogango/tag_details.html', request, payload)
 
-@login_required
-def install_blog(request):
-    if _is_blog_installed():
-        return HttpResponseRedirect(reverse('blogango_index'))
+class InstallBlog(generic.View):
+    form_class = bforms.InstallForm
+    template_name = 'blogango/index.html'
+    context_object_name = 'install_form'
 
-    if request.method == 'GET':
-        install_form = bforms.InstallForm()
-    if request.method == 'POST':
-        install_form = bforms.InstallForm(request.POST)
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        if _is_blog_installed():
+            return HttpResponseRedirect(reverse('blogango_index'))
+        install_form = self.form_class
+        return install_form
+
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        if _is_blog_installed():
+            template_name = 'blogango/install.html'
+        install_form = self.form_class(request.POST)
         if install_form.is_valid():
             install_form.save()
-            return HttpResponseRedirect(reverse('blogango_index'))
-    payload = {"install_form": install_form}
-    return render('blogango/install.html', request, payload)
+        return install_form
+install_blog = InstallBlog.as_view()
 
 
 @login_required
