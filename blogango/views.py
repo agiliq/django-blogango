@@ -139,20 +139,29 @@ def admin_comment_block(request):
     comment.save()
     return HttpResponse(comment.pk)
 
+class IndexView(generic.ListView):
+    template_name = 'blogango/mainpage.html'
+    context_object_name = 'entries'
 
-def index(request, page=1):
-    blog = Blog.objects.get_blog()
-    if not blog:
-        return HttpResponseRedirect(reverse('blogango_install'))
-    page = int(page)
-    entries = BlogEntry.objects.filter(is_page=False)
-    paginator = Paginator(entries, blog.entries_per_page)
-    if paginator.num_pages < page:
-        return redirect(reverse('blogango_page', args=[paginator.num_pages]))
-    page_ = paginator.page(page)
-    entries = page_.object_list
-    payload = {'entries': entries, 'page_': page_}
-    return render('blogango/mainpage.html', request, payload)
+    def get_queryset(self, *args, **kwargs):
+        blog = Blog.objects.get_blog()
+        if not blog:
+            return HttpResponseRedirect(reverse('blogango_install'))
+        entries = BlogEntry.objects.filter(is_page=False)
+        return entries
+
+    def get_context_data(self, *args, **kwargs):
+        blog = Blog.objects.get_blog()
+        if blog:
+            context = super(IndexView, self).get_context_data(**kwargs)
+            queryset = context['entries']
+            (paginator, page_, queryset, is_paginated) = self.paginate_queryset(queryset, blog.entries_per_page)
+            if paginator.num_pages < 1:
+                return redirect(reverse('blogango_page', args=[paginator.num_pages]))
+            context['page_'] = page_
+            return context
+
+index = IndexView.as_view()
 
 
 
