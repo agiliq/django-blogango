@@ -1,6 +1,5 @@
 from datetime import datetime
-
-from django.shortcuts import render_to_response, get_object_or_404, redirect
+from django.shortcuts import render_to_response, get_object_or_404, redirect, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -25,6 +24,12 @@ from blogango import forms as bforms
 from blogango.conf.settings import AKISMET_COMMENT, AKISMET_API_KEY
 from blogango.akismet import Akismet, AkismetError
 
+
+class LoginRequiredMixin(object):
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
 
 @staff_member_required
 def admin_dashboard(request):
@@ -314,19 +319,17 @@ def tag_details(request, tag_slug, page=1):
     payload['page_'] = page_
     return render('blogango/tag_details.html', request, payload)
 
-class InstallBlog(generic.View):
+class InstallBlog(LoginRequiredMixin, generic.View):
     form_class = bforms.InstallForm
     template_name = 'blogango/index.html'
     context_object_name = 'install_form'
 
-    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         if _is_blog_installed():
             return HttpResponseRedirect(reverse('blogango_index'))
         install_form = self.form_class
         return install_form
 
-    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         if _is_blog_installed():
             template_name = 'blogango/install.html'
@@ -336,19 +339,25 @@ class InstallBlog(generic.View):
         return install_form
 install_blog = InstallBlog.as_view()
 
+class CreateBlogRoll(LoginRequiredMixin, generic.edit.FormView):
+    template_name = 'blogango/blogroll.html'
+    form_class = bforms.BlogForm
+    context_object_name = 'blogroll_form'
 
-@login_required
-def create_blogroll(request):
-    if request.method == 'GET':
-        blogroll_form = bforms.BlogForm()
-    if request.method == 'POST':
-        blogroll_form = bforms.BlogForm(request.POST)
+    def get_context_data(self, *args, **kwargs):
+        context = super(CreateBlogRoll, self).get_context_data(**kwargs)
+        context['blogroll_form'] = self.form_class()
+        return context
+
+    def post(self, *args, **kwargs):
+        blogroll_form = self.form_class(self.request.POST)
         if blogroll_form.is_valid():
             blogroll_form.save()
             return HttpResponseRedirect('.')
-    payload = {"blogroll_form": blogroll_form}
-    return render('blogango/blogroll.html', request, payload)
+        payload = {"blogroll_form": blogroll_form}  
+        return render(self.template_name, self.request, payload)
 
+create_blogroll = CreateBlogRoll.as_view()
 
 def author(request, username, page=1):
     page = int(page)
