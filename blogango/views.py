@@ -31,16 +31,28 @@ class LoginRequiredMixin(object):
     def dispatch(self, *args, **kwargs):
         return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
 
-@staff_member_required
-def admin_dashboard(request):
-    recent_drafts = \
-        BlogEntry.default.filter(
-            is_published=False).order_by('-created_on')[:5]
-    recent_entries = BlogEntry.objects.order_by('-created_on')[:5]
-    return render('blogango/admin/index.html', request, {'recent_drafts':
-                                                         recent_drafts,
-                                                         'recent_entries':
-                                                         recent_entries})
+class StaffMemReqMixin(object):
+
+    @method_decorator(staff_member_required)
+    def dispatch(self, *args, **kwargs):
+        return super(StaffMemReqMixin, self).dispatch(*args, **kwargs)
+
+
+class AdminDashboardView(StaffMemReqMixin, generic.ListView):
+    template_name = 'blogango/admin/index.html'
+    context_object_name = 'recent_drafts'
+
+    def get_queryset(self, *args, **kwargs):
+        recent_drafts = BlogEntry.default.filter(is_published=False).order_by('-created_on')[:5]
+        return recent_drafts
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AdminDashboardView, self).get_context_data(**self.kwargs)
+        recent_entries = BlogEntry.objects.order_by('-created_on')[:5]
+        context['recent_entries'] = recent_entries
+        return context
+
+admin_dashboard = AdminDashboardView.as_view()
 
 
 @staff_member_required
