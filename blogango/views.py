@@ -371,20 +371,32 @@ class CreateBlogRoll(LoginRequiredMixin, generic.edit.FormView):
 
 create_blogroll = CreateBlogRoll.as_view()
 
-def author(request, username, page=1):
-    page = int(page)
-    blog = Blog.objects.get_blog()
-    author = get_object_or_404(User, username=username)
-    author_posts = author.blogentry_set.filter(is_published=True)
-    paginator = Paginator(author_posts, blog.entries_per_page)
-    if page > paginator.num_pages:
-        return redirect(reverse('blogango_author_page',
-                                args=[author.username, paginator.num_pages]))
-    page_ = paginator.page(page)
-    entries = page_.object_list
-    return render('blogango/author.html', request, {'author': author,
-                                                    'entries': entries,
-                                                    'page_': page_})
+class AuthorView(generic.ListView):
+    template_name = 'blogango/author.html'
+
+    def get_queryset(self, *args, **kwargs):
+        author = get_object_or_404(User, username = self.kwargs['username'])
+        author_posts = author.blogentry_set.filter(is_published=True)
+        return author_posts
+
+    def get_context_data(self, page=1, *args, **kwargs):
+        context = super(AuthorView, self).get_context_data(**self.kwargs)
+        author_posts = context['object_list']
+        page = int(page)
+        blog = Blog.objects.get_blog()
+        paginator = Paginator(author_posts, blog.entries_per_page)
+        author = get_object_or_404(User, username = self.kwargs['username'])
+        if page > paginator.num_pages:
+            return redirect(reverse(self.template_name, args=[author, paginator.num_pages]))
+        page_ = paginator.page(page)
+        entries = page_.object_list
+        context['entries'] = entries
+        context['author'] = author
+        context['page_'] = page_
+        return context
+
+
+author = AuthorView.as_view()
 
 
 class BlogEntryMonthArchiveView(MonthArchiveView):
