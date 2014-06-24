@@ -304,20 +304,32 @@ def page_details(request, slug):
     return render('blogango/details.html', request, payload)
 
 
-def tag_details(request, tag_slug, page=1):
-    tag = get_object_or_404(Tag, slug=tag_slug)
-    page = int(page)
-    blog = Blog.objects.get_blog()
-    tagged_entries = BlogEntry.objects.filter(is_published=True, tags__in=[tag])
-    paginator = Paginator(tagged_entries, blog.entries_per_page)
-    if page > paginator.num_pages:
-        return redirect(reverse('blogango_tag_details_page',
-                                args=[tag.slug, paginator.num_pages]))
-    page_ = paginator.page(page)
-    entries = page_.object_list
-    payload = {'tag': tag, 'entries': entries}
-    payload['page_'] = page_
-    return render('blogango/tag_details.html', request, payload)
+class TagDetails(generic.ListView):
+    template_name = 'blogango/tag_details.html'
+    context_object_name = 'tagged_entries'
+
+    def get_queryset(self, *args, **kwargs):
+        tag = get_object_or_404(Tag, slug= self.kwargs['tag_slug'])
+        tagged_entries = BlogEntry.objects.filter(is_published=True, tags__in=[tag])
+        return tagged_entries
+
+    def get_context_data(self, page=1,*args, **kwargs):
+        tag = get_object_or_404(Tag, slug= self.kwargs['tag_slug'])
+        context = super(TagDetails, self).get_context_data(**kwargs)
+        blog = Blog.objects.get_blog()
+        page = int(page)
+        tagged_entries = context['tagged_entries']
+        paginator = Paginator(tagged_entries, blog.entries_per_page)
+        if page > paginator.page(page):
+            return redirect(reverse(self.template_name, args=[tag.slug, paginator.num_pages]))
+        page_ = paginator.page(page)
+        entries = page_.object_list
+        context['tag'] = tag
+        context['entries'] = entries
+        context['page_'] = page_
+        return context
+
+tag_details = TagDetails.as_view()
 
 class InstallBlog(LoginRequiredMixin, generic.View):
     form_class = bforms.InstallForm
