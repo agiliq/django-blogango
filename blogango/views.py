@@ -146,17 +146,14 @@ class AdminManageComments(StaffMemReqMixin, generic.ListView):
 
 admin_manage_comments = AdminManageComments.as_view()
 
-@staff_member_required
-def admin_edit_preferences(request):
-    #only one blog must be present
-    blog = Blog.objects.get_blog()
-    form = bforms.PreferencesForm(instance=blog)
-    if request.POST:
-        form = bforms.PreferencesForm(request.POST, instance=blog)
-        if form.is_valid():
-            form.save()
-            return redirect(request.path+"?done")
-    return render('blogango/admin/edit_preferences.html', request, {'form': form})
+class AdminEditPreferences(StaffMemReqMixin, generic.UpdateView):
+    model = Blog
+    form_class = bforms.PreferencesForm
+    template_name = 'blogango/admin/edit_preferences.html'
+    success_url = '?done'
+
+admin_edit_preferences = AdminEditPreferences.as_view()
+
 
 
 @staff_member_required
@@ -264,7 +261,6 @@ class DetailsView(generic.DetailView):
         comment_f = bforms.CommentForm(self.request.POST)
         if comment_f.is_valid():
             entry = self.get_object()
-            print "absolute url is ", entry.get_absolute_url()
             comment_by = self.request.user if self.request.user.is_authenticated() else None
             comment = Comment(text=comment_f.cleaned_data['text'],
                               created_by=comment_by,
