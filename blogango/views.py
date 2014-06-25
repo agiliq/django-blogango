@@ -103,17 +103,27 @@ class AdminEditView(StaffMemReqMixin, generic.UpdateView):
 
 admin_edit = AdminEditView.as_view()
 
-@staff_member_required
-def admin_manage_entries(request, username=None):
-    author = None
-    if username:
-        author = get_object_or_404(User, username=username)
-        entries = BlogEntry.default.filter(created_by=author)
-    else:
-        entries = BlogEntry.default.all()
-    return render('blogango/admin/manage_entries.html',
-                  request, {'entries': entries, 'author': author})
+class AdminManageEntries(StaffMemReqMixin, generic.ListView):
+    template_name = 'blogango/admin/manage_entries.html'
+    model = BlogEntry
+    context_object_name = 'entries'
 
+    def get_queryset(self):
+        author = None
+        if self.request.user:
+            author = get_object_or_404(User, username = self.request.user)
+            entries = BlogEntry.default.filter(created_by=author)
+        else:
+            entries = BlogEntry.default.all()
+        return entries
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AdminManageEntries, self).get_context_data(**kwargs)
+        if self.request.user:
+            context['username'] = self.request.user
+        return context 
+
+admin_manage_entries = AdminManageEntries.as_view()
 
 @staff_member_required
 def admin_manage_comments(request, entry_id=None):
