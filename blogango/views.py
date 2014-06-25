@@ -47,7 +47,7 @@ class AdminDashboardView(StaffMemReqMixin, generic.ListView):
         return recent_drafts
 
     def get_context_data(self, *args, **kwargs):
-        context = super(AdminDashboardView, self).get_context_data(**self.kwargs)
+        context = super(AdminDashboardView, self).get_context_data(**kwargs)
         recent_entries = BlogEntry.objects.order_by('-created_on')[:5]
         context['recent_entries'] = recent_entries
         return context
@@ -55,38 +55,53 @@ class AdminDashboardView(StaffMemReqMixin, generic.ListView):
 admin_dashboard = AdminDashboardView.as_view()
 
 
-@staff_member_required
-def admin_entry_edit(request, entry_id=None):
-    entry = None
-    entry_form = bforms.EntryForm(initial={'created_by': request.user.id,
-                                           'publish_date': datetime.now()})
-    if entry_id:
-        entry = get_object_or_404(BlogEntry, pk=entry_id)
-        entry_form = bforms.EntryForm(instance=entry,
-                                      initial={'text': entry.text.raw})
-    if request.POST:
-        entry_form = bforms.EntryForm(request.POST, instance=entry)
+class AdminEntryView(StaffMemReqMixin, generic.edit.CreateView):
+    model = BlogEntry
+    form_class = bforms.EntryForm
+    template_name = 'blogango/admin/edit_entry.html'
+    
 
-        if entry_form.is_valid():
-            new_entry = entry_form.save(commit=False)
-            if "publish" in request.POST:
-                new_entry.is_published = True
-            if "page" in request.POST:
-                new_entry.is_page = True
-            new_entry.save()
-            tag_list = entry_form.cleaned_data['tags']
-            new_entry.tags.set(*tag_list)
-            if new_entry.is_published:
-                return redirect(new_entry)
-            return redirect(reverse('blogango_admin_entry_edit',
-                                    args=[new_entry.id])+'?done')
-    tags_json = json.dumps([each.name for each in Tag.objects.all()])
-    return render('blogango/admin/edit_entry.html', request, {'entry_form':
-                                                              entry_form,
-                                                              'entry': entry,
-                                                              'tags_json':
-                                                              tags_json})
+    def form_valid(self, form):
+        if "page" in self.request.POST:
+            form.instance.is_page = True
+        if "publish" in self.request.POST:
+            form.instance.is_published = True
+        return super(AdminEntryView, self).form_valid(form)
 
+    def get_success_url(self):
+        blog_entry = self.object
+        if blog_entry.is_published:
+            published_date = blog_entry.publish_date
+            return reverse('blogango_details', kwargs={'year': published_date.year, 'month': published_date.month,
+                                              'slug': blog_entry.slug})
+        pk = blog_entry.id
+        return reverse('blogango_admin_entry_edit', kwargs={'pk':pk})
+
+admin_entry = AdminEntryView.as_view()
+
+class AdminEditView(StaffMemReqMixin, generic.UpdateView):
+    model = BlogEntry
+    fields = ['title', 'text', 'publish_date', 'tags', 'text_markup_type', 'created_by',
+              'meta_keywords','meta_description', 'comments_allowed']
+    template_name = 'blogango/admin/edit_entry.html'
+
+    def form_valid(self, form):
+        if "page" in self.request.POST:
+            form.instance.is_page = True
+        if "publish" in self.request.POST:
+            form.instance.is_published = True
+        return super(AdminEditView, self).form_valid(form)
+    
+    def get_success_url(self):
+        blog_entry = self.object
+        if blog_entry.is_published:
+            published_date = blog_entry.publish_date
+            return reverse('blogango_details', kwargs={'year': published_date.year, 'month': published_date.month,
+                                              'slug': blog_entry.slug})
+        pk = blog_entry.id
+        return reverse('blogango_admin_entry_edit', kwargs={'pk':pk})
+
+admin_edit = AdminEditView.as_view()
 
 @staff_member_required
 def admin_manage_entries(request, username=None):
