@@ -42,7 +42,7 @@ urlpatterns = patterns('blogango.views',
         name='blogango_admin_comments_manage'),
     url(r'^admin/comments/manage/(?P<entry_id>\d+)/$',
         'admin_manage_comments', name='blogango_admin_entry_comments_manage'),
-    url(r'^admin/preferences/edit/(?P<pk>\d+)/$', 'admin_edit_preferences',
+    url(r'^admin/preferences/edit/$', 'admin_edit_preferences',
         name='blogango_admin_edit_preferences'),
     url(r'^admin/comment/approve/$', 'admin_comment_approve',
         name='blogango_admin_comment_approve'),
@@ -78,5 +78,5 @@ urlpatterns += patterns('',
 )
 
 urlpatterns += patterns('blogango.views',
-    url(r'^(?P<slug>[-\w]+)/$', 'page_details', name='blogango_page_details'),
+    url(r'^(?P<slug>[-\w]+)/$', 'details', name='blogango_page_details'),
 )

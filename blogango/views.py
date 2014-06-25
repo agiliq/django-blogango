@@ -132,6 +132,7 @@ class AdminManageComments(StaffMemReqMixin, generic.ListView):
     context_object_name = 'comments'
 
     def get_queryset(self):
+        comments = Comment.objects.order_by('-created_on')
         if 'blocked' in self.request.GET:
             comments = \
               Comment.default.filter(Q(is_spam=True) | Q(is_public=False)).order_by('-created_on')  
@@ -151,6 +152,9 @@ class AdminEditPreferences(StaffMemReqMixin, generic.UpdateView):
     form_class = bforms.PreferencesForm
     template_name = 'blogango/admin/edit_preferences.html'
     success_url = '?done'
+
+    def get_object(self, *args, **kwargs):
+        return Blog.objects.get_blog()
 
 admin_edit_preferences = AdminEditPreferences.as_view()
 
@@ -231,9 +235,12 @@ class DetailsView(generic.DetailView):
         context = super(DetailsView, self).get_context_data(**kwargs)
         if not _is_blog_installed():
             template_name = 'blogango/install'
-        entry = BlogEntry.default.get(created_on__year=self.kwargs['year'],
+        if 'year' in self.kwargs:
+            entry = BlogEntry.default.get(created_on__year=self.kwargs['year'],
                                       created_on__month=self.kwargs['month'],
                                       slug=self.kwargs['slug'])
+        else:
+            entry = BlogEntry.default.get(is_page=True, slug=self.kwargs['slug'])
         # published check needs to be handled here to allow previews
         if not entry.is_published:
             if self.request.user.is_staff and 'preview' in self.request.GET:
@@ -284,54 +291,6 @@ class DetailsView(generic.DetailView):
             comment.save()
             return HttpResponseRedirect('#comment-%s' % comment.pk)
 details = DetailsView.as_view()
-
-#@handle404
-def page_details(request, slug):
-    if not _is_blog_installed():
-        return HttpResponseRedirect(reverse('blogango_install'))
-
-    entry = BlogEntry.default.get(is_page=True,
-                                  slug=slug)
-
-    # published check needs to be handled here to allow previews
-    if not entry.is_published:
-        if request.user.is_staff and 'preview' in request.GET:
-            pass
-        else:
-            raise Http404
-
-    if request.method == 'POST':
-        comment_f = bforms.CommentForm(request.POST)
-        if comment_f.is_valid():
-            comment_by = request.user if request.user.is_authenticated() else None
-            comment = Comment(text=comment_f.cleaned_data['text'],
-                              created_by=comment_by,
-                              comment_for=entry,
-                              user_name=comment_f.cleaned_data['name'],
-                              user_url=comment_f.cleaned_data['url'],
-                              email_id=comment_f.cleaned_data['email'])
-            comment.is_public = getattr(settings, 'AUTO_APPROVE_COMMENTS',
-                                        True)
-            if AKISMET_COMMENT:
-                try:
-                    comment.is_spam = check_comment_spam(request, comment)
-                except AkismetError:
-                    # Most likely spam causing timeout error.
-                    comment.is_spam = True
-            comment.save()
-            return HttpResponseRedirect('#comment-%s' % comment.pk)
-    else:
-        init_data = {'name': None}
-        if request.user.is_authenticated():
-            init_data['name'] = request.user.get_full_name() or request.user.username
-        comment_f = bforms.CommentForm(initial=init_data)
-
-    comments = Comment.objects.filter(comment_for=entry, is_spam=False)
-    reactions = Reaction.objects.filter(comment_for=entry)
-    # tags = Tag.objects.filter(tag_for=entry)
-    payload = {'entry': entry, 'comments': comments,
-               'reactions': reactions, 'comment_form': comment_f}
-    return render('blogango/details.html', request, payload)
 
 
 class TagDetails(generic.ListView):
