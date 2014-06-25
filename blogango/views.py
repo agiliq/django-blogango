@@ -125,29 +125,26 @@ class AdminManageEntries(StaffMemReqMixin, generic.ListView):
 
 admin_manage_entries = AdminManageEntries.as_view()
 
-@staff_member_required
-def admin_manage_comments(request, entry_id=None):
-    # fetch all comments, objects gets you only public ones
-    blog_entry = None
-    if entry_id:
-        blog_entry = get_object_or_404(BlogEntry, pk=entry_id)
-    if 'blocked' in request.GET:
-        comments = \
-            Comment.default.filter(Q(is_spam=True) | Q(is_public=False)).order_by('-created_on')
-    else:
-        comments = Comment.objects.order_by('-created_on')
-    if blog_entry:
-        comments = comments.filter(comment_for=blog_entry)
-    page = request.GET.get('page', 1)
-    comments_per_page = getattr(settings, 'COMMENTS_PER_PAGE', 20)
-    paginator = Paginator(comments, comments_per_page)
-    page_ = paginator.page(page)
-    comments = page_.object_list
-    return render('blogango/admin/manage_comments.html',
-                  request, {'comments': comments,
-                            'blog_entry': blog_entry,
-                            'page_': page_})
 
+class AdminManageComments(StaffMemReqMixin, generic.ListView):
+    model = Comment
+    template_name = 'blogango/admin/manage_comments.html'
+    context_object_name = 'comments'
+
+    def get_queryset(self):
+        if 'blocked' in self.request.GET:
+            comments = \
+              Comment.default.filter(Q(is_spam=True) | Q(is_public=False)).order_by('-created_on')  
+        return comments
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AdminManageComments, self).get_context_data(**kwargs)
+        comments = context['comments']
+        (paginator, page_, queryset, is_paginated) = self.paginate_queryset(comments, 20)
+        context['page_'] = page_
+        return context
+
+admin_manage_comments = AdminManageComments.as_view()
 
 @staff_member_required
 def admin_edit_preferences(request):
