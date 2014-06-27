@@ -88,7 +88,7 @@ class BlogEntry(models.Model):
     created_by = models.ForeignKey(User, unique=False)
     is_page = models.BooleanField(default=False)
     is_published = models.BooleanField(default=True)
-    publish_date = models.DateTimeField()
+    publish_date = models.DateTimeField(null=True)
     comments_allowed = models.BooleanField(default=True)
     is_rte = models.BooleanField(default=False)
 
@@ -185,7 +185,7 @@ class BaseComment(models.Model):
     comment_for = models.ForeignKey(BlogEntry)
     created_on = models.DateTimeField(auto_now_add=True)
     user_name = models.CharField(max_length=100)
-    user_url = models.CharField(max_length=100)
+    user_url = models.URLField()
 
     class Meta:
         ordering = ['created_on']
