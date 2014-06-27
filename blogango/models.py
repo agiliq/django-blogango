@@ -185,7 +185,7 @@ class BaseComment(models.Model):
     comment_for = models.ForeignKey(BlogEntry)
     created_on = models.DateTimeField(auto_now_add=True)
     user_name = models.CharField(max_length=100)
-    user_url = models.CharField(max_length=100)
+    user_url = models.URLField()
 
     class Meta:
         ordering = ['created_on']
