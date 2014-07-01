@@ -184,23 +184,26 @@ class IndexView(generic.ListView):
     template_name = 'blogango/mainpage.html'
     context_object_name = 'entries'
 
-    def get_queryset(self, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         blog = Blog.objects.get_blog()
         if not blog:
             return HttpResponseRedirect(reverse('blogango_install'))
+        self.kwargs['blog'] = blog
+        return super(IndexView, self).get(request, *args, **kwargs)
+
+    def get_queryset(self, *args, **kwargs):
         entries = BlogEntry.objects.filter(is_page=False)
         return entries
 
     def get_context_data(self, *args, **kwargs):
-        blog = Blog.objects.get_blog()
-        if blog:
-            context = super(IndexView, self).get_context_data(**kwargs)
-            queryset = context['entries']
-            (paginator, page_, queryset, is_paginated) = self.paginate_queryset(queryset, blog.entries_per_page)
-            if paginator.num_pages < 1:
-                return redirect(reverse('blogango_page', args=[paginator.num_pages]))
-            context['page_'] = page_
-            return context
+        context = super(IndexView, self).get_context_data(**kwargs)
+        blog = self.kwargs['blog']
+        queryset = context['entries']
+        (paginator, page_, queryset, is_paginated) = self.paginate_queryset(queryset, blog.entries_per_page)
+        if paginator.num_pages < 1:
+            return redirect(reverse('blogango_page', args=[paginator.num_pages]))
+        context['page_'] = page_
+        return context
 
 index = IndexView.as_view()
 
