@@ -253,7 +253,7 @@ class DetailsView(generic.DetailView):
         init_data = {}
         if self.request.user.is_authenticated():
             init_data['name'] = self.request.user.get_full_name() or self.request.user.username
-            init_data['email'] =self.request.user.email
+            init_data['email'] = self.request.user.email
         else:
             init_data['name'] = self.request.session.get("name", "")
             init_data['email'] = self.request.session.get("email", "")
