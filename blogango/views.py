@@ -225,13 +225,15 @@ def check_comment_spam(request, comment):
 class DetailsView(generic.DetailView):
     template_name = 'blogango/details.html'
     model = BlogEntry
-    
-    def get_context_data(self, *args, **kwargs):
-        context = super(DetailsView, self).get_context_data(**kwargs)
 
+    def get(self, *args, **kwargs):
         if not _is_blog_installed():
             return HttpResponseRedirect(reverse('blogango_install'))
+        return super(DetailsView, self).get(self.request, *args, **kwargs)
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(DetailsView, self).get_context_data(**kwargs)
+        
         if 'year' in self.kwargs:
             entry = BlogEntry.default.get(created_on__year=self.kwargs['year'],
                                       created_on__month=self.kwargs['month'],
