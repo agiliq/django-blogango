@@ -320,24 +320,14 @@ class TagDetails(generic.ListView):
 
 tag_details = TagDetails.as_view()
 
-class InstallBlog(LoginRequiredMixin, generic.View):
-    form_class = bforms.InstallForm
-    template_name = 'blogango/index.html'
-    context_object_name = 'install_form'
+class InstallBlog(generic.TemplateView):
+    template_name = 'blogango/install.html'
 
     def get(self, request, *args, **kwargs):
         if _is_blog_installed():
             return HttpResponseRedirect(reverse('blogango_index'))
-        install_form = self.form_class
-        return install_form
+        return render(self.template_name, request, kwargs)
 
-    def post(self, request, *args, **kwargs):
-        if _is_blog_installed():
-            template_name = 'blogango/install.html'
-        install_form = self.form_class(request.POST)
-        if install_form.is_valid():
-            install_form.save()
-        return install_form
 install_blog = InstallBlog.as_view()
 
 class CreateBlogRoll(LoginRequiredMixin, generic.edit.FormView):
