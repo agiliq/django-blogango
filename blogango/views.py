@@ -183,6 +183,7 @@ def admin_comment_block(request):
 class IndexView(generic.ListView):
     template_name = 'blogango/mainpage.html'
     context_object_name = 'entries'
+    paginate_by = Blog.objects.get_blog().entries_per_page
 
     def get(self, request, *args, **kwargs):
         blog = Blog.objects.get_blog()
@@ -194,16 +195,6 @@ class IndexView(generic.ListView):
     def get_queryset(self, *args, **kwargs):
         entries = BlogEntry.objects.filter(is_page=False)
         return entries
-
-    def get_context_data(self, *args, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
-        blog = self.kwargs['blog']
-        queryset = context['entries']
-        (paginator, page_, queryset, is_paginated) = self.paginate_queryset(queryset, blog.entries_per_page)
-        if paginator.num_pages < 1:
-            return redirect(reverse('blogango_page', args=[paginator.num_pages]))
-        context['page_'] = page_
-        return context
 
 index = IndexView.as_view()
 
