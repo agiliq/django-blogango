@@ -183,12 +183,15 @@ def admin_comment_block(request):
 class IndexView(generic.ListView):
     template_name = 'blogango/mainpage.html'
     context_object_name = 'entries'
-    paginate_by = Blog.objects.get_blog().entries_per_page
+    
+    def get_paginate_by(self, *args, **kwargs):
+        paginate_by = Blog.objects.get_blog().entries_per_page
+        return paginate_by
 
     def get(self, request, *args, **kwargs):
         blog = Blog.objects.get_blog()
         if not blog:
-            return HttpResponseRedirect(reverse('blogango_install'))
+            return HttpResponseRedirect(reverse('install_blog'))
         self.kwargs['blog'] = blog
         return super(IndexView, self).get(request, *args, **kwargs)
 
@@ -197,8 +200,6 @@ class IndexView(generic.ListView):
         return entries
 
 index = IndexView.as_view()
-
-
 
 def check_comment_spam(request, comment):
     api = Akismet(AKISMET_API_KEY,
@@ -224,11 +225,13 @@ def check_comment_spam(request, comment):
 class DetailsView(generic.DetailView):
     template_name = 'blogango/details.html'
     model = BlogEntry
-
+    
     def get_context_data(self, *args, **kwargs):
         context = super(DetailsView, self).get_context_data(**kwargs)
+
         if not _is_blog_installed():
-            template_name = 'blogango/install'
+            return HttpResponseRedirect(reverse('blogango_install'))
+
         if 'year' in self.kwargs:
             entry = BlogEntry.default.get(created_on__year=self.kwargs['year'],
                                       created_on__month=self.kwargs['month'],
