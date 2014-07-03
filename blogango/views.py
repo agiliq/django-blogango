@@ -255,10 +255,10 @@ class DetailsView(generic.DetailView):
     template_name = 'blogango/details.html'
     model = BlogEntry
 
-    def get(self, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         if not _is_blog_installed():
             return HttpResponseRedirect(reverse('blogango_install'))
-        return super(DetailsView, self).get(self.request, *args, **kwargs)
+        return super(DetailsView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
         context = super(DetailsView, self).get_context_data(**kwargs)
