@@ -209,18 +209,13 @@ class IndexView(generic.ListView):
     context_object_name = 'entries'
     
     def get_paginate_by(self, *args, **kwargs):
-        paginate_by = Blog.objects.get_blog().entries_per_page
+        paginate_by = self.kwargs['blog'].entries_per_page
         return paginate_by
 
     def get(self, request, *args, **kwargs):
         blog = Blog.objects.get_blog()
         if not blog:
             return HttpResponseRedirect(reverse('blogango_install'))
-        paginator = Paginator(BlogEntry.objects.filter(is_page=False), Blog.objects.get_blog().entries_per_page)
-        if 'page' in kwargs:
-            page = int(kwargs['page'])
-            if paginator.num_pages < page:
-                return redirect(reverse('blogango_page', args=[paginator.num_pages]))
         self.kwargs['blog'] = blog
         return super(IndexView, self).get(request, *args, **kwargs)
 
