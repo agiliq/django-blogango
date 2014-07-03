@@ -349,7 +349,7 @@ class InstallBlog(generic.TemplateView):
     def get(self, request, *args, **kwargs):
         if _is_blog_installed():
             return HttpResponseRedirect(reverse('blogango_index'))
-        return render(self.template_name, request, kwargs)
+        return super(InstallBlog, self).get(request, *args, **kwargs)
 
 install_blog = InstallBlog.as_view()
 
