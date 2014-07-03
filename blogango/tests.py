@@ -107,7 +107,7 @@ class TestViews(TestCase):
         response = self.c.get(reverse('blogango_page', args=[2]))
         self.assertEqual(response.status_code, 200)
         response = self.c.get(reverse('blogango_page', args=[3]))
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 404)
 
     def test_entries_slug(self):
         e1 = BlogEntry.objects.create(title="test", text='foo', created_by=self.user,
