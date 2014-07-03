@@ -24,15 +24,15 @@
 	    </div>
 	{% endfor %}
     <div class="clear"></div>
-    {% if page_.has_next or page_.has_previous %}
+    {% if page_obj.has_next or page_obj.has_previous %}
     <div class="pagination"> 
         <div class="moreinfo">
-            {% if page_.has_next %}
-                <a href='{% url "blogango_tag_details_page" tag.slug page_.next_page_number %}'>&laquo; Previous Entries</a>
+            {% if page_obj.has_next %}
+                <a href='{% url "blogango_tag_details_page" tag.slug page_obj.next_page_number %}'>&laquo; Previous Entries</a>
             {% endif %}
             
-            {% if page_.has_previous %}
-                <span class='right'><a href='{% url "blogango_tag_details_page" tag.slug page_.previous_page_number %}'>Next Entries &raquo;</a></span>
+            {% if page_obj.has_previous %}
+                <span class='right'><a href='{% url "blogango_tag_details_page" tag.slug page_obj.previous_page_number %}'>Next Entries &raquo;</a></span>
             {% endif %}
         </div> 
     </div>

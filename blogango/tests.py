@@ -192,7 +192,7 @@ class TestViews(TestCase):
         response = self.c.get(reverse('blogango_tag_details_page', args=[tag.slug, 2]))
         self.assertEqual(response.status_code, 200)
         response = self.c.get(reverse('blogango_tag_details_page', args=[tag.slug, 3]))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)
 
     def tearDown(self):
         self.blog.delete()

@@ -318,27 +318,21 @@ details = DetailsView.as_view()
 
 class TagDetails(generic.ListView):
     template_name = 'blogango/tag_details.html'
-    context_object_name = 'tagged_entries'
+    context_object_name = 'entries'
 
     def get_queryset(self, *args, **kwargs):
         tag = get_object_or_404(Tag, slug= self.kwargs['tag_slug'])
         tagged_entries = BlogEntry.objects.filter(is_published=True, tags__in=[tag])
         return tagged_entries
 
-    def get_context_data(self, page=1,*args, **kwargs):
-        tag = get_object_or_404(Tag, slug= self.kwargs['tag_slug'])
+    def get_paginate_by(self, queryset):
+        paginate_by = Blog.objects.get_blog().entries_per_page
+        return paginate_by
+
+    def get_context_data(self, *args, **kwargs):
         context = super(TagDetails, self).get_context_data(**kwargs)
-        blog = Blog.objects.get_blog()
-        page = int(page)
-        tagged_entries = context['tagged_entries']
-        paginator = Paginator(tagged_entries, blog.entries_per_page)
-        if page > paginator.page(page):
-            return redirect(reverse(self.template_name, args=[tag.slug, paginator.num_pages]))
-        page_ = paginator.page(page)
-        entries = page_.object_list
+        tag = get_object_or_404(Tag, slug=self.kwargs['tag_slug'])
         context['tag'] = tag
-        context['entries'] = entries
-        context['page_'] = page_
         return context
 
 tag_details = TagDetails.as_view()
