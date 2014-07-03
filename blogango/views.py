@@ -208,7 +208,7 @@ class IndexView(generic.ListView):
     template_name = 'blogango/mainpage.html'
     context_object_name = 'entries'
     
-    def get_paginate_by(self, *args, **kwargs):
+    def get_paginate_by(self, queryset):
         paginate_by = self.kwargs['blog'].entries_per_page
         return paginate_by
 
@@ -219,7 +219,7 @@ class IndexView(generic.ListView):
         self.kwargs['blog'] = blog
         return super(IndexView, self).get(request, *args, **kwargs)
 
-    def get_queryset(self, *args, **kwargs):
+    def get_queryset(self):
         entries = BlogEntry.objects.filter(is_page=False)
         return entries
 
