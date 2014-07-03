@@ -146,19 +146,27 @@ class AdminManageComments(StaffMemReqMixin, generic.ListView):
     model = Comment
     template_name = 'blogango/admin/manage_comments.html'
     context_object_name = 'comments'
+    paginate_by = 20
 
     def get_queryset(self):
-        comments = Comment.objects.order_by('-created_on')
+        blog_entry = None
+        if 'entry_id' in self.kwargs:
+            blog_entry = get_object_or_404(BlogEntry, pk=self.kwargs['entry_id'])
         if 'blocked' in self.request.GET:
             comments = \
               Comment.default.filter(Q(is_spam=True) | Q(is_public=False)).order_by('-created_on')  
+        else:
+            comments = Comment.objects.order_by('-created_on')
+        if blog_entry:
+            comments = comments.filter(comment_for=blog_entry)
         return comments
 
     def get_context_data(self, *args, **kwargs):
         context = super(AdminManageComments, self).get_context_data(**kwargs)
-        comments = context['comments']
-        (paginator, page_, queryset, is_paginated) = self.paginate_queryset(comments, 20)
-        context['page_'] = page_
+        blog_entry = None
+        if 'entry_id' in self.kwargs:
+            blog_entry = get_object_or_404(BlogEntry, pk=self.kwargs['entry_id'])
+        context['blog_entry'] = blog_entry
         return context
 
 admin_manage_comments = AdminManageComments.as_view()
@@ -372,26 +380,31 @@ create_blogroll = CreateBlogRoll.as_view()
 
 class AuthorView(generic.ListView):
     template_name = 'blogango/author.html'
+    context_object_name = 'entries'
+
+    def get(self, *args, **kwargs):
+        author = get_object_or_404(User, username=self.kwargs['username'])
+        author_posts = author.blogentry_set.filter(is_published=True)
+        paginator = Paginator(author_posts, Blog.objects.get_blog().entries_per_page)
+        if 'page' in kwargs:
+            page = int(self.kwargs['page'])
+            if paginator.num_pages < page:
+                return redirect(reverse('blogango_author_page', 
+                    args=[author.username, paginator.num_pages]))
+        return super(AuthorView, self).get(self.request, *args, **kwargs)
 
     def get_queryset(self, *args, **kwargs):
-        author = get_object_or_404(User, username = self.kwargs['username'])
+        author = get_object_or_404(User, username=self.kwargs['username'])
         author_posts = author.blogentry_set.filter(is_published=True)
         return author_posts
 
-    def get_context_data(self, page=1, *args, **kwargs):
-        context = super(AuthorView, self).get_context_data(**self.kwargs)
-        author_posts = context['object_list']
-        page = int(page)
-        blog = Blog.objects.get_blog()
-        paginator = Paginator(author_posts, blog.entries_per_page)
-        author = get_object_or_404(User, username = self.kwargs['username'])
-        if page > paginator.num_pages:
-            return redirect(reverse(self.template_name, args=[author, paginator.num_pages]))
-        page_ = paginator.page(page)
-        entries = page_.object_list
-        context['entries'] = entries
-        context['author'] = author
-        context['page_'] = page_
+    def get_paginate_by(self, *args, **kwargs):
+        paginate_by = Blog.objects.get_blog().entries_per_page
+        return paginate_by
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AuthorView, self).get_context_data(**kwargs)
+        context['author'] = self.request.user
         return context
 
 

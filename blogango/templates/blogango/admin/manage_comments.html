@@ -40,15 +40,15 @@
     	{{ _("No comments") }}
     {% endif %}
     </ul>
-    {% if page_.has_next or page_.has_previous %}
+    {% if page_obj.has_next or page_obj.has_previous %}
     <div class="pagination"> 
         <div class="moreinfo">
-            {% if page_.has_next %}
-            <a href='{% url "blogango_admin_comments_manage" %}?page={{page_.next_page_number}}{% if 'blocked' in request.GET %}&blocked{% endif %}'>&laquo; Previous Entries</a>
+            {% if page_obj.has_next %}
+            <a href='{% url "blogango_admin_comments_manage" %}?page={{page_obj.next_page_number}}{% if 'blocked' in request.GET %}&blocked{% endif %}'>&laquo; Previous Entries</a>
             {% endif %}
             
-            {% if page_.has_previous %}
-            <span class='right'><a href='{% url "blogango_admin_comments_manage" %}?page={{page_.previous_page_number}}{% if 'blocked' in request.GET %}&blocked{% endif %}'>Next Entries &raquo;</a></span>
+            {% if page_obj.has_previous %}
+            <span class='right'><a href='{% url "blogango_admin_comments_manage" %}?page={{page_obj.previous_page_number}}{% if 'blocked' in request.GET %}&blocked{% endif %}'>Next Entries &raquo;</a></span>
             {% endif %}
         </div> 
     </div>
