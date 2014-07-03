@@ -81,15 +81,31 @@ admin_entry = AdminEntryView.as_view()
 
 class AdminEditView(StaffMemReqMixin, generic.UpdateView):
     model = BlogEntry
+    form_class = bforms.EntryForm
     fields = ['title', 'text', 'publish_date', 'tags', 'text_markup_type', 'created_by',
               'meta_keywords','meta_description', 'comments_allowed']
     template_name = 'blogango/admin/edit_entry.html'
+
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AdminEditView, self).get_context_data(**kwargs)
+        tags_json = json.dumps([each.name for each in Tag.objects.all()])
+        context['tags_json'] = tags_json
+        return context
 
     def form_valid(self, form):
         if "page" in self.request.POST:
             form.instance.is_page = True
         if "publish" in self.request.POST:
             form.instance.is_published = True
+        form.save()
+        tag_list = form.cleaned_data['tags']
+        self.object.tags.set(*tag_list)
+        entry = self.object
+        if entry.is_published:
+            return redirect(entry)
+        if not entry.is_published:
+            return redirect(reverse('blogango_admin_entry_edit', args = [entry.id])+'?done')
         return super(AdminEditView, self).form_valid(form)
     
     def get_success_url(self):
@@ -191,7 +207,12 @@ class IndexView(generic.ListView):
     def get(self, request, *args, **kwargs):
         blog = Blog.objects.get_blog()
         if not blog:
-            return HttpResponseRedirect(reverse('install_blog'))
+            return HttpResponseRedirect(reverse('blogango_install'))
+        paginator = Paginator(BlogEntry.objects.filter(is_page=False), Blog.objects.get_blog().entries_per_page)
+        if 'page' in kwargs:
+            page = int(kwargs['page'])
+            if paginator.num_pages < page:
+                return redirect(reverse('blogango_page', args=[paginator.num_pages]))
         self.kwargs['blog'] = blog
         return super(IndexView, self).get(request, *args, **kwargs)
 
@@ -233,7 +254,7 @@ class DetailsView(generic.DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(DetailsView, self).get_context_data(**kwargs)
-        
+
         if 'year' in self.kwargs:
             entry = BlogEntry.default.get(created_on__year=self.kwargs['year'],
                                       created_on__month=self.kwargs['month'],

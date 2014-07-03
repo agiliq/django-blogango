@@ -1,7 +1,7 @@
 {% extends "blogango/admin/base.html" %}
 {% block title %}
-    {% if entry %}
-        Editing entry:: {{ form.initial.title }}
+    {% if blogentry %}
+        Editing blogentry:: {{ form.initial.title }}
     {% else %}
         New Entry
     {% endif %}
@@ -43,13 +43,13 @@
 	        <div class="message message-info">Blog entry saved successfully</div>
 	    {% endif %}
       </div>
-    {% if entry %}
+    {% if blogentry %}
         <h1>
-            {{ entry.title }} &mdash; &#8203; Edit Entry
-            {% if entry.is_published %}
-                <a href="{{ entry.get_absolute_url }}" class="preview">{{ _("View Entry") }}</a>
+            {{ blogentry.title }} &mdash; &#8203; Edit Entry
+            {% if blogentry.is_published %}
+                <a href="{{ blogentry.get_absolute_url }}" class="preview">{{ _("View Entry") }}</a>
             {% else %}
-                <a href="{{ entry.get_absolute_url }}?preview" class="preview" target="_blank">{{ _("Preview Entry") }}</a>
+                <a href="{{ blogentry.get_absolute_url }}?preview" class="preview" target="_blank">{{ _("Preview Entry") }}</a>
             {% endif %}
         </h1>
     {% endif %}
@@ -104,7 +104,7 @@
 		{% endif %}
 		<div class="secondary">
 		  <div class="actions">
-		    <input type="submit" value="{% if entry.is_published %}Unpublish{% else %}Save{% endif %}" name="save">
+		    <input type="submit" value="{% if blogentry.is_published %}Unpublish{% else %}Save{% endif %}" name="save">
 		    <input type="submit" value="Save and Publish" name="publish">
 		    <input type="reset" value="Cancel" name="cancel">
 		  </div>

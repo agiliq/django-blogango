@@ -36,7 +36,7 @@ class BlogTestCase(TestCase):
     def test_bloginstall(self):
         User.objects.create_user(username='foo', password='bar')
         response = self.c.get(reverse('blogango_install'))
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
         self.c.login(username='foo', password='bar')
         response = self.c.get(reverse('blogango_install'))
         self.assertEqual(response.status_code, 200)
@@ -192,7 +192,7 @@ class TestViews(TestCase):
         response = self.c.get(reverse('blogango_tag_details_page', args=[tag.slug, 2]))
         self.assertEqual(response.status_code, 200)
         response = self.c.get(reverse('blogango_tag_details_page', args=[tag.slug, 3]))
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
 
     def tearDown(self):
         self.blog.delete()
@@ -229,8 +229,8 @@ class TestAdminActions(TestCase):
         data = {'text_markup_type': 'html', 'created_by':self.user.pk}
         response = self.c.post(reverse("blogango_admin_entry_new"), data)
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(response, "entry_form", "text", "This field is required.")
-        self.assertFormError(response, "entry_form", "tags", "This field is required.")
+        self.assertFormError(response, "form", "text", "This field is required.")
+        self.assertFormError(response, "form", "tags", "This field is required.")
         #post a valid form but don't publish it
         data['text'] = 'test text'
         data['publish_date_0'] = '2011-09-22'
@@ -300,7 +300,7 @@ class TestAdminActions(TestCase):
         self.assertEqual(1, comments.count())
 
     def test_manage_entry_comments(self):
-        """Check if there is a page to see comments for a particulat entry"""
+        """Check if there is a page to see comments for a particular entry"""
         user = User.objects.create_superuser("test", "test@agiliq.com", "test")
         entry = create_test_blog_entry(user)
         create_test_comment(entry)
