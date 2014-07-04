@@ -248,28 +248,31 @@ def check_comment_spam(request, comment):
 
 class DetailsView(generic.DetailView):
     template_name = 'blogango/details.html'
-    model = BlogEntry
+    context_object_name = 'entry'
 
     def get(self, request, *args, **kwargs):
         if not _is_blog_installed():
             return HttpResponseRedirect(reverse('blogango_install'))
         return super(DetailsView, self).get(request, *args, **kwargs)
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(DetailsView, self).get_context_data(**kwargs)
-
+    def get_object(self, queryset=None):
         if 'year' in self.kwargs:
             entry = BlogEntry.default.get(created_on__year=self.kwargs['year'],
                                       created_on__month=self.kwargs['month'],
                                       slug=self.kwargs['slug'])
         else:
             entry = BlogEntry.default.get(is_page=True, slug=self.kwargs['slug'])
-        # published check needs to be handled here to allow previews
+
         if not entry.is_published:
             if self.request.user.is_staff and 'preview' in self.request.GET:
                 pass
             else:
                 raise Http404
+        return entry
+
+    def get_context_data(self, **kwargs):
+        context = super(DetailsView, self).get_context_data(**kwargs)
+
         init_data = {}
         if self.request.user.is_authenticated():
             init_data['name'] = self.request.user.get_full_name() or self.request.user.username
@@ -278,13 +281,13 @@ class DetailsView(generic.DetailView):
             init_data['name'] = self.request.session.get("name", "")
             init_data['email'] = self.request.session.get("email", "")
             init_data['url'] = self.request.session.get("url", "")
+        entry = context['entry']
         comment_f = bforms.CommentForm(initial=init_data)
         comments = Comment.objects.filter(comment_for=entry, is_spam=False)
         reactions = Reaction.objects.filter(comment_for=entry)
-        payload = {'entry': entry, 'comments': comments,
+        payload = {'comments': comments,
                'reactions': reactions, 'comment_form': comment_f}
-        for k,v in payload.items():
-            context[k] = v
+        context.update(payload)
         return context
 
     def post(self, *args, **kwargs):
