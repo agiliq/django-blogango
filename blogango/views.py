@@ -42,7 +42,7 @@ class AdminDashboardView(StaffMemReqMixin, generic.ListView):
     template_name = 'blogango/admin/index.html'
     context_object_name = 'recent_drafts'
 
-    def get_queryset(self, *args, **kwargs):
+    def get_queryset(self):
         recent_drafts = BlogEntry.default.filter(is_published=False).order_by('-created_on')[:5]
         return recent_drafts
 
@@ -320,7 +320,7 @@ class TagDetails(generic.ListView):
     template_name = 'blogango/tag_details.html'
     context_object_name = 'entries'
 
-    def get_queryset(self, *args, **kwargs):
+    def get_queryset(self):
         tag = get_object_or_404(Tag, slug= self.kwargs['tag_slug'])
         tagged_entries = BlogEntry.objects.filter(is_published=True, tags__in=[tag])
         return tagged_entries
@@ -371,29 +371,19 @@ class AuthorView(generic.ListView):
     template_name = 'blogango/author.html'
     context_object_name = 'entries'
 
-    def get(self, *args, **kwargs):
+    def get_queryset(self):
         author = get_object_or_404(User, username=self.kwargs['username'])
         author_posts = author.blogentry_set.filter(is_published=True)
-        paginator = Paginator(author_posts, Blog.objects.get_blog().entries_per_page)
-        if 'page' in kwargs:
-            page = int(self.kwargs['page'])
-            if paginator.num_pages < page:
-                return redirect(reverse('blogango_author_page', 
-                    args=[author.username, paginator.num_pages]))
-        return super(AuthorView, self).get(self.request, *args, **kwargs)
+        entries = author_posts
+        return entries
 
-    def get_queryset(self, *args, **kwargs):
-        author = get_object_or_404(User, username=self.kwargs['username'])
-        author_posts = author.blogentry_set.filter(is_published=True)
-        return author_posts
-
-    def get_paginate_by(self, *args, **kwargs):
+    def get_paginate_by(self, queryset):
         paginate_by = Blog.objects.get_blog().entries_per_page
         return paginate_by
 
     def get_context_data(self, *args, **kwargs):
         context = super(AuthorView, self).get_context_data(**kwargs)
-        context['author'] = self.request.user
+        context['author'] = self.request.user 
         return context
 
 

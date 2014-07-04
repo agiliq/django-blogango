@@ -172,12 +172,12 @@ class TestViews(TestCase):
             BlogEntry.objects.create(title="test", text='foo', created_by=self.user,
                     publish_date=datetime.today(), text_markup_type='plain')
         self.assertEqual(BlogEntry.objects.count(), 15)
-        response = self.c.get(reverse('blogango_author_page', args=[self.user.username, 1]))
+        response = self.c.get(reverse('blogango_author_page', args=[self.user.username])+'?page=1')
         self.assertEqual(response.status_code, 200)
-        response = self.c.get(reverse('blogango_author_page', args=[self.user.username, 2]))
+        response = self.c.get(reverse('blogango_author_page', args=[self.user.username])+'?page=2')
         self.assertEqual(response.status_code, 200)
-        response = self.c.get(reverse('blogango_author_page', args=[self.user.username, 3]))
-        self.assertEqual(response.status_code, 302)
+        response = self.c.get(reverse('blogango_author_page', args=[self.user.username])+'?page=3')
+        self.assertEqual(response.status_code, 404)
 
     def test_tagged_entries_pagination(self):
         num_entries = 15
