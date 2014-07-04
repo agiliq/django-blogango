@@ -310,7 +310,6 @@ class DetailsView(generic.DetailView):
                     # Most likely could be a timeout to a spam message
                     comment.is_spam = True
             if not comment.is_spam:
-                print "comment is not spam"
                 self.request.session["name"] = comment_f.cleaned_data['name']
                 self.request.session["email"] = comment_f.cleaned_data['email']
                 self.request.session["url"] = comment_f.cleaned_data['url']
