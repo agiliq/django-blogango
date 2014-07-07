@@ -1,10 +1,8 @@
 from datetime import datetime
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, url
 from django.contrib.sitemaps import GenericSitemap
 from blogango import feeds
 from blogango.models import BlogEntry
-from blogango import views
-from django.contrib.auth.decorators import login_required, permission_required
 
 blog_info_dict = {
     'queryset': BlogEntry.objects.filter(is_published=True, publish_date__lte=datetime.now),
