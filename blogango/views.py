@@ -165,6 +165,8 @@ def index(request, page=1):
 
 
 def check_comment_spam(request, comment):
+    import logging
+    logging.basicConfig(level=logging.INFO)
     api = Akismet(AKISMET_API_KEY,
                   'http://%s' % (request.get_host()),
                   request.META.get('HTTP_USER_AGENT', ''))
@@ -181,8 +183,12 @@ def check_comment_spam(request, comment):
                         'comment_author_email': smart_str(comment.email_id),
                         'comment_author_url': smart_str(comment.user_url),
                         'comment_type': 'comment'}
+        logging.info(akismet_data)
+        logging.info(comment.text)
 
-        return api.comment_check(smart_str(comment.text), akismet_data)
+        is_spam = api.comment_check(smart_str(comment.text), akismet_data)
+        logging.info(is_spam)
+        return is_spam
     raise AkismetError(message)
 
 
