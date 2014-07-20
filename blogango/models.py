@@ -208,12 +208,16 @@ class Comment(BaseComment):
              We do not display the comment in those cases.
     is_public: null for comments waiting to be approved, True if approved,
                False if rejected
+    user_ip: Ip address from which this comment was made
+    user_agent: User agent of the commenter
     """
 
     created_by = models.ForeignKey(User, unique=False, blank=True, null=True)
     email_id = models.EmailField()
     is_spam = models.BooleanField(default=False)
     is_public = models.NullBooleanField(null=True, blank=True)
+    user_ip = models.IPAddressField(null=True)
+    user_agent = models.CharField(max_length=200, default='')
 
     default = models.Manager()
     objects = CommentManager()
