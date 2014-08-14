@@ -396,7 +396,9 @@ class AuthorView(generic.ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(AuthorView, self).get_context_data(**kwargs)
-        context['author'] = self.request.user 
+        username = self.kwargs['username']
+        user = User.objects.get(username=username)
+        context['author'] = user
         return context
 
 
