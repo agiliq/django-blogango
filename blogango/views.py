@@ -23,6 +23,16 @@ from blogango.conf.settings import AKISMET_COMMENT, AKISMET_API_KEY
 from blogango.akismet import Akismet, AkismetError
 
 
+class Handle404Mixin(object):
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            super(Handle404Mixin, self).dispatch(request, *args, **kwargs)
+        except ObjectDoesNotExist:
+            raise Http404
+        return super(Handle404Mixin, self).dispatch(request, *args, **kwargs)
+
+
 class LoginRequiredMixin(object):
 
     @method_decorator(login_required)
@@ -244,7 +254,7 @@ def check_comment_spam(request, comment):
         return api.comment_check(smart_str(comment.text), akismet_data)
     raise AkismetError(message)
 
-class DetailsView(generic.DetailView):
+class DetailsView(Handle404Mixin, generic.DetailView):
     template_name = 'blogango/details.html'
     context_object_name = 'entry'
 
