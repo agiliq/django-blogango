@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
 from django.template import RequestContext
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.admin.views.decorators import staff_member_required
@@ -355,20 +355,18 @@ install_blog = InstallBlog.as_view()
 class CreateBlogRoll(LoginRequiredMixin, generic.edit.FormView):
     template_name = 'blogango/blogroll.html'
     form_class = bforms.BlogForm
-    context_object_name = 'blogroll_form'
+    success_url = reverse_lazy('blogango_blogroll')
 
     def get_context_data(self, *args, **kwargs):
         context = super(CreateBlogRoll, self).get_context_data(**kwargs)
-        context['blogroll_form'] = self.form_class()
+        # our template expects context 'blogroll_form'
+        context['blogroll_form'] = context['form']
         return context
 
-    def post(self, *args, **kwargs):
-        blogroll_form = self.form_class(self.request.POST)
-        if blogroll_form.is_valid():
-            blogroll_form.save()
-            return HttpResponseRedirect('.')
-        payload = {"blogroll_form": blogroll_form}  
-        return render(self.template_name, self.request, payload)
+    def form_valid(self, form):
+        form.save()
+        return super(CreateBlogRoll, self).form_valid(form)
+
 
 create_blogroll = CreateBlogRoll.as_view()
 
