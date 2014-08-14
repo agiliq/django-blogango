@@ -327,6 +327,7 @@ class TagDetails(generic.ListView):
 
     def get_queryset(self):
         tag = get_object_or_404(Tag, slug= self.kwargs['tag_slug'])
+        self.kwargs['tag'] = tag
         tagged_entries = BlogEntry.objects.filter(is_published=True, tags__in=[tag])
         return tagged_entries
 
@@ -336,8 +337,7 @@ class TagDetails(generic.ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(TagDetails, self).get_context_data(**kwargs)
-        tag = get_object_or_404(Tag, slug=self.kwargs['tag_slug'])
-        context['tag'] = tag
+        context['tag'] = self.kwargs['tag']
         return context
 
 tag_details = TagDetails.as_view()
