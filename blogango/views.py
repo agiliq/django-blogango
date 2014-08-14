@@ -23,14 +23,20 @@ from blogango.conf.settings import AKISMET_COMMENT, AKISMET_API_KEY
 from blogango.akismet import Akismet, AkismetError
 
 
-class Handle404Mixin(object):
-
-    def dispatch(self, request, *args, **kwargs):
+def handle404(view_function):
+    def wrapper(*args, **kwargs):
         try:
-            super(Handle404Mixin, self).dispatch(request, *args, **kwargs)
+            return view_function(*args, **kwargs)
         except ObjectDoesNotExist:
             raise Http404
+    return wrapper
+
+class Handle404Mixin(object):
+    
+    @method_decorator(handle404)
+    def dispatch(self, request, *args, **kwargs):
         return super(Handle404Mixin, self).dispatch(request, *args, **kwargs)
+
 
 
 class LoginRequiredMixin(object):
