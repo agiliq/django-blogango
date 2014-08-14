@@ -289,13 +289,14 @@ class DetailsView(generic.DetailView):
         return context
 
     def post(self, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
         comment_f = bforms.CommentForm(self.request.POST)
         if comment_f.is_valid():
-            entry = self.get_object()
             comment_by = self.request.user if self.request.user.is_authenticated() else None
             comment = Comment(text=comment_f.cleaned_data['text'],
                               created_by=comment_by,
-                              comment_for=entry,
+                              comment_for=self.object,
                               user_name=comment_f.cleaned_data['name'],
                               user_url=comment_f.cleaned_data['url'],
                               email_id=comment_f.cleaned_data['email'])
@@ -313,6 +314,10 @@ class DetailsView(generic.DetailView):
                 self.request.session["url"] = comment_f.cleaned_data['url']
             comment.save()
             return HttpResponseRedirect('#comment-%s' % comment.pk)
+        context.update({'comment_form': comment_f})
+        return self.render_to_response(context)
+
+
 details = DetailsView.as_view()
 
 
