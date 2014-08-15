@@ -31,6 +31,7 @@ def handle404(view_function):
             raise Http404
     return wrapper
 
+
 class Handle404Mixin(object):
     
     @method_decorator(handle404)
@@ -38,12 +39,12 @@ class Handle404Mixin(object):
         return super(Handle404Mixin, self).dispatch(request, *args, **kwargs)
 
 
-
 class LoginRequiredMixin(object):
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
+
 
 class StaffMemReqMixin(object):
 
@@ -392,9 +393,9 @@ class AuthorView(generic.ListView):
 
     def get_queryset(self):
         author = get_object_or_404(User, username=self.kwargs['username'])
+        self.kwargs['author'] = author
         author_posts = author.blogentry_set.filter(is_published=True)
-        entries = author_posts
-        return entries
+        return author_posts
 
     def get_paginate_by(self, queryset):
         paginate_by = Blog.objects.get_blog().entries_per_page
@@ -402,9 +403,7 @@ class AuthorView(generic.ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(AuthorView, self).get_context_data(**kwargs)
-        username = self.kwargs['username']
-        user = User.objects.get(username=username)
-        context['author'] = user
+        context['author'] = self.kwargs['author']
         return context
 
 
@@ -474,13 +473,3 @@ def _generic_form_display(request, form_class):
             return HttpResponseRedirect('.')
     payload = {"install_form": form_inst}
     return render('blogango/install.html', request, payload)
-
-
-# A generic form processor.
-def generic(request):
-    if request.method == 'GET':
-        pass
-    if request.method == 'POST':
-        pass
-
-
