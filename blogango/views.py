@@ -53,18 +53,15 @@ class StaffMemReqMixin(object):
         return super(StaffMemReqMixin, self).dispatch(*args, **kwargs)
 
 
-class AdminDashboardView(StaffMemReqMixin, generic.ListView):
+class AdminDashboardView(StaffMemReqMixin, generic.TemplateView):
     template_name = 'blogango/admin/index.html'
-    context_object_name = 'recent_drafts'
-
-    def get_queryset(self):
-        recent_drafts = BlogEntry.default.filter(is_published=False).order_by('-created_on')[:5]
-        return recent_drafts
 
     def get_context_data(self, *args, **kwargs):
         context = super(AdminDashboardView, self).get_context_data(**kwargs)
+        recent_drafts = BlogEntry.default.filter(is_published=False).order_by('-created_on')[:5]
         recent_entries = BlogEntry.objects.order_by('-created_on')[:5]
         context['recent_entries'] = recent_entries
+        context['recent_drafts'] = recent_drafts
         return context
 
 admin_dashboard = AdminDashboardView.as_view()
