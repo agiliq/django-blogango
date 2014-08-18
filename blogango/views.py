@@ -82,9 +82,6 @@ class AdminEntryView(StaffMemReqMixin, generic.edit.CreateView):
             form.instance.is_page = True
         if "publish" in self.request.POST:
             form.instance.is_published = True
-        entry = form.save()
-        if entry.is_published:
-            return redirect(entry)
         return super(AdminEntryView, self).form_valid(form)
 
     def get_success_url(self):
@@ -131,15 +128,6 @@ class AdminEditView(StaffMemReqMixin, generic.UpdateView):
             form.instance.is_page = True
         if "publish" in self.request.POST:
             form.instance.is_published = True
-        form.save()
-        tag_list = form.cleaned_data['tags']
-        self.object.tags.set(*tag_list)
-        entry = self.object
-        if entry.is_published:
-            return redirect(entry)
-        if not entry.is_published:
-            return redirect(reverse('blogango_admin_entry_edit',
-                                    args=[entry.id])+'?done')
         return super(AdminEditView, self).form_valid(form)
 
     def get_success_url(self):
@@ -150,8 +138,9 @@ class AdminEditView(StaffMemReqMixin, generic.UpdateView):
                            kwargs={'year': published_date.year,
                                    'month': published_date.month,
                                    'slug': blog_entry.slug})
-        pk = blog_entry.id
-        return reverse('blogango_admin_entry_edit', kwargs={'pk': pk})
+        else:
+            return reverse('blogango_admin_entry_edit',
+                           args=[blog_entry.id])+'?done'
 
 admin_edit = AdminEditView.as_view()
 
