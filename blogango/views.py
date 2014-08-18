@@ -161,7 +161,6 @@ class AdminManageComments(StaffMemReqMixin, generic.ListView):
     model = Comment
     template_name = 'blogango/admin/manage_comments.html'
     context_object_name = 'comments'
-    paginate_by = 20
 
     def get_queryset(self):
         blog_entry = None
@@ -183,6 +182,10 @@ class AdminManageComments(StaffMemReqMixin, generic.ListView):
             blog_entry = get_object_or_404(BlogEntry, pk=self.kwargs['entry_id'])
         context['blog_entry'] = blog_entry
         return context
+
+    def get_paginate_by(self, queryset):
+        paginate_by = getattr(settings, 'COMMENTS_PER_PAGE', 20)
+        return paginate_by
 
 admin_manage_comments = AdminManageComments.as_view()
 
