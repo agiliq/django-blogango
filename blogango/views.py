@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.shortcuts import render_to_response, get_object_or_404, redirect, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.conf import settings
@@ -74,7 +76,6 @@ class AdminEntryView(StaffMemReqMixin, generic.edit.CreateView):
     model = BlogEntry
     form_class = bforms.EntryForm
     template_name = 'blogango/admin/edit_entry.html'
-    
 
     def form_valid(self, form):
         if "page" in self.request.POST:
@@ -87,10 +88,19 @@ class AdminEntryView(StaffMemReqMixin, generic.edit.CreateView):
         blog_entry = self.object
         if blog_entry.is_published:
             published_date = blog_entry.publish_date
-            return reverse('blogango_details', kwargs={'year': published_date.year, 'month': published_date.month,
-                                              'slug': blog_entry.slug})
+            return reverse('blogango_details',
+                           kwargs={'year': published_date.year,
+                                   'month': published_date.month,
+                                   'slug': blog_entry.slug})
         pk = blog_entry.id
-        return reverse('blogango_admin_entry_edit', kwargs={'pk':pk})
+        return reverse('blogango_admin_entry_edit', kwargs={'pk': pk})
+
+    def get_initial(self):
+        initial = super(AdminEntryView, self).get_initial()
+        initials = {'created_by': self.request.user.id,
+                    'publish_date': datetime.now()}
+        initial.update(initials)
+        return initial
 
     def get_context_data(self, *args, **kwargs):
         context = super(AdminEntryView, self).get_context_data(**kwargs)
@@ -100,13 +110,13 @@ class AdminEntryView(StaffMemReqMixin, generic.edit.CreateView):
 
 admin_entry = AdminEntryView.as_view()
 
+
 class AdminEditView(StaffMemReqMixin, generic.UpdateView):
     model = BlogEntry
     form_class = bforms.EntryForm
     fields = ['title', 'text', 'publish_date', 'tags', 'text_markup_type', 'created_by',
               'meta_keywords','meta_description', 'comments_allowed']
     template_name = 'blogango/admin/edit_entry.html'
-
 
     def get_context_data(self, *args, **kwargs):
         context = super(AdminEditView, self).get_context_data(**kwargs)
