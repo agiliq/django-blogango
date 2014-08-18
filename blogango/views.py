@@ -92,6 +92,12 @@ class AdminEntryView(StaffMemReqMixin, generic.edit.CreateView):
         pk = blog_entry.id
         return reverse('blogango_admin_entry_edit', kwargs={'pk':pk})
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(AdminEntryView, self).get_context_data(**kwargs)
+        tags_json = json.dumps([each.name for each in Tag.objects.all()])
+        context['tags_json'] = tags_json
+        return context
+
 admin_entry = AdminEntryView.as_view()
 
 class AdminEditView(StaffMemReqMixin, generic.UpdateView):
