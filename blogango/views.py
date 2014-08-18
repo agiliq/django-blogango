@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.shortcuts import render_to_response, get_object_or_404, redirect, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.conf import settings
@@ -71,7 +73,6 @@ class AdminEntryView(StaffMemReqMixin, generic.edit.CreateView):
     model = BlogEntry
     form_class = bforms.EntryForm
     template_name = 'blogango/admin/edit_entry.html'
-    
 
     def form_valid(self, form):
         if "page" in self.request.POST:
@@ -84,20 +85,34 @@ class AdminEntryView(StaffMemReqMixin, generic.edit.CreateView):
         blog_entry = self.object
         if blog_entry.is_published:
             published_date = blog_entry.publish_date
-            return reverse('blogango_details', kwargs={'year': published_date.year, 'month': published_date.month,
-                                              'slug': blog_entry.slug})
-        pk = blog_entry.id
-        return reverse('blogango_admin_entry_edit', kwargs={'pk':pk})
+            return reverse('blogango_details',
+                           kwargs={'year': published_date.year,
+                                   'month': published_date.month,
+                                   'slug': blog_entry.slug})
+        else:
+            return reverse('blogango_admin_entry_edit',
+                           args=[blog_entry.id])+'?done'
+
+    def get_initial(self):
+        initial = super(AdminEntryView, self).get_initial()
+        initials = {'created_by': self.request.user.id,
+                    'publish_date': datetime.now()}
+        initial.update(initials)
+        return initial
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AdminEntryView, self).get_context_data(**kwargs)
+        tags_json = json.dumps([each.name for each in Tag.objects.all()])
+        context['tags_json'] = tags_json
+        return context
 
 admin_entry = AdminEntryView.as_view()
+
 
 class AdminEditView(StaffMemReqMixin, generic.UpdateView):
     model = BlogEntry
     form_class = bforms.EntryForm
-    fields = ['title', 'text', 'publish_date', 'tags', 'text_markup_type', 'created_by',
-              'meta_keywords','meta_description', 'comments_allowed']
     template_name = 'blogango/admin/edit_entry.html'
-
 
     def get_context_data(self, *args, **kwargs):
         context = super(AdminEditView, self).get_context_data(**kwargs)
@@ -110,26 +125,22 @@ class AdminEditView(StaffMemReqMixin, generic.UpdateView):
             form.instance.is_page = True
         if "publish" in self.request.POST:
             form.instance.is_published = True
-        form.save()
-        tag_list = form.cleaned_data['tags']
-        self.object.tags.set(*tag_list)
-        entry = self.object
-        if entry.is_published:
-            return redirect(entry)
-        if not entry.is_published:
-            return redirect(reverse('blogango_admin_entry_edit', args = [entry.id])+'?done')
         return super(AdminEditView, self).form_valid(form)
-    
+
     def get_success_url(self):
         blog_entry = self.object
         if blog_entry.is_published:
             published_date = blog_entry.publish_date
-            return reverse('blogango_details', kwargs={'year': published_date.year, 'month': published_date.month,
-                                              'slug': blog_entry.slug})
-        pk = blog_entry.id
-        return reverse('blogango_admin_entry_edit', kwargs={'pk':pk})
+            return reverse('blogango_details',
+                           kwargs={'year': published_date.year,
+                                   'month': published_date.month,
+                                   'slug': blog_entry.slug})
+        else:
+            return reverse('blogango_admin_entry_edit',
+                           args=[blog_entry.id])+'?done'
 
 admin_edit = AdminEditView.as_view()
+
 
 class AdminManageEntries(StaffMemReqMixin, generic.ListView):
     template_name = 'blogango/admin/manage_entries.html'
@@ -158,7 +169,6 @@ class AdminManageComments(StaffMemReqMixin, generic.ListView):
     model = Comment
     template_name = 'blogango/admin/manage_comments.html'
     context_object_name = 'comments'
-    paginate_by = 20
 
     def get_queryset(self):
         blog_entry = None
@@ -180,6 +190,10 @@ class AdminManageComments(StaffMemReqMixin, generic.ListView):
             blog_entry = get_object_or_404(BlogEntry, pk=self.kwargs['entry_id'])
         context['blog_entry'] = blog_entry
         return context
+
+    def get_paginate_by(self, queryset):
+        paginate_by = getattr(settings, 'COMMENTS_PER_PAGE', 20)
+        return paginate_by
 
 admin_manage_comments = AdminManageComments.as_view()
 
