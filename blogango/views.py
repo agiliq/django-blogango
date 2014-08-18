@@ -148,9 +148,9 @@ class AdminManageEntries(StaffMemReqMixin, generic.ListView):
     context_object_name = 'entries'
 
     def get_queryset(self):
-        author = None
-        if self.request.user:
-            author = get_object_or_404(User, username = self.request.user)
+        if self.kwargs:
+            username = self.kwargs['username']
+            author = get_object_or_404(User, username=username)
             entries = BlogEntry.default.filter(created_by=author)
         else:
             entries = BlogEntry.default.all()
@@ -158,8 +158,10 @@ class AdminManageEntries(StaffMemReqMixin, generic.ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(AdminManageEntries, self).get_context_data(**kwargs)
-        if self.request.user:
-            context['username'] = self.request.user
+        if self.kwargs:
+            username = self.kwargs['username']
+            user = get_object_or_404(User, username=username)
+            context['author'] = user
         return context 
 
 admin_manage_entries = AdminManageEntries.as_view()
