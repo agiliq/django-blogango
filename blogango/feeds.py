@@ -9,7 +9,7 @@ from taggit.models import Tag
 
 class main_feed(Feed):
     try:
-        blog = Blog.objects.all()[0]
+        blog = Blog.objects.get_blog()
     except:
         class DummyBlog:
             def __init__(self):
