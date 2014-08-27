@@ -1,5 +1,5 @@
 from datetime import datetime
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, url
 from django.contrib.sitemaps import GenericSitemap
 from blogango import feeds
 from blogango.models import BlogEntry
@@ -13,24 +13,22 @@ sitemaps = {
 }
 
 urlpatterns = patterns('blogango.views',
-    url(r'^$', 'index', name='blogango_index'),
+    url(r'^$', 'index', name="blogango_index"),
     url(r'^install/$', 'install_blog', name='blogango_install'),
     url(r'^page/(?P<page>\d+)/$', 'index',  name='blogango_page'),
-    url(r'^(?P<year>\d{4})/(?P<month>\d{2})/(?P<slug>[-\w]+)/$', 'details',
+    url(r'^(?P<year>\d{4})/(?P<month>\d+)/(?P<slug>[-\w]+)/$', 'details',
         name='blogango_details'),
     url(r'^blogroll/$', 'create_blogroll', name='blogango_blogroll'),
     url(r'^tag/(?P<tag_slug>[-\w]+)/$', 'tag_details',
         name='blogango_tag_details'),
     url(r'^tag/(?P<tag_slug>[-\w]+)/(?P<page>\d+)/$', 'tag_details',
         name='blogango_tag_details_page'),
-    url(r'^author/(?P<username>[\w.@+-]+)/$', 'author', name='blogango_author'),
-    url(r'^author/(?P<username>[\w.@+-]+)/(?P<page>\d+)/$', 'author',
-        name='blogango_author_page'),
+    url(r'^author/(?P<username>[\w.@+-]+)/$', 'author', name='blogango_author_page'),
 
     url(r'^admin/$', 'admin_dashboard', name='blogango_admin_dashboard'),
-    url(r'^admin/entry/new/$', 'admin_entry_edit',
+    url(r'^admin/entry/new/$', 'admin_entry',
         name='blogango_admin_entry_new'),
-    url(r'^admin/entry/edit/(?P<entry_id>\d+)/$', 'admin_entry_edit',
+    url(r'^admin/entry/edit/(?P<pk>\d+)/$', 'admin_edit',
         name='blogango_admin_entry_edit'),
     url(r'^admin/entry/manage/$', 'admin_manage_entries',
         name='blogango_admin_entry_manage'),
@@ -76,5 +74,5 @@ urlpatterns += patterns('',
 )
 
 urlpatterns += patterns('blogango.views',
-    url(r'^(?P<slug>[-\w]+)/$', 'page_details', name='blogango_page_details'),
+    url(r'^(?P<slug>[-\w]+)/$', 'details', name='blogango_page_details'),
 )

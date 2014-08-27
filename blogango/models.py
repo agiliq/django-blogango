@@ -265,7 +265,8 @@ def _infer_title_or_slug(text):
 def _generate_summary(text):
     return ' '.join(text.split()[:100])
 
-moderator.register(Comment, CommentModerator)
+if Comment not in moderator._registry:
+    moderator.register(Comment, CommentModerator)
 
 from south.modelsinspector import add_introspection_rules
 add_introspection_rules([], ["^markupfield\.fields\.MarkupField"])

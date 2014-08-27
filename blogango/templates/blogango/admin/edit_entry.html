@@ -1,7 +1,7 @@
 {% extends "blogango/admin/base.html" %}
 {% block title %}
-    {% if entry %}
-        Editing entry:: {{ entry_form.initial.title }}
+    {% if blogentry %}
+        Editing blogentry:: {{ form.initial.title }}
     {% else %}
         New Entry
     {% endif %}
@@ -43,20 +43,20 @@
 	        <div class="message message-info">Blog entry saved successfully</div>
 	    {% endif %}
       </div>
-    {% if entry %}
+    {% if blogentry %}
         <h1>
-            {{ entry.title }} &mdash; &#8203; Edit Entry
-            {% if entry.is_published %}
-                <a href="{{ entry.get_absolute_url }}" class="preview">{{ _("View Entry") }}</a>
+            {{ blogentry.title }} &mdash; &#8203; Edit Entry
+            {% if blogentry.is_published %}
+                <a href="{{ blogentry.get_absolute_url }}" class="preview">{{ _("View Entry") }}</a>
             {% else %}
-                <a href="{{ entry.get_absolute_url }}?preview" class="preview" target="_blank">{{ _("Preview Entry") }}</a>
+                <a href="{{ blogentry.get_absolute_url }}?preview" class="preview" target="_blank">{{ _("Preview Entry") }}</a>
             {% endif %}
         </h1>
     {% endif %}
-    {% if entry_form.errors %}
+    {% if form.errors %}
         Please correct the following errors:
         <ul class="errors">
-            {% for field, error in entry_form.errors.iteritems %}
+            {% for field, error in form.errors.iteritems %}
                 <li>{{ field }} {{ error.as_text }}</li>
             {% endfor %}
         </ul>
@@ -65,46 +65,46 @@
         {% csrf_token %}
 		<div class="formbox formbox-title">
 		      <h3><label for="id_title">Title</label></h3>
-		      {{ entry_form.title }}
+		      {{ form.title }}
 		</div>
 		<div class="formbox">
 		      <h3><label for="id_text">Text</label></h3>
-		      {{ entry_form.text }}
+		      {{ form.text }}
 		</div>
 		<div class="formbox">
 		      <h3><label for="id_text_markup_type">Markup Parser</label></h3>
-		      {{ entry_form.text_markup_type }}
+		      {{ form.text_markup_type }}
 		</div>
 		<div class="formbox">
 		      <h3><label for="id_tags">Tags</label></h3>
-		      {{ entry_form.tags }}
+		      {{ form.tags }}
 		</div>
 		<div class="formbox toggleable collapsed">
 		      <h3><label for="id_created_by">Author</label></h3>
-		      {{ entry_form.created_by }}
+		      {{ form.created_by }}
 		</div>	
 		<div class="formbox">
 		      <h3><label for="id_published_date">Publish date</label></h3>
-              {{ entry_form.publish_date }}
+              {{ form.publish_date }}
 		</div>
 		<div class="formbox toggleable collapsed">
 		      <h3><label for="id_meta_keywords">Keywords</label></h3>
-		      {{ entry_form.meta_keywords }}
+		      {{ form.meta_keywords }}
 		</div>
 		<div class="formbox toggleable collapsed">
 		      <h3><label for="id_meta_description">Description</label></h3>
-		      {{ entry_form.meta_description }}
+		      {{ form.meta_description }}
 		</div>
 		<div class="formbox">
 		      <h3><label for="id_comments_allowed">Allow Comments?</label></h3>
-		      {{ entry_form.comments_allowed }}
+		      {{ form.comments_allowed }}
 		</div>
 		{% if 'page' in request.GET %}
 		    <input type="hidden" name="page" value="1" />
 		{% endif %}
 		<div class="secondary">
 		  <div class="actions">
-		    <input type="submit" value="{% if entry.is_published %}Unpublish{% else %}Save{% endif %}" name="save">
+		    <input type="submit" value="{% if blogentry.is_published %}Unpublish{% else %}Save{% endif %}" name="save">
 		    <input type="submit" value="Save and Publish" name="publish">
 		    <input type="reset" value="Cancel" name="cancel">
 		  </div>

@@ -1,13 +1,13 @@
 from datetime import datetime
 
-from django.shortcuts import render_to_response, get_object_or_404, redirect
+from django.shortcuts import render_to_response, get_object_or_404, redirect, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
 from django.template import RequestContext
-from django.core.paginator import Paginator
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.admin.views.decorators import staff_member_required
@@ -16,7 +16,7 @@ from django.db.models import Q
 from django.views.decorators.http import require_POST
 import json
 from django.views.generic.dates import MonthArchiveView
-
+from django.views import generic
 from taggit.models import Tag
 
 from blogango.models import Blog, BlogEntry, Comment, BlogRoll, Reaction
@@ -25,98 +25,165 @@ from blogango.conf.settings import AKISMET_COMMENT, AKISMET_API_KEY
 from blogango.akismet import Akismet, AkismetError
 
 
-@staff_member_required
-def admin_dashboard(request):
-    recent_drafts = \
-        BlogEntry.default.filter(
-            is_published=False).order_by('-created_on')[:5]
-    recent_entries = BlogEntry.objects.order_by('-created_on')[:5]
-    return render('blogango/admin/index.html', request, {'recent_drafts':
-                                                         recent_drafts,
-                                                         'recent_entries':
-                                                         recent_entries})
+def handle404(view_function):
+    def wrapper(*args, **kwargs):
+        try:
+            return view_function(*args, **kwargs)
+        except ObjectDoesNotExist:
+            raise Http404
+    return wrapper
 
 
-@staff_member_required
-def admin_entry_edit(request, entry_id=None):
-    entry = None
-    entry_form = bforms.EntryForm(initial={'created_by': request.user.id,
-                                           'publish_date': datetime.now()})
-    if entry_id:
-        entry = get_object_or_404(BlogEntry, pk=entry_id)
-        entry_form = bforms.EntryForm(instance=entry,
-                                      initial={'text': entry.text.raw})
-    if request.POST:
-        entry_form = bforms.EntryForm(request.POST, instance=entry)
-
-        if entry_form.is_valid():
-            new_entry = entry_form.save(commit=False)
-            if "publish" in request.POST:
-                new_entry.is_published = True
-            if "page" in request.POST:
-                new_entry.is_page = True
-            new_entry.save()
-            tag_list = entry_form.cleaned_data['tags']
-            new_entry.tags.set(*tag_list)
-            if new_entry.is_published:
-                return redirect(new_entry)
-            return redirect(reverse('blogango_admin_entry_edit',
-                                    args=[new_entry.id])+'?done')
-    tags_json = json.dumps([each.name for each in Tag.objects.all()])
-    return render('blogango/admin/edit_entry.html', request, {'entry_form':
-                                                              entry_form,
-                                                              'entry': entry,
-                                                              'tags_json':
-                                                              tags_json})
+class Handle404Mixin(object):
+    
+    @method_decorator(handle404)
+    def dispatch(self, request, *args, **kwargs):
+        return super(Handle404Mixin, self).dispatch(request, *args, **kwargs)
 
 
-@staff_member_required
-def admin_manage_entries(request, username=None):
-    author = None
-    if username:
-        author = get_object_or_404(User, username=username)
-        entries = BlogEntry.default.filter(created_by=author)
-    else:
-        entries = BlogEntry.default.all()
-    return render('blogango/admin/manage_entries.html',
-                  request, {'entries': entries, 'author': author})
+class LoginRequiredMixin(object):
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
 
 
-@staff_member_required
-def admin_manage_comments(request, entry_id=None):
-    # fetch all comments, objects gets you only public ones
-    blog_entry = None
-    if entry_id:
-        blog_entry = get_object_or_404(BlogEntry, pk=entry_id)
-    if 'blocked' in request.GET:
-        comments = \
-            Comment.default.filter(Q(is_spam=True) | Q(is_public=False)).order_by('-created_on')
-    else:
-        comments = Comment.objects.order_by('-created_on')
-    if blog_entry:
-        comments = comments.filter(comment_for=blog_entry)
-    page = request.GET.get('page', 1)
-    comments_per_page = getattr(settings, 'COMMENTS_PER_PAGE', 20)
-    paginator = Paginator(comments, comments_per_page)
-    page_ = paginator.page(page)
-    comments = page_.object_list
-    return render('blogango/admin/manage_comments.html',
-                  request, {'comments': comments,
-                            'blog_entry': blog_entry,
-                            'page_': page_})
+class StaffMemReqMixin(object):
+
+    @method_decorator(staff_member_required)
+    def dispatch(self, *args, **kwargs):
+        return super(StaffMemReqMixin, self).dispatch(*args, **kwargs)
 
 
-@staff_member_required
-def admin_edit_preferences(request):
-    #only one blog must be present
-    blog = Blog.objects.get_blog()
-    form = bforms.PreferencesForm(instance=blog)
-    if request.POST:
-        form = bforms.PreferencesForm(request.POST, instance=blog)
-        if form.is_valid():
-            form.save()
-            return redirect(request.path+"?done")
-    return render('blogango/admin/edit_preferences.html', request, {'form': form})
+class AdminDashboardView(StaffMemReqMixin, generic.TemplateView):
+    template_name = 'blogango/admin/index.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AdminDashboardView, self).get_context_data(**kwargs)
+        recent_drafts = BlogEntry.default.filter(is_published=False).order_by('-created_on')[:5]
+        recent_entries = BlogEntry.objects.order_by('-created_on')[:5]
+        context['recent_entries'] = recent_entries
+        context['recent_drafts'] = recent_drafts
+        return context
+
+admin_dashboard = AdminDashboardView.as_view()
+
+class AdminCreateUpdateCommon(object):
+    model = BlogEntry
+    form_class = bforms.EntryForm
+    template_name = 'blogango/admin/edit_entry.html'
+
+    def form_valid(self, form):
+        if "page" in self.request.POST:
+            form.instance.is_page = True
+        if "publish" in self.request.POST:
+            form.instance.is_published = True
+        return super(AdminCreateUpdateCommon, self).form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AdminCreateUpdateCommon, self).get_context_data(**kwargs)
+        tags_json = json.dumps([each.name for each in Tag.objects.all()])
+        context['tags_json'] = tags_json
+        return context
+
+    def get_success_url(self):
+        blog_entry = self.object
+        if blog_entry.is_published:
+            published_date = blog_entry.publish_date
+            return reverse('blogango_details',
+                           kwargs={'year': published_date.year,
+                                   'month': published_date.month,
+                                   'slug': blog_entry.slug})
+        else:
+            return reverse('blogango_admin_entry_edit',
+                           args=[blog_entry.id])+'?done'
+
+class AdminEntryView(StaffMemReqMixin, AdminCreateUpdateCommon, generic.edit.CreateView):
+
+    def get_initial(self):
+        initial = super(AdminEntryView, self).get_initial()
+        initials = {'created_by': self.request.user.id,
+                    'publish_date': datetime.now()}
+        initial.update(initials)
+        return initial
+
+admin_entry = AdminEntryView.as_view()
+
+
+class AdminEditView(StaffMemReqMixin, AdminCreateUpdateCommon, generic.UpdateView):
+    pass
+
+admin_edit = AdminEditView.as_view()
+
+
+class AdminManageEntries(StaffMemReqMixin, generic.ListView):
+    template_name = 'blogango/admin/manage_entries.html'
+    model = BlogEntry
+    context_object_name = 'entries'
+
+    def get_queryset(self):
+        if self.kwargs:
+            username = self.kwargs['username']
+            author = get_object_or_404(User, username=username)
+            entries = BlogEntry.default.filter(created_by=author)
+        else:
+            entries = BlogEntry.default.all()
+        return entries
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AdminManageEntries, self).get_context_data(**kwargs)
+        if self.kwargs:
+            username = self.kwargs['username']
+            user = get_object_or_404(User, username=username)
+            context['author'] = user
+        return context 
+
+admin_manage_entries = AdminManageEntries.as_view()
+
+
+class AdminManageComments(StaffMemReqMixin, generic.ListView):
+    model = Comment
+    template_name = 'blogango/admin/manage_comments.html'
+    context_object_name = 'comments'
+
+    def get_queryset(self):
+        blog_entry = None
+        if 'entry_id' in self.kwargs:
+            blog_entry = get_object_or_404(BlogEntry, pk=self.kwargs['entry_id'])
+        if 'blocked' in self.request.GET:
+            comments = \
+              Comment.default.filter(Q(is_spam=True) | Q(is_public=False)).order_by('-created_on')  
+        else:
+            comments = Comment.objects.order_by('-created_on')
+        if blog_entry:
+            comments = comments.filter(comment_for=blog_entry)
+        return comments
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AdminManageComments, self).get_context_data(**kwargs)
+        blog_entry = None
+        if 'entry_id' in self.kwargs:
+            blog_entry = get_object_or_404(BlogEntry, pk=self.kwargs['entry_id'])
+        context['blog_entry'] = blog_entry
+        return context
+
+    def get_paginate_by(self, queryset):
+        paginate_by = getattr(settings, 'COMMENTS_PER_PAGE', 20)
+        return paginate_by
+
+admin_manage_comments = AdminManageComments.as_view()
+
+class AdminEditPreferences(StaffMemReqMixin, generic.UpdateView):
+    model = Blog
+    form_class = bforms.PreferencesForm
+    template_name = 'blogango/admin/edit_preferences.html'
+    success_url = '?done'
+
+    def get_object(self, *args, **kwargs):
+        return Blog.objects.get_blog()
+
+admin_edit_preferences = AdminEditPreferences.as_view()
+
 
 
 def get_verified_akismet_instance(request):
@@ -168,30 +235,26 @@ def admin_comment_block(request):
         api.submit_spam(smart_str(comment.text), akismet_data)
     return HttpResponse(comment.pk)
 
+class IndexView(generic.ListView):
+    template_name = 'blogango/mainpage.html'
+    context_object_name = 'entries'
+    
+    def get_paginate_by(self, queryset):
+        paginate_by = self.kwargs['blog'].entries_per_page
+        return paginate_by
 
-def handle404(view_function):
-    def wrapper(*args, **kwargs):
-        try:
-            return view_function(*args, **kwargs)
-        except ObjectDoesNotExist:
-            raise Http404
-    return wrapper
+    def get(self, request, *args, **kwargs):
+        blog = Blog.objects.get_blog()
+        if not blog:
+            return HttpResponseRedirect(reverse('blogango_install'))
+        self.kwargs['blog'] = blog
+        return super(IndexView, self).get(request, *args, **kwargs)
 
+    def get_queryset(self):
+        entries = BlogEntry.objects.filter(is_page=False)
+        return entries
 
-def index(request, page=1):
-    blog = Blog.objects.get_blog()
-    if not blog:
-        return HttpResponseRedirect(reverse('blogango_install'))
-    page = int(page)
-    entries = BlogEntry.objects.filter(is_page=False)
-    paginator = Paginator(entries, blog.entries_per_page)
-    if paginator.num_pages < page:
-        return redirect(reverse('blogango_page', args=[paginator.num_pages]))
-    page_ = paginator.page(page)
-    entries = page_.object_list
-    payload = {'entries': entries, 'page_': page_}
-    return render('blogango/mainpage.html', request, payload)
-
+index = IndexView.as_view()
 
 def check_comment_spam(request, comment):
     import logging
@@ -220,30 +283,60 @@ def check_comment_spam(request, comment):
         return is_spam
     raise AkismetError(message)
 
+class DetailsView(Handle404Mixin, generic.DetailView):
+    template_name = 'blogango/details.html'
+    context_object_name = 'entry'
 
-@handle404
-def details(request, year, month, slug):
-    if not _is_blog_installed():
-        return HttpResponseRedirect(reverse('blogango_install'))
+    def get(self, request, *args, **kwargs):
+        if not _is_blog_installed():
+            return HttpResponseRedirect(reverse('blogango_install'))
+        return super(DetailsView, self).get(request, *args, **kwargs)
 
-    entry = BlogEntry.default.get(created_on__year=year,
-                                  created_on__month=month,
-                                  slug=slug)
-
-    # published check needs to be handled here to allow previews
-    if not entry.is_published:
-        if request.user.is_staff and 'preview' in request.GET:
-            pass
+    def get_object(self, queryset=None):
+        if 'year' in self.kwargs:
+            entry = BlogEntry.default.get(created_on__year=self.kwargs['year'],
+                                      created_on__month=self.kwargs['month'],
+                                      slug=self.kwargs['slug'])
         else:
-            raise Http404
+            entry = BlogEntry.default.get(is_page=True, slug=self.kwargs['slug'])
 
-    if request.method == 'POST':
-        comment_f = bforms.CommentForm(request.POST)
+        if not entry.is_published:
+            if self.request.user.is_staff and 'preview' in self.request.GET:
+                pass
+            else:
+                raise Http404
+        return entry
+
+    def get_context_data(self, **kwargs):
+        context = super(DetailsView, self).get_context_data(**kwargs)
+
+        init_data = {}
+        if self.request.user.is_authenticated():
+            init_data['name'] = self.request.user.get_full_name() or self.request.user.username
+            init_data['email'] = self.request.user.email
+        else:
+            init_data['name'] = self.request.session.get("name", "")
+            init_data['email'] = self.request.session.get("email", "")
+            init_data['url'] = self.request.session.get("url", "")
+        entry = context['entry']
+        comment_f = bforms.CommentForm(initial=init_data)
+        comments = Comment.objects.filter(comment_for=entry, is_spam=False)
+        reactions = Reaction.objects.filter(comment_for=entry)
+        payload = {'comments': comments,
+               'reactions': reactions, 'comment_form': comment_f}
+        context.update(payload)
+        return context
+
+    def post(self, *args, **kwargs):
+        self.object = self.get_object()
+        request = self.request
+        context = self.get_context_data(object=self.object)
+        comment_f = bforms.CommentForm(self.request.POST)
         if comment_f.is_valid():
-            comment_by = request.user if request.user.is_authenticated() else None
+            comment_by = self.request.user if self.request.user.is_authenticated() else None
             comment = Comment(text=comment_f.cleaned_data['text'],
                               created_by=comment_by,
-                              comment_for=entry,
+                              comment_for=self.object,
                               user_name=comment_f.cleaned_data['name'],
                               user_url=comment_f.cleaned_data['url'],
                               email_id=comment_f.cleaned_data['email'])
@@ -253,143 +346,93 @@ def details(request, year, month, slug):
             comment.user_agent = request.META.get('HTTP_USER_AGENT', '')
             if AKISMET_COMMENT:
                 try:
-                    comment.is_spam = check_comment_spam(request, comment)
+                    comment.is_spam = check_comment_spam(self.request, comment)
                 except AkismetError:
                     # Most likely could be a timeout to a spam message
                     comment.is_spam = True
             if not comment.is_spam:
-                request.session["name"] = comment_f.cleaned_data['name']
-                request.session["email"] = comment_f.cleaned_data['email']
-                request.session["url"] = comment_f.cleaned_data['url']
+                self.request.session["name"] = comment_f.cleaned_data['name']
+                self.request.session["email"] = comment_f.cleaned_data['email']
+                self.request.session["url"] = comment_f.cleaned_data['url']
             comment.save()
             return HttpResponseRedirect('#comment-%s' % comment.pk)
-    else:
-        init_data = {}
-        if request.user.is_authenticated():
-            init_data['name'] = request.user.get_full_name() or request.user.username
-            init_data['email'] = request.user.email
-        else:
-            init_data['name'] = request.session.get("name", "")
-            init_data['email'] = request.session.get("email", "")
-            init_data['url'] = request.session.get("url", "")
-        comment_f = bforms.CommentForm(initial=init_data)
-
-    comments = Comment.objects.filter(comment_for=entry, is_spam=False)
-    reactions = Reaction.objects.filter(comment_for=entry)
-    # tags = Tag.objects.filter(tag_for=entry)
-    payload = {'entry': entry, 'comments': comments,
-               'reactions': reactions, 'comment_form': comment_f}
-    return render('blogango/details.html', request, payload)
+        context.update({'comment_form': comment_f})
+        return self.render_to_response(context)
 
 
-@handle404
-def page_details(request, slug):
-    if not _is_blog_installed():
-        return HttpResponseRedirect(reverse('blogango_install'))
-
-    entry = BlogEntry.default.get(is_page=True,
-                                  slug=slug)
-
-    # published check needs to be handled here to allow previews
-    if not entry.is_published:
-        if request.user.is_staff and 'preview' in request.GET:
-            pass
-        else:
-            raise Http404
-
-    if request.method == 'POST':
-        comment_f = bforms.CommentForm(request.POST)
-        if comment_f.is_valid():
-            comment_by = request.user if request.user.is_authenticated() else None
-            comment = Comment(text=comment_f.cleaned_data['text'],
-                              created_by=comment_by,
-                              comment_for=entry,
-                              user_name=comment_f.cleaned_data['name'],
-                              user_url=comment_f.cleaned_data['url'],
-                              email_id=comment_f.cleaned_data['email'])
-            comment.is_public = getattr(settings, 'AUTO_APPROVE_COMMENTS',
-                                        True)
-            if AKISMET_COMMENT:
-                try:
-                    comment.is_spam = check_comment_spam(request, comment)
-                except AkismetError:
-                    # Most likely spam causing timeout error.
-                    comment.is_spam = True
-            comment.save()
-            return HttpResponseRedirect('#comment-%s' % comment.pk)
-    else:
-        init_data = {'name': None}
-        if request.user.is_authenticated():
-            init_data['name'] = request.user.get_full_name() or request.user.username
-        comment_f = bforms.CommentForm(initial=init_data)
-
-    comments = Comment.objects.filter(comment_for=entry, is_spam=False)
-    reactions = Reaction.objects.filter(comment_for=entry)
-    # tags = Tag.objects.filter(tag_for=entry)
-    payload = {'entry': entry, 'comments': comments,
-               'reactions': reactions, 'comment_form': comment_f}
-    return render('blogango/details.html', request, payload)
+details = DetailsView.as_view()
 
 
-def tag_details(request, tag_slug, page=1):
-    tag = get_object_or_404(Tag, slug=tag_slug)
-    page = int(page)
-    blog = Blog.objects.get_blog()
-    tagged_entries = BlogEntry.objects.filter(is_published=True, tags__in=[tag])
-    paginator = Paginator(tagged_entries, blog.entries_per_page)
-    if page > paginator.num_pages:
-        return redirect(reverse('blogango_tag_details_page',
-                                args=[tag.slug, paginator.num_pages]))
-    page_ = paginator.page(page)
-    entries = page_.object_list
-    payload = {'tag': tag, 'entries': entries}
-    payload['page_'] = page_
-    return render('blogango/tag_details.html', request, payload)
+class TagDetails(generic.ListView):
+    template_name = 'blogango/tag_details.html'
+    context_object_name = 'entries'
 
+    def get_queryset(self):
+        tag = get_object_or_404(Tag, slug= self.kwargs['tag_slug'])
+        self.kwargs['tag'] = tag
+        tagged_entries = BlogEntry.objects.filter(is_published=True, tags__in=[tag])
+        return tagged_entries
 
-@login_required
-def install_blog(request):
-    if _is_blog_installed():
-        return HttpResponseRedirect(reverse('blogango_index'))
+    def get_paginate_by(self, queryset):
+        paginate_by = Blog.objects.get_blog().entries_per_page
+        return paginate_by
 
-    if request.method == 'GET':
-        install_form = bforms.InstallForm()
-    if request.method == 'POST':
-        install_form = bforms.InstallForm(request.POST)
-        if install_form.is_valid():
-            install_form.save()
+    def get_context_data(self, *args, **kwargs):
+        context = super(TagDetails, self).get_context_data(**kwargs)
+        context['tag'] = self.kwargs['tag']
+        return context
+
+tag_details = TagDetails.as_view()
+
+class InstallBlog(generic.TemplateView):
+    template_name = 'blogango/install.html'
+
+    def get(self, request, *args, **kwargs):
+        if _is_blog_installed():
             return HttpResponseRedirect(reverse('blogango_index'))
-    payload = {"install_form": install_form}
-    return render('blogango/install.html', request, payload)
+        return super(InstallBlog, self).get(request, *args, **kwargs)
+
+install_blog = InstallBlog.as_view()
+
+class CreateBlogRoll(LoginRequiredMixin, generic.edit.FormView):
+    template_name = 'blogango/blogroll.html'
+    form_class = bforms.BlogForm
+    success_url = reverse_lazy('blogango_blogroll')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(CreateBlogRoll, self).get_context_data(**kwargs)
+        # our template expects context 'blogroll_form'
+        context['blogroll_form'] = context['form']
+        return context
+
+    def form_valid(self, form):
+        form.save()
+        return super(CreateBlogRoll, self).form_valid(form)
 
 
-@login_required
-def create_blogroll(request):
-    if request.method == 'GET':
-        blogroll_form = bforms.BlogForm()
-    if request.method == 'POST':
-        blogroll_form = bforms.BlogForm(request.POST)
-        if blogroll_form.is_valid():
-            blogroll_form.save()
-            return HttpResponseRedirect('.')
-    payload = {"blogroll_form": blogroll_form}
-    return render('blogango/blogroll.html', request, payload)
+create_blogroll = CreateBlogRoll.as_view()
+
+class AuthorView(generic.ListView):
+    template_name = 'blogango/author.html'
+    context_object_name = 'entries'
+
+    def get_queryset(self):
+        author = get_object_or_404(User, username=self.kwargs['username'])
+        self.kwargs['author'] = author
+        author_posts = author.blogentry_set.filter(is_published=True)
+        return author_posts
+
+    def get_paginate_by(self, queryset):
+        paginate_by = Blog.objects.get_blog().entries_per_page
+        return paginate_by
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AuthorView, self).get_context_data(**kwargs)
+        context['author'] = self.kwargs['author']
+        return context
 
 
-def author(request, username, page=1):
-    page = int(page)
-    blog = Blog.objects.get_blog()
-    author = get_object_or_404(User, username=username)
-    author_posts = author.blogentry_set.filter(is_published=True)
-    paginator = Paginator(author_posts, blog.entries_per_page)
-    if page > paginator.num_pages:
-        return redirect(reverse('blogango_author_page',
-                                args=[author.username, paginator.num_pages]))
-    page_ = paginator.page(page)
-    entries = page_.object_list
-    return render('blogango/author.html', request, {'author': author,
-                                                    'entries': entries,
-                                                    'page_': page_})
+author = AuthorView.as_view()
 
 
 class BlogEntryMonthArchiveView(MonthArchiveView):
@@ -455,12 +498,3 @@ def _generic_form_display(request, form_class):
             return HttpResponseRedirect('.')
     payload = {"install_form": form_inst}
     return render('blogango/install.html', request, payload)
-
-
-# A generic form processor.
-def generic(request):
-    if request.method == 'GET':
-        pass
-    if request.method == 'POST':
-        pass
-

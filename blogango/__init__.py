@@ -1,12 +1,8 @@
 
-from datetime import date, datetime, time
-from time import strptime
-
-from django.core.urlresolvers import reverse
 from django.db.models import signals
 
 from pingback import register_pingback, ping_func
-from pingback.client import ping_external_links, ping_directories
+from pingback.client import ping_external_links
 from django_xmlrpc import xmlrpcdispatcher
 
 from blogango.models import BlogEntry

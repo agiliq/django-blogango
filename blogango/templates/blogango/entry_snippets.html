@@ -22,7 +22,7 @@
   </div>
   <div class="right_panel">
     <a href="{{ entry.get_absolute_url }}" class='noline'><h1 class="post_title">{{ entry.title }}</h1></a>
-    <h6 class="posted_by">By : <a href="{% url "blogango_author" entry.created_by %}">{{ entry.created_by }}</a>{% if entry.created_by.teammember.tag_line %} - {{ entry.created_by.teammember.tag_line }} {% endif %}</h6>
+    <h6 class="posted_by">By : <a href="{% url "blogango_author_page" entry.created_by %}">{{ entry.created_by }}</a>{% if entry.created_by.teammember.tag_line %} - {{ entry.created_by.teammember.tag_line }} {% endif %}</h6>
 	{% if post_detail %}
 	  <p>{{ entry.text|safe }}</p>
 	{% else %}
