@@ -329,6 +329,7 @@ class DetailsView(Handle404Mixin, generic.DetailView):
 
     def post(self, *args, **kwargs):
         self.object = self.get_object()
+        request = self.request
         context = self.get_context_data(object=self.object)
         comment_f = bforms.CommentForm(self.request.POST)
         if comment_f.is_valid():
