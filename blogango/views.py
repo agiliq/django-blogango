@@ -68,8 +68,7 @@ class AdminDashboardView(StaffMemReqMixin, generic.TemplateView):
 
 admin_dashboard = AdminDashboardView.as_view()
 
-
-class AdminEntryView(StaffMemReqMixin, generic.edit.CreateView):
+class AdminCreateUpdateCommon(object):
     model = BlogEntry
     form_class = bforms.EntryForm
     template_name = 'blogango/admin/edit_entry.html'
@@ -79,7 +78,13 @@ class AdminEntryView(StaffMemReqMixin, generic.edit.CreateView):
             form.instance.is_page = True
         if "publish" in self.request.POST:
             form.instance.is_published = True
-        return super(AdminEntryView, self).form_valid(form)
+        return super(AdminCreateUpdateCommon, self).form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AdminCreateUpdateCommon, self).get_context_data(**kwargs)
+        tags_json = json.dumps([each.name for each in Tag.objects.all()])
+        context['tags_json'] = tags_json
+        return context
 
     def get_success_url(self):
         blog_entry = self.object
@@ -92,6 +97,8 @@ class AdminEntryView(StaffMemReqMixin, generic.edit.CreateView):
         else:
             return reverse('blogango_admin_entry_edit',
                            args=[blog_entry.id])+'?done'
+
+class AdminEntryView(StaffMemReqMixin, AdminCreateUpdateCommon, generic.edit.CreateView):
 
     def get_initial(self):
         initial = super(AdminEntryView, self).get_initial()
@@ -100,44 +107,11 @@ class AdminEntryView(StaffMemReqMixin, generic.edit.CreateView):
         initial.update(initials)
         return initial
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(AdminEntryView, self).get_context_data(**kwargs)
-        tags_json = json.dumps([each.name for each in Tag.objects.all()])
-        context['tags_json'] = tags_json
-        return context
-
 admin_entry = AdminEntryView.as_view()
 
 
-class AdminEditView(StaffMemReqMixin, generic.UpdateView):
-    model = BlogEntry
-    form_class = bforms.EntryForm
-    template_name = 'blogango/admin/edit_entry.html'
-
-    def get_context_data(self, *args, **kwargs):
-        context = super(AdminEditView, self).get_context_data(**kwargs)
-        tags_json = json.dumps([each.name for each in Tag.objects.all()])
-        context['tags_json'] = tags_json
-        return context
-
-    def form_valid(self, form):
-        if "page" in self.request.POST:
-            form.instance.is_page = True
-        if "publish" in self.request.POST:
-            form.instance.is_published = True
-        return super(AdminEditView, self).form_valid(form)
-
-    def get_success_url(self):
-        blog_entry = self.object
-        if blog_entry.is_published:
-            published_date = blog_entry.publish_date
-            return reverse('blogango_details',
-                           kwargs={'year': published_date.year,
-                                   'month': published_date.month,
-                                   'slug': blog_entry.slug})
-        else:
-            return reverse('blogango_admin_entry_edit',
-                           args=[blog_entry.id])+'?done'
+class AdminEditView(StaffMemReqMixin, AdminCreateUpdateCommon, generic.UpdateView):
+    pass
 
 admin_edit = AdminEditView.as_view()
 
