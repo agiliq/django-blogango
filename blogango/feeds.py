@@ -8,15 +8,7 @@ from taggit.models import Tag
 
 
 class main_feed(Feed):
-    try:
-        blog = Blog.objects.get_blog()
-    except:
-        class DummyBlog:
-            def __init__(self):
-                self.title = ''
-                self.tag_line = ''
-        blog = DummyBlog()
-
+    blog = Blog.objects.get_blog()
     title = blog.title
     link = "/rss/latest/"
     description = blog.tag_line
