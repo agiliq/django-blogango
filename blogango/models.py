@@ -88,7 +88,7 @@ class BlogEntry(models.Model):
     created_by = models.ForeignKey(User, unique=False)
     is_page = models.BooleanField(default=False)
     is_published = models.BooleanField(default=True)
-    publish_date = models.DateTimeField()
+    publish_date = models.DateTimeField(null=True)
     comments_allowed = models.BooleanField(default=True)
     is_rte = models.BooleanField(default=False)
 
@@ -185,7 +185,7 @@ class BaseComment(models.Model):
     comment_for = models.ForeignKey(BlogEntry)
     created_on = models.DateTimeField(auto_now_add=True)
     user_name = models.CharField(max_length=100)
-    user_url = models.CharField(max_length=100)
+    user_url = models.URLField()
 
     class Meta:
         ordering = ['created_on']
@@ -208,12 +208,16 @@ class Comment(BaseComment):
              We do not display the comment in those cases.
     is_public: null for comments waiting to be approved, True if approved,
                False if rejected
+    user_ip: Ip address from which this comment was made
+    user_agent: User agent of the commenter
     """
 
     created_by = models.ForeignKey(User, unique=False, blank=True, null=True)
     email_id = models.EmailField()
     is_spam = models.BooleanField(default=False)
     is_public = models.NullBooleanField(null=True, blank=True)
+    user_ip = models.IPAddressField(null=True)
+    user_agent = models.CharField(max_length=200, default='')
 
     default = models.Manager()
     objects = CommentManager()

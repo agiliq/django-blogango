@@ -186,6 +186,27 @@ admin_edit_preferences = AdminEditPreferences.as_view()
 
 
 
+def get_verified_akismet_instance(request):
+    api = Akismet(AKISMET_API_KEY,
+                  'http://%s' % (request.get_host()),
+                  request.META.get('HTTP_USER_AGENT', ''))
+    try:
+        api.verify_key()
+    except AkismetError:
+        return False
+    return api
+
+
+def create_akismet_data(comment):
+    akismet_data = {'user_ip': smart_str(comment.user_ip),
+                    'user_agent': smart_str(comment.user_agent),
+                    'comment_author': smart_str(comment.user_name),
+                    'comment_author_email': smart_str(comment.email_id),
+                    'comment_author_url': smart_str(comment.user_url),
+                    'comment_type': 'comment'}
+    return akismet_data
+
+
 @staff_member_required
 @require_POST
 def admin_comment_approve(request):
@@ -194,6 +215,10 @@ def admin_comment_approve(request):
     comment.is_spam = False
     comment.is_public = True
     comment.save()
+    api = get_verified_akismet_instance(request)
+    if api:
+        akismet_data = create_akismet_data(comment)
+        api.submit_ham(smart_str(comment.text), akismet_data)
     return HttpResponse(comment.pk)
 
 
@@ -204,6 +229,10 @@ def admin_comment_block(request):
     comment = get_object_or_404(Comment, pk=comment_id)
     comment.is_public = False
     comment.save()
+    api = get_verified_akismet_instance(request)
+    if api:
+        akismet_data = create_akismet_data(comment)
+        api.submit_spam(smart_str(comment.text), akismet_data)
     return HttpResponse(comment.pk)
 
 class IndexView(generic.ListView):
@@ -228,6 +257,8 @@ class IndexView(generic.ListView):
 index = IndexView.as_view()
 
 def check_comment_spam(request, comment):
+    import logging
+    logging.basicConfig(level=logging.INFO)
     api = Akismet(AKISMET_API_KEY,
                   'http://%s' % (request.get_host()),
                   request.META.get('HTTP_USER_AGENT', ''))
@@ -244,8 +275,12 @@ def check_comment_spam(request, comment):
                         'comment_author_email': smart_str(comment.email_id),
                         'comment_author_url': smart_str(comment.user_url),
                         'comment_type': 'comment'}
+        logging.info(akismet_data)
+        logging.info(comment.text)
 
-        return api.comment_check(smart_str(comment.text), akismet_data)
+        is_spam = api.comment_check(smart_str(comment.text), akismet_data)
+        logging.info(is_spam)
+        return is_spam
     raise AkismetError(message)
 
 class DetailsView(Handle404Mixin, generic.DetailView):
@@ -306,6 +341,8 @@ class DetailsView(Handle404Mixin, generic.DetailView):
                               email_id=comment_f.cleaned_data['email'])
             comment.is_public = getattr(settings, 'AUTO_APPROVE_COMMENTS',
                                         True)
+            comment.user_ip = request.META['REMOTE_ADDR']
+            comment.user_agent = request.META.get('HTTP_USER_AGENT', '')
             if AKISMET_COMMENT:
                 try:
                     comment.is_spam = check_comment_spam(self.request, comment)
