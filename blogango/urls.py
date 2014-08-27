@@ -46,11 +46,6 @@ urlpatterns = patterns('blogango.views',
         name='blogango_admin_comment_block'),
 )
 
-#search view
-urlpatterns += patterns('',
-    #url(r'^search/', include('haystack.urls')),
-)
-
 # sitemap.xml
 urlpatterns += patterns('django.contrib.sitemaps.views',
     url(r'^sitemap\.xml$', 'sitemap', {'sitemaps': sitemaps}),
