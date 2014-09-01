@@ -5,7 +5,7 @@ from blogango import feeds
 from blogango.models import BlogEntry
 
 blog_info_dict = {
-    'queryset': BlogEntry.objects.filter(),
+    'queryset': BlogEntry.objects.all(),
     'date_field': 'publish_date',
 }
 sitemaps = {
