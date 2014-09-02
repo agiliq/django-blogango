@@ -14,7 +14,7 @@ class main_feed(Feed):
     description = blog.tag_line
 
     def items(self):
-        return BlogEntry.objects.all()[:10]
+        return BlogEntry.objects.filter(is_page=False)[:10]
 
     def item_description(self, item):
         return item.text
