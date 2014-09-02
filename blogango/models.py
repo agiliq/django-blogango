@@ -77,7 +77,7 @@ class BlogEntry(models.Model):
     is_rte: Was this post done using a Rich text editor?"""
 
     title = models.CharField(max_length=100)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=100)
     text = MarkupField(default_markup_type=getattr(settings,
                                                    'DEFAULT_MARKUP_TYPE',
                                                    'plain'),
@@ -270,5 +270,3 @@ if Comment not in moderator._registry:
 
 from south.modelsinspector import add_introspection_rules
 add_introspection_rules([], ["^markupfield\.fields\.MarkupField"])
-
-

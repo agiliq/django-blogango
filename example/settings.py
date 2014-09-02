@@ -86,6 +86,7 @@ INSTALLED_APPS = (
     'django_xmlrpc',
     'taggit',
     'django.contrib.comments',
+    'south',
 )
 
 try:
