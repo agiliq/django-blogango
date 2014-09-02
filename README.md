@@ -12,9 +12,7 @@ Checkout the application live in use at [http://agiliq.com/blog](http://agiliq.c
     python manage.py syncdb
     python manage.py runserver
 
-You will be able to access `http://localhost:8000/admin/` with this.
-
-Blog entries exist at `/blog/`. Try accessing it. It will ask you to create a Blog instance at `/admin/blogango/blog/add/`. The Blog instance is required for storing blog wide settings, like, number of entries to show per page, title for the blog, tag line for the blog etc.
+Create a Blog instance at `/admin/blogango/blog/add/`. The Blog instance is required for storing blog wide settings, like, number of entries to show per page, title for the blog, tag line for the blog etc.
 
 With Blog instance created, you will be able to access `/blog/`. At this point, no blog entries exist. Create a blog entry at `/admin/blogango/blogentry/add/`.
 
