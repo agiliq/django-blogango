@@ -10,7 +10,7 @@ notifications:
   slack: agiliq:4rM97fcM3RrHNA3EssNXYG3V
 # command to run tests
 script:
-  -  coverage run --omit='*migrations*' --source="." example/manage.py test blogango.tests
+  -  coverage run example/manage.py test blogango.tests
 
 after_success:
   - coveralls

@@ -13,3 +13,5 @@ localsettings.py
 MANIFEST
 dist/*
 example/dev.db
+htmlcov/
+.coverage
