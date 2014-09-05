@@ -247,7 +247,7 @@ class TestAdminActions(TestCase):
         self.assertEqual(BlogEntry.objects.count(), 2)
         entry = BlogEntry.objects.latest('pk')
         #check proper tags have been set
-        self.assertEqual([each.name for each in entry.tags.all()], ["testing", "testing2"])
+        self.assertEqual(sorted([each.name for each in entry.tags.all()]), sorted(["testing", "testing2"]))
 
     def test_edit_entry(self):
         """Test for editing a entry in the blog"""
