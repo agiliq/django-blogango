@@ -195,8 +195,7 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def tearDown(self):
-        self.blog.delete()
-        self.user.delete()
+        pass
 
 
 class TestAdminActions(TestCase):
