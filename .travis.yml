@@ -8,6 +8,12 @@ install:
   -  pip install coveralls --use-mirrors
 notifications:
   slack: agiliq:4rM97fcM3RrHNA3EssNXYG3V
+env:
+  - DJANGO_SETTINGS_MODULE=settings       # use sqlite
+  - DJANGO_SETTINGS_MODULE=test_settings  # use postgresql
+services: postgresql
+before_script:
+  - psql -c "CREATE DATABASE mydb;" -U postgres
 # command to run tests
 script:
   -  coverage run example/manage.py test blogango.tests
