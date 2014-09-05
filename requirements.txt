@@ -10,4 +10,3 @@ haystack
 markdown
 docutils
 textile
-psycopg2

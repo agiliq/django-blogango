@@ -5,7 +5,7 @@ python:
 # command to install dependencies
 install:
   -  pip install -r requirements.txt --use-mirrors
-  -  pip install coveralls --use-mirrors
+  -  pip install coveralls psycopg2 --use-mirrors
 notifications:
   slack: agiliq:4rM97fcM3RrHNA3EssNXYG3V
 env:
