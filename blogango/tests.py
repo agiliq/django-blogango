@@ -10,7 +10,7 @@ from django.core import mail
 
 
 from taggit.models import Tag
-from models import Blog, BlogEntry, Comment
+from .models import Blog, BlogEntry, Comment
 
 
 class BlogTestCase(TestCase):
@@ -193,10 +193,6 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 200)
         response = self.c.get(reverse('blogango_tag_details_page', args=[tag.slug, 3]))
         self.assertEqual(response.status_code, 404)
-
-    def tearDown(self):
-        self.blog.delete()
-        self.user.delete()
 
 
 class TestAdminActions(TestCase):
