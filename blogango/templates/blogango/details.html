@@ -10,7 +10,7 @@
 {% block breadcrumbs %}
     <li><a href="{% url "blogango_index" %}" rel="nofollow">Blog</a></li>
     <li><a href="{% url "blogango_archives" entry.created_on.year entry.created_on|date:'b' %}" rel="nofollow"> {{ entry.created_on|date:'N Y' }}</a></li>
-	<li>{{ entry.title }}</li>
+    <li>{{ entry.title }}</li>
 {% endblock %}
 
 {% block content %}
@@ -19,85 +19,22 @@
     {% include 'blogango/entry_snippets.html' %}
 {% endwith %}
 
-{% comment %}
-<div class="comment_block">
-  <div class="left_panel">
-    <div class="frame_bg"><img src="{{ STATIC_URL }}blogango/images/person_img.jpg" width="71" height="72" alt="shabda" /></div>
-    <div class="italics">{{ entry.created_on|date:'jS N, Y' }}</div>
-    <div class="comment_bg"><a href="{{ entry.get_absolute_url }}#comments">{{ entry.get_num_comments }}</a></div>
-    <div class="italics">Comments</div>
-    <div class="reactions_bg"><a href="{{ entry.get_absolute_url }}#reactions">{{ entry.get_num_reactions }}</a></div>
-    <div class="italics">Reactions</div>
-  </div>
-  <div class="right_panel">
-    <a href="{{ entry.get_absolute_url }}" class='noline'><h1 class="post_title">{{ entry.title }}</h1></a>
-    <h6 class="posted_by">By : <a href="{% url "blogango_author" entry.created_by %}">{{ entry.created_by }}</a>{# - Django Geek #}</h6>
-    <p>{{ entry.text|safe }} </p>
-    <a href="{{ entry.get_absolute_url }}" class="moreinfo">more info..</a>
-    <div class="topics">Topics :
-	{% for tag in entry.tags.all %}
-		<a href="{% url "blogango_tag_details" tag.slug %}">{{ tag.name }}</a>
-	{% endfor %}
-	</div>
-  </div>
-</div>
-{% endcomment %}
-
 {% if comments %}
-<!--COMMENT BLOCK STARTS-->
-<h2 style="clear:both;">Comments</h2>
-{% for comment in comments %}
-    <a name="comment-{{ comment.pk }}">
-    <div id="comments" class="commentor_block">
-	    <div class="leftnpanel">
-	        <span class="commentor">
-	           {% if comment.user_url %}
-	               <a href='{{ comment.user_url }}' rel='nofollow' target='_blank'>{{ comment.user_name }}</a>
-	           {% else %}
-	               {{ comment.user_name }}
-	           {% endif %}
-	        </span>
-            <span class="postdate">
-                <a href="#comment-{{ comment.pk }}">{{ comment.created_on|date:'jS N, Y' }}</a>
-            </span><br/>
-	        <div class="comment_post">
-	            <p>{{ comment.text|striptags|urlize|linebreaks }}</p>
-	        </div>
-	    </div>
-	    <div class="rightnpanel">
-	        <img src="{% gravatar_url comment.email_id %}" width="50" height="50" alt="commmenttor" class="picborder"/>
-	    </div>
-	    <div class="clear"></div>
-    </div>
-{% endfor %}
-<!--COMMENT BLOCK ENDS-->
-{% endif %}
-<div class="clear"></div>
-{% if reactions %}
-<!--REACTIONS BLOCK STARTS-->
-<h1>Reactions</h1>
-{% for reaction in reactions %}
-    <div id="reactions" class="commentor_block">
-	    <div class="leftnpanel">
-	        <span class="commentor">
-                <a href="{{ reaction.user_url }}">
-				    {{ reaction.user_name }}
-				</a>
-	        </span>
-	        <span class="postdate">{{ reaction.created_on|date:'jS N, Y' }}</span><br/>
-	        <div class="comment_post">
-	            <p>{{ reaction.text|safe|twitterize }}</p>
-	        </div>
-	    </div>
-	    <div class="rightnpanel">
-            {% if reaction.profile_image %}
-	            <img src="{{ reaction.profile_image }}" width="50" height="50" alt="commmenttor" class="picborder" />
-            {% endif %}
-	    </div>
-	    <div class="clear"></div>
-    </div>
-{% endfor %}
-<!--REACTION BLOCK ENDS-->
+
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'agiliqblog1'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
 {% endif %}
 
 <!--  Ping Backs starts -->
@@ -116,35 +53,5 @@
 {% endif %}
 <!--  Ping Backs ends -->
 
-<!--COMMENT FORM BLOCK STARTS-->
-<div class="general_block">
-    {% if entry.comments_allowed%}
-        <form action="." method="post">
-            {% csrf_token %}
-            <fieldset>
-                <legend>Post a comment</legend>
-                Name : {{comment_form.name.errors}}<br/> {{comment_form.name}} <br/>
-	            Email : {{comment_form.email.errors}} <br/> {{comment_form.email}} <br/>
-	            Your site url: {{comment_form.url.errors}} <br/> {{comment_form.url}} <br/>
-                Comment : {{comment_form.text.errors}} <br/> {{comment_form.text}} <br/>
-                <input name="button" type="submit"  id="button" value="Comment"  class="but_right"/>
-	        </fieldset>
-	    </form>
-    {% else %}
-        <div class="message">Comments are disabled.</div>
-    {% endif %}
-</div>
-<!--COMMENT FORM BLOCK ENDS-->
 
 {% endblock %}
-
-
-{% comment %}
-<div id="columnA_2columns">
-    <div class="post">
-        <h3><a href="{{entry.get_absolute_url}}">{{entry.title}}</a></h3>
-        {# {% include "blogango/entry_controls.html" %} #}
-        <div class="entrytxt">{{entry.text|textile}}</div>
-    </div>
-</div>
-{% endcomment %}
