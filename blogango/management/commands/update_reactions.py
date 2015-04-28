@@ -6,11 +6,8 @@ from django.contrib.sites.models import Site
 from blogango.models import BlogEntry, Reaction
 
 import urllib2
+import json
 
-try:
-    import simplejson
-except ImportError:
-    import django.utils.simplejson
 
 BACKTYPE_URL = "http://api.backtype.com/comments/connect.json?url=%s&key=%s"
 
@@ -30,7 +27,7 @@ class Command(NoArgsCommand):
             print "getting backtype results for %s" % (entry_url)
             url = BACKTYPE_URL % (entry_url, settings.BACKTYPE_API_KEY)
             resp = urllib2.urlopen(url)
-            json_data = simplejson.load(resp)            
+            json_data = json.load(resp)            
 
             comments = json_data["comments"]
             for comment in comments:

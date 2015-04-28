@@ -1,6 +1,6 @@
 import urllib
 import urllib2
-from django.utils import simplejson
+from django.utils import json
 import views
 
 site = 'blogango.com'
@@ -35,5 +35,5 @@ def _query_yahoo(base_url, params):
     url = base_url + payload
     print url
     response = urllib2.urlopen(url)
-    result = simplejson.load(response)
+    result = json.load(response)
     return result
