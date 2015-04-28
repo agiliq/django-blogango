@@ -50,6 +50,7 @@ class PreferencesForm(forms.ModelForm):
 
     class Meta:
         model = Blog
+        exclude = ()
 
 
 class BlogForm(forms.ModelForm):

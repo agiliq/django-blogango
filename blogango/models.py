@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
-from django.contrib.comments.moderation import CommentModerator, moderator
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 
@@ -52,8 +51,8 @@ class Blog(models.Model):
 class BlogPublishedManager(models.Manager):
     use_for_related_fields = True
 
-    def get_query_set(self):
-        return super(BlogPublishedManager, self).get_query_set().filter(
+    def get_queryset(self):
+        return super(BlogPublishedManager, self).get_queryset().filter(
             is_published=True,
             publish_date__lte=datetime.now())
 
@@ -176,8 +175,8 @@ class BlogEntry(models.Model):
 
 
 class CommentManager(models.Manager):
-    def get_query_set(self):
-        return super(CommentManager, self).get_query_set().filter(is_public=True)
+    def get_queryset(self):
+        return super(CommentManager, self).get_queryset().filter(is_public=True)
 
 
 class BaseComment(models.Model):
@@ -252,11 +251,6 @@ class BlogRoll(models.Model):
         return self.url
 
 
-class CommentModerator(CommentModerator):
-    email_notification = True
-    enable_field = 'is_public'
-
-
 #Helper methods
 def _infer_title_or_slug(text):
     return '-'.join(text.split()[:5])
@@ -264,9 +258,3 @@ def _infer_title_or_slug(text):
 
 def _generate_summary(text):
     return ' '.join(text.split()[:100])
-
-if Comment not in moderator._registry:
-    moderator.register(Comment, CommentModerator)
-
-from south.modelsinspector import add_introspection_rules
-add_introspection_rules([], ["^markupfield\.fields\.MarkupField"])

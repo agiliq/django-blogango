@@ -9,9 +9,10 @@ from taggit.models import Tag
 
 class main_feed(Feed):
     blog = Blog.objects.get_blog()
-    title = blog.title
-    link = "/rss/latest/"
-    description = blog.tag_line
+    if blog:
+        title = blog.title
+        link = "/rss/latest/"
+        description = blog.tag_line
 
     def items(self):
         return BlogEntry.objects.filter(is_page=False)[:10]
