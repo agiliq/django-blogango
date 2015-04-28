@@ -50,6 +50,7 @@ class PreferencesForm(forms.ModelForm):
 
     class Meta:
         model = Blog
+        fields = ('title', 'tag_line', 'entries_per_page', 'recents', 'recent_comments')
 
 
 class BlogForm(forms.ModelForm):
