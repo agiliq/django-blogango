@@ -1,10 +1,9 @@
-django==1.6
+Django==1.8
 django-taggit
 django-xmlrpc==0.1.4
 BeautifulSoup
 django-markupfield==1.0.2
 django-pingback
-south
 haystack
 -e git+git://github.com/montylounge/django-google-analytics.git#egg=django_google_analytics
 markdown
