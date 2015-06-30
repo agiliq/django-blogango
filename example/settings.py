@@ -47,8 +47,8 @@ SECRET_KEY = '40g6bhw!*3&=5h1l1hj#g8wa3=ep_ez4+j7h)f@onghphh%#af'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = ('django.template.loaders.filesystem.Loader',
-	 'django.template.loaders.app_directories.Loader'
-		)
+                    'django.template.loaders.app_directories.Loader'
+                    )
 
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -81,7 +81,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.sitemaps',
     'django.contrib.staticfiles',
-    
+
     'blogango',
     'pingback',
     'django_xmlrpc',
@@ -92,15 +92,16 @@ try:
     from localsettings import *
 except ImportError:
     DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'dev.db',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'default': {
+            # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'dev.db',                      # Or path to database file if using sqlite3.
+            'USER': '',                      # Not used with sqlite3.
+            'PASSWORD': '',                  # Not used with sqlite3.
+            'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+            'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        }
     }
-}
 
 STATIC_URL = "/static/"
 

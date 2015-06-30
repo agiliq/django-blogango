@@ -8,6 +8,7 @@ from django.contrib.sites.models import Site
 
 
 class Command(NoArgsCommand):
+
     """
         Send Notification email to blog author for recent(last 24hrs) comments.
     """
