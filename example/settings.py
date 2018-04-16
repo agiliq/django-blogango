@@ -104,7 +104,7 @@ except ImportError:
 
 STATIC_URL = "/static/"
 
-
+SOUTH_TESTS_MIGRATE = False
 # details to send mail
 # EMAIL_HOST = ''
 # EMAIL_BACKEND = ''

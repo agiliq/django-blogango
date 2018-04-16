@@ -1,0 +1,6 @@
+[run]
+source = blogango
+omit = */tests.py,*/migrations/*,
+
+[report]
+omit = */tests.py,*/migrations/*,
