@@ -1,3 +1,5 @@
+**This app in not maintained anymore.**
+
 [![Build Status](https://travis-ci.org/agiliq/django-blogango.png?branch=master)](https://travis-ci.org/agiliq/django-blogango)
 
 [![Coverage Status](https://coveralls.io/repos/agiliq/django-blogango/badge.png?branch=master)](https://coveralls.io/r/agiliq/django-blogango?branch=master)
