@@ -11,7 +11,7 @@ Checkout the application live in use at [http://agiliq.com/blog](http://agiliq.c
 
     cd django-blogango/example/  
     pip install -r ../requirements.txt  
-    python manage.py syncdb --migrate
+    python manage.py migrate
     python manage.py runserver
 
 Create a Blog instance at `/admin/blogango/blog/add/`. The Blog instance is required for storing blog wide settings, like, number of entries to show per page, title for the blog, tag line for the blog etc.
