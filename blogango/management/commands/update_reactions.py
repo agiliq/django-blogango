@@ -11,23 +11,24 @@ import json
 
 BACKTYPE_URL = "http://api.backtype.com/comments/connect.json?url=%s&key=%s"
 
+
 class Command(NoArgsCommand):
     help = """
             Sync reactions from backtype
-            
+
             Supports all sources from backtype
             Sample cron job call:
                 python manage.py update_reactions
            """
 
     def handle_noargs(self, **options):
-        current_site = Site.objects.get_current() # hack to get absolute uri for the blog entries
+        current_site = Site.objects.get_current()  # hack to get absolute uri for the blog entries
         for entry in BlogEntry.objects.all():
             entry_url = current_site.domain + entry.get_absolute_url()
             print "getting backtype results for %s" % (entry_url)
             url = BACKTYPE_URL % (entry_url, settings.BACKTYPE_API_KEY)
             resp = urllib2.urlopen(url)
-            json_data = json.load(resp)            
+            json_data = json.load(resp)
 
             comments = json_data["comments"]
             for comment in comments:
@@ -37,7 +38,7 @@ class Command(NoArgsCommand):
                     text = comment['tweet_text']
                     user_name = comment['tweet_from_user']
                     profile_image = comment['tweet_profile_image_url']
-                    user_url = "http://twitter.com/%s" %(user_name)
+                    user_url = "http://twitter.com/%s" % (user_name)
                     source = 'twitter'
                 else:
                     pk = comment['comment']['id']
@@ -49,7 +50,7 @@ class Command(NoArgsCommand):
                     if source == 'yc':
                         profile_image = "http://mediacdn.disqus.com/images/reactions/services/hackernews_128.png"
                     else:
-                        profile_image = "http://mediacdn.disqus.com/images/reactions/services/%s_128.png" %(source)
+                        profile_image = "http://mediacdn.disqus.com/images/reactions/services/%s_128.png" % (source)
                 try:
                     reaction = Reaction.objects.get(pk=pk)
                 except Reaction.DoesNotExist:
@@ -63,4 +64,3 @@ class Command(NoArgsCommand):
                     reaction.profile_image = profile_image
                     reaction.source = source
                     reaction.save()
-
