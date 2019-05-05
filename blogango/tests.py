@@ -20,8 +20,8 @@ class BlogTestCase(TestCase):
 
     def test_bloginstall_redirect(self):
         "check that the blog redirects to install page when there is no blog installed"
-        response = self.c.get(reverse("blogango_index"))
-        self.assertEqual(response.status_code, 302)
+        response = self.c.get(reverse("blogango_install"))
+        self.assertEqual(response.status_code, 200)
 
     def test_blogindex_access(self):
         Blog.objects.create(title='test', tag_line="blog",
